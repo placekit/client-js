@@ -1,0 +1,26 @@
+{
+  "name": "jsclient",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:lib": "rollup",
+    "lint": "eslint .",
+    "format": "eslint . --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cocazez/jsclient.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cocazez/jsclient/issues"
+  },
+  "homepage": "https://github.com/cocazez/jsclient#readme",
+  "devDependencies": {
+    "eslint": "^8.17.0",
+    "eslint-config-google": "^0.14.0",
+    "rollup": "^2.75.6"
+  }
+}
