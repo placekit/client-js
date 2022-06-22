@@ -33,9 +33,6 @@ module.exports = {
     }],
     'new-cap': 'off',
     'no-console': 'error',
-    'object-curly-spacing': ['error', 'always'],
-    'react/display-name': 'off',
-    'react/prop-types': 'warn',
-    'require-jsdoc': 'off'
+    'object-curly-spacing': ['error', 'always']
   }
 };
