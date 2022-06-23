@@ -1,18 +1,35 @@
-const init = (options) => {
+const init = ({
+  appId,
+  apiKey,
+  options
+}) => {
   const host = '';
-  const config = {
-    ...options,
-  };
+  let config = options;
 
-  return (req, options) => {
-    const url = new URL(req, host);
-
-    return fetch(url, {
-      config,
-      ...options,
+  const instance = (query, params) => {
+    return fetch(host, {
       method: 'POST',
+      mode: 'no-cors',
+      cache: 'no-cache',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+        'AppId': appId,
+      },
+      body: JSON.stringify({
+        ...config,
+        ...params,
+        query,
+      }),
     });
   };
+
+  instance.configure = (opts) => {
+    config = opts;
+  };
+
+  return instance;
 };
 
 module.exports = init;
