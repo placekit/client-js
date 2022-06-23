@@ -14,3 +14,5 @@ const init = (options) => {
     });
   };
 };
+
+module.exports = init;
