@@ -1,10 +1,25 @@
+import commonjs from '@rollup/plugin-commonjs';
+import { terser } from 'rollup-plugin-terser';
+
 export default {
   input: 'src/index.js',
   output: [
     {
-      dir: 'dist/',
+      file: 'dist/index.js',
       format: 'esm',
-      sourcemap: true,
     },
+    {
+      file: 'dist/bundle.js',
+      format: 'cjs',
+    },
+    {
+      file: 'dist/bundle.min.js',
+      format: 'umd',
+      name: 'MyModuleName',
+      plugins: [terser()],
+    },
+  ],
+  plugins: [
+    commonjs(),
   ],
 };
