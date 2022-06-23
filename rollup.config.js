@@ -11,6 +11,7 @@ export default {
     {
       file: 'dist/bundle.js',
       format: 'cjs',
+      exports: 'default',
     },
     {
       file: 'dist/bundle.min.js',
