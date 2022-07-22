@@ -1,27 +1,42 @@
 {
   "name": "@cocazez/jsclient",
   "version": "0.0.0",
+  "author": "Nicolas Torres <hi@noclat.com>",
   "description": "",
-  "main": "src/index.js",
-  "scripts": {
-    "build": "rollup -c",
-    "lint": "eslint .",
-    "format": "eslint . --fix"
-  },
+  "license": "ISC",
+  "homepage": "https://github.com/cocazez/jsclient#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cocazez/jsclient.git"
   },
-  "author": "",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/cocazez/jsclient/issues"
   },
-  "homepage": "https://github.com/cocazez/jsclient#readme",
+  "main": "src/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "jsdelivr": "./dist/index.umd.js",
+  "unpkg": "./dist/index.umd.js",
+  "browser": {
+    "./index.js": "./dist/index.umd.js"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs.js",
+      "import": "./dist/index.esm.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "clear": "rimraf dist",
+    "build": "rollup -c",
+    "lint": "eslint .",
+    "format": "eslint . --fix"
+  },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^22.0.0",
     "eslint": "^8.17.0",
     "eslint-config-google": "^0.14.0",
+    "rimraf": "^3.0.2",
     "rollup": "^2.75.6",
     "rollup-plugin-terser": "^7.0.2"
   }

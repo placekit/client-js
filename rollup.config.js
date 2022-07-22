@@ -5,18 +5,18 @@ export default {
   input: 'src/index.js',
   output: [
     {
-      file: 'dist/index.js',
-      format: 'esm',
+      file: 'dist/index.esm.js',
+      format: 'es',
     },
     {
-      file: 'dist/bundle.js',
+      file: 'dist/index.cjs.js',
       format: 'cjs',
-      exports: 'default',
+      exports: 'auto',
     },
     {
-      file: 'dist/bundle.min.js',
+      file: 'dist/index.umd.js',
       format: 'umd',
-      name: 'MyModuleName',
+      name: 'PlaceKit',
       plugins: [terser()],
     },
   ],
