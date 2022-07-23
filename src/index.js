@@ -46,8 +46,8 @@ const init = ({
     });
   };
 
-  const instance = (resource, params) => {
-    return request(resource, params);
+  const instance = (query, params) => {
+    return request(query, params);
   };
 
   instance.configure = (opts) => {
