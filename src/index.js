@@ -1,17 +1,3 @@
-const fetchWithTimeout = async (resource, options = {}) => {
-  const controller = new AbortController();
-  const id = setTimeout(
-    () => controller.abort(),
-    options.timeout || 8000
-  );
-  const res = await fetch(resource, {
-    ...options,
-    signal: controller.signal,
-  });
-  clearTimeout(id);
-  return res;
-};
-
 const init = ({
   appId,
   apiKey,
@@ -20,15 +6,21 @@ const init = ({
   const hosts = [
     ''
   ];
+  let currentHost = 0;
   let config = options;
 
-  const instance = (query, params) => {
-    const host = hosts[0];
-    return fetchWithTimeout(host, {
+  const request = (resource, params) => {
+    const controller = new AbortController();
+    const id = setTimeout(
+      () => controller.abort(),
+      config.timeout || 2000
+    );
+    return fetch(hosts[currentHost], {
       method: 'POST',
       mode: 'no-cors',
       cache: 'no-cache',
       credentials: 'include',
+      signal: controller.signal,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`,
@@ -37,9 +29,25 @@ const init = ({
       body: JSON.stringify({
         ...config,
         ...params,
-        query,
+        query: resource,
       }),
+    }).then((res) => {
+      clearTimeout(id);
+      return res.json();
+    }).catch((err) => {
+      if (err.name === 'AbortError') {
+        // change host and retry if timeout
+        currentHost++;
+        if (currentHost < hosts.length-1) {
+          return request(query, params);
+        }
+      }
+      throw err;
     });
+  };
+
+  const instance = (resource, params) => {
+    return request(resource, params);
   };
 
   instance.configure = (opts) => {
