@@ -1,9 +1,9 @@
 {
   "name": "@cocazez/jsclient",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": "Nicolas Torres <hi@noclat.com>",
   "description": "",
-  "license": "ISC",
+  "license": "MIT",
   "homepage": "https://github.com/cocazez/jsclient#readme",
   "repository": {
     "type": "git",
@@ -25,7 +25,10 @@
       "import": "./dist/index.esm.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
   "scripts": {
     "clear": "rimraf dist",
     "build": "rollup -c",
