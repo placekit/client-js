@@ -33,9 +33,9 @@
             templates: {
               item({ item }) {
                 return [
-                  item.name.default[0],
-                  item.zipcode[0],
-                  item.county.default[0]
+                  item.name,
+                  item.zipcode,
+                  item.county
                 ].join(' ');
               },
             },

@@ -15,6 +15,8 @@ module.exports = {
   ignorePatterns: [
     'node_modules',
     'dist',
+    'examples',
+    'test.js',
   ],
   rules: {
     'comma-dangle': ['error', 'only-multiline'],
@@ -33,6 +35,7 @@ module.exports = {
     }],
     'new-cap': 'off',
     'no-console': 'error',
+    'no-throw-literal': 'off',
     'object-curly-spacing': ['error', 'always']
   }
 };
