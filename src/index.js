@@ -3,6 +3,7 @@ const placekit = ({
   apiKey,
   options = {}
 }) => {
+  // declare hosts cascade for the retry strategy
   const hosts = [
     `https://${appId}.algolia.net/1/indexes/flowable-open-source/query`,
     `https://${appId}-dsn.algolia.net/1/indexes/flowable-open-source/query`,
@@ -13,12 +14,14 @@ const placekit = ({
   let currentHost = 0;
   let config = {};
 
+  // TODO: remove this helper, should happen server-side
   const getLangAttr = (value, lang) => {
     return value[lang] || value.default;
   };
 
-  const request = (query, params) => {
-    const { timeout, language, ...globalParams } = config;
+  const instance = (query, params) => {
+    // TODO: keep action and language in globalParams to forward to server
+    const { language, timeout, ...globalParams } = config;
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), timeout || 2000);
     return fetch(hosts[currentHost], {
@@ -44,6 +47,7 @@ const placekit = ({
       }
       return res.json();
     }).then((res) => {
+      // TODO: move records remapping server-side
       return {
         ...res,
         hits: res.hits.map((item) => ({
@@ -65,22 +69,20 @@ const placekit = ({
     });
   };
 
-  const instance = {};
-
-  instance.search = (query, params) => {
-    return request(query, params);
-  };
-
   instance.configure = (opts = {}) => {
     config = opts;
+
     // set language from user perference
     if (!config.language) {
       config.language = window && window.navigator.language ?
         window.navigator.language.replace(/-\w+$/, '') :
         'default';
     }
+
+    // TODO: type-check all options
   };
 
+  // set global configuration
   instance.configure(options);
   return instance;
 };
