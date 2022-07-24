@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-theme-classic"
+  />
+</head>
+<body>
+  <div id="autocomplete"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-js"></script>
+  <script src="../../dist/index.umd.js"></script>
+  <script>
+    const { autocomplete } = window['@algolia/autocomplete-js'];
+    const pk = placekit({
+      appId: '',
+      apiKey: '',
+    });
+
+    autocomplete({
+      container: '#autocomplete',
+      placeholder: 'Search for places',
+      getSources({ query }) {
+        return [
+          {
+            sourceId: 'places',
+            getItems({ query }) {
+              return pk.search(query, {
+                hitsPerPage: 5,
+              }).then(res => res.hits);
+            },
+            templates: {
+              item({ item }) {
+                return [
+                  item.name.default[0],
+                  item.zipcode[0],
+                  item.county.default[0]
+                ].join(' ');
+              },
+            },
+          },
+        ];
+      },
+    });
+  </script>
+</body>
+</html>

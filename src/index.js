@@ -1,15 +1,19 @@
-const init = ({
+const placekit = ({
   appId,
   apiKey,
   options
 }) => {
   const hosts = [
-    ''
+    `https://${appId}.algolia.net/1/indexes/flowable-open-source/query`,
+    `https://${appId}-dsn.algolia.net/1/indexes/flowable-open-source/query`,
+    `https://${appId}-1.algolianet.com/1/indexes/flowable-open-source/query`,
+    `https://${appId}-2.algolianet.com/1/indexes/flowable-open-source/query`,
+    `https://${appId}-3.algolianet.com/1/indexes/flowable-open-source/query`,
   ];
   let currentHost = 0;
-  let config = options;
+  let config = options || {};
 
-  const request = (resource, params) => {
+  const request = (query, params) => {
     const controller = new AbortController();
     const id = setTimeout(
       () => controller.abort(),
@@ -17,26 +21,33 @@ const init = ({
     );
     return fetch(hosts[currentHost], {
       method: 'POST',
-      mode: 'no-cors',
-      cache: 'no-cache',
-      credentials: 'include',
       signal: controller.signal,
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-        'AppId': appId,
+        'Content-Type': 'application/json; charset=UTF-8',
+        'X-Algolia-Application-Id': appId,
+        'X-Algolia-API-Key': apiKey,
       },
       body: JSON.stringify({
         ...config,
         ...params,
-        query: resource,
+        query,
       }),
     }).then((res) => {
       clearTimeout(id);
+      if (!res.ok) {
+        throw({
+          status: res.status,
+          statusText: res.statusText,
+        });
+      }
       return res.json();
+    }).then((res) => {
+      return res.hits.map((item) => {
+        return item;
+      });
     }).catch((err) => {
-      if (err.name === 'AbortError') {
-        // change host and retry if timeout
+      if (err.name === 'AbortError' || (err.status && err.status >= 500)) {
+        // change host and retry if timeout or 50x
         currentHost++;
         if (currentHost < hosts.length-1) {
           return request(query, params);
@@ -46,7 +57,9 @@ const init = ({
     });
   };
 
-  const instance = (query, params) => {
+  const instance = {};
+  
+  instance.search = (query, params) => {
     return request(query, params);
   };
 
@@ -57,4 +70,4 @@ const init = ({
   return instance;
 };
 
-module.exports = init;
+module.exports = placekit;
