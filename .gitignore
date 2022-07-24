@@ -3,7 +3,6 @@
 # misc
 .DS_Store
 /NOTES.md
-test.js
 
 # dependencies
 node_modules

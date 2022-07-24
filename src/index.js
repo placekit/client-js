@@ -74,7 +74,7 @@ const placekit = ({
 
     // set language from user perference
     if (!config.language) {
-      config.language = window && window.navigator.language ?
+      config.language = typeof window !== 'undefined' && window.navigator.language ?
         window.navigator.language.replace(/-\w+$/, '') :
         'default';
     }
