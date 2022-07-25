@@ -1,4 +1,5 @@
 import commonjs from '@rollup/plugin-commonjs';
+import cleanup from 'rollup-plugin-cleanup';
 import { terser } from 'rollup-plugin-terser';
 
 import packageJSON from './package.json';
@@ -40,5 +41,6 @@ export default {
   external: [/node_modules/],
   plugins: [
     commonjs(),
+    cleanup(),
   ],
 };
