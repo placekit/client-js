@@ -1,5 +1,7 @@
+/** @external Position built-in Geolocation position type */
+
 /**
- * @typedef {Object} Options PlaceKit parameters
+ * @typedef {Object} PKParams PlaceKit parameters
  * @prop {string} language Results language (ISO 639-1)
  * @prop {string[]} countries Countries whitelist (ISO 639-1)
  * @prop {string} type Results type
@@ -14,12 +16,17 @@
  */
 
 /**
+ * @typedef {Object} PKResponse PlaceKit response
+ * @prop {Object[]} hits Results
+ */
+
+/**
  * PlaceKIt initialization closure
  * @desc Fetch wrapper over the PlaceKit API to implement a retry strategy and parameters checking.
  * @arg {Object} params
  * @arg {string} params.appId PlaceKit application ID
  * @arg {string} params.apiKey PlaceKit API key
- * @arg {Options} params.options PlaceKit global parameters
+ * @arg {PKParams} params.options PlaceKit global parameters
  * @return {(instance|false)}
  */
 module.exports = ({
@@ -59,8 +66,8 @@ module.exports = ({
   /**
    * PlaceKit instance is a function to search for places
    * @param {string} query Query
-   * @param {Options} params Override global parameters
-   * @return {Promise}
+   * @param {PKParams} params Override global parameters
+   * @return {Promise<PKResponse>}
    */
   const instance = (query, params) => {
     // TODO: keep action and language in globalParams to forward to server
@@ -115,7 +122,7 @@ module.exports = ({
   /**
    * Check and set global parameters and default values
    * @memberof instance
-   * @arg {Options} opts PlaceKit global parameters
+   * @arg {PKParams} opts PlaceKit global parameters
    */
   instance.configure = (opts = {}) => {
     config = opts;
@@ -137,35 +144,35 @@ module.exports = ({
   };
 
 
-  // Make `instance.usingDeviceLocation` read-only
-  let usingDeviceLocation = false;
+  // Make `instance.hasGeolocation` read-only
+  let hasGeolocation = false;
   /**
    * @member {boolean}
    * @memberof instance
    * @readonly
    */
-  Object.defineProperty(instance, 'usingDeviceLocation', {
-    get: () => usingDeviceLocation,
+  Object.defineProperty(instance, 'hasGeolocation', {
+    get: () => hasGeolocation,
   });
 
   /**
-   * Ask for the device's location
+   * Request the device's location
    * @memberof instance
-   * @return {Promise}
+   * @return {Promise<Position>}
    */
-  instance.askDeviceLocation = () => {
+  instance.requestGeolocation = () => {
     return new Promise((resolve, reject) => {
       if (typeof window === 'undefined' || !navigator.geolocation) {
         reject(Error('PlaceKit: geolocation is only available in the browser.'));
       } else {
         navigator.geolocation.getCurrentPosition(
           (pos) => {
-            usingDeviceLocation = true;
+            hasGeolocation = true;
             config.aroundLatLng = `${pos.coords.latitude}, ${pos.coords.longitude}`;
             resolve(pos);
           },
           (err) => {
-            usingDeviceLocation = false;
+            hasGeolocation = false;
             delete config.aroundLatLn;
             reject(Error(`PlaceKit: (${err.code}) ${err.message}`));
           },
