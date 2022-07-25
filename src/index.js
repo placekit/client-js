@@ -16,12 +16,10 @@
 /**
  * PlaceKIt initialization closure
  * @desc Fetch wrapper over the PlaceKit API to implement a retry strategy and parameters checking.
- *
  * @arg {Object} params
  * @arg {string} params.appId PlaceKit application ID
  * @arg {string} params.apiKey PlaceKit API key
  * @arg {Options} params.options PlaceKit global parameters
- *
  * @return {(instance|false)}
  */
 module.exports = ({
