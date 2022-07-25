@@ -1,7 +1,7 @@
 /** @external Position built-in Geolocation position type */
 
 /**
- * @typedef {Object} PKParams PlaceKit parameters
+ * @typedef {Object} PKOptions PlaceKit parameters
  * @prop {string} language Results language (ISO 639-1)
  * @prop {string[]} countries Countries whitelist (ISO 639-1)
  * @prop {string} type Results type
@@ -26,7 +26,7 @@
  * @arg {Object} params
  * @arg {string} params.appId PlaceKit application ID
  * @arg {string} params.apiKey PlaceKit API key
- * @arg {PKParams} params.options PlaceKit global parameters
+ * @arg {PKOptions} params.options PlaceKit global parameters
  * @return {(instance|false)}
  */
 const placekit = ({
@@ -56,7 +56,30 @@ const placekit = ({
   ];
 
   let currentHost = 0;
-  let config = {};
+  let globalParams = {};
+
+  /**
+   * Check and sanitize parameters
+   * @arg {PKOptions} opts PlaceKit options
+   * @return {PKOptions}
+   */
+  const checkParams = (opts = {}) => {
+    if (
+      opts.language && (
+        typeof opts.language !== 'string' || !opts.language.test(/^[a-z]{2}$/i)
+      )
+    ) {
+      console.warn('PlaceKit: `options.language` must be a 2-letter string (ISO-639-1).');
+    } else if (opts.language) {
+      opts.language = opts.language.toLocaleLowerCase();
+    } else {
+      // set language from browser
+      opts.language = typeof window !== 'undefined' && navigator.language ?
+        window.navigator.language.replace(/-\w+$/, '') :
+        'default';
+    }
+    return opts;
+  };
 
   // TODO: remove this helper, should happen server-side
   const getLangAttr = (value, lang) => {
@@ -66,12 +89,15 @@ const placekit = ({
   /**
    * PlaceKit instance is a function to search for places
    * @param {string} query Query
-   * @param {PKParams} params Override global parameters
+   * @param {PKOptions} options Override global parameters
    * @return {Promise<PKResponse>}
    */
-  const instance = (query, params) => {
+  const instance = (query, options) => {
     // TODO: keep action and language in globalParams to forward to server
-    const { language, timeout, ...globalParams } = config;
+    const { language, timeout, ...params } = {
+      ...globalParams,
+      ...checkParams(options)
+    };
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), timeout || 2000);
     return fetch(hosts[currentHost], {
@@ -83,7 +109,6 @@ const placekit = ({
         'X-Algolia-API-Key': apiKey,
       },
       body: JSON.stringify({
-        ...globalParams,
         ...params,
         query,
       }),
@@ -112,7 +137,7 @@ const placekit = ({
         // change host and retry if timeout or 50x
         currentHost++;
         if (currentHost < hosts.length-1) {
-          return request(query, params);
+          return request(query, options);
         }
       }
       throw err;
@@ -122,25 +147,10 @@ const placekit = ({
   /**
    * Check and set global parameters and default values
    * @memberof instance
-   * @arg {PKParams} opts PlaceKit global parameters
+   * @arg {PKOptions} options PlaceKit global parameters
    */
-  instance.configure = (opts = {}) => {
-    config = opts;
-
-    if (
-      config.language && (
-        typeof config.language !== 'string' || !config.language.test(/^[a-z]{2}$/i)
-      )
-    ) {
-      console.warn('PlaceKit: `options.language` must be a 2-letter string (ISO-639-1).');
-    } else if (config.language) {
-      config.language = config.language.toLocaleLowerCase();
-    } else {
-      // set language from browser
-      config.language = typeof window !== 'undefined' && navigator.language ?
-        window.navigator.language.replace(/-\w+$/, '') :
-        'default';
-    }
+  instance.configure = (options) => {
+    globalParams = checkParams(options);
   };
 
 
@@ -168,12 +178,12 @@ const placekit = ({
         navigator.geolocation.getCurrentPosition(
           (pos) => {
             hasGeolocation = true;
-            config.aroundLatLng = `${pos.coords.latitude}, ${pos.coords.longitude}`;
+            globalParams.aroundLatLng = `${pos.coords.latitude}, ${pos.coords.longitude}`;
             resolve(pos);
           },
           (err) => {
             hasGeolocation = false;
-            delete config.aroundLatLn;
+            delete globalParams.aroundLatLn;
             reject(Error(`PlaceKit: (${err.code}) ${err.message}`));
           },
           {
