@@ -22,9 +22,9 @@
  * @arg {string} params.apiKey PlaceKit API key
  * @arg {Options} params.options PlaceKit global parameters
  *
- * @return {(Object|false)} instance
+ * @return {(instance|false)}
  */
-const placekit = ({
+module.exports = ({
   appId,
   apiKey,
   options = {}
@@ -115,8 +115,8 @@ const placekit = ({
   };
 
   /**
-   * @desc Check and set global parameters and default values
-   * @method configure
+   * Check and set global parameters and default values
+   * @memberof instance
    * @arg {Options} opts PlaceKit global parameters
    */
   instance.configure = (opts = {}) => {
@@ -141,13 +141,18 @@ const placekit = ({
 
   // Make `instance.usingDeviceLocation` read-only
   let usingDeviceLocation = false;
+  /**
+   * @member {boolean}
+   * @memberof instance
+   * @readonly
+   */
   Object.defineProperty(instance, 'usingDeviceLocation', {
     get: () => usingDeviceLocation,
   });
 
   /**
-   * @desc Ask for the device's location
-   * @method askDeviceLocation
+   * Ask for the device's location
+   * @memberof instance
    * @return {Promise}
    */
   instance.askDeviceLocation = () => {
@@ -178,5 +183,3 @@ const placekit = ({
   instance.configure(options);
   return instance;
 };
-
-module.exports = placekit;
