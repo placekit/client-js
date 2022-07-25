@@ -1,23 +1,27 @@
 /**
+ * @typedef {Object} Options PlaceKit parameters
+ * @prop {string} language Results language (ISO 639-1)
+ * @prop {string[]} countries Countries whitelist (ISO 639-1)
+ * @prop {string} type Results type
+ * @prop {boolean} postcodeSearch Search only postCode
+ * @prop {string} aroundLatLng Coordinates search starts around
+ * @prop {boolean} aroundLatLngViaIP Geolocalize using IP address
+ * @prop {number} aroundRadius Radius around `aroundLatLng`
+ * @prop {string} insideBoundingBox Filter inside rectangle area
+ * @prop {string} insidePolygon Filter inside polygon
+ * @prop {string} getRankingInfo Include ranking info in results
+ * @prop {boolean} useDeviceLocation Filter inside polygon
+ * @prop {Object} computeQueryParams Override query parameters
+ */
+
+/**
  * PlaceKIt initialization closure
  * @desc Fetch wrapper over the PlaceKit API to implement a retry strategy and parameters checking.
  *
  * @arg {Object} params
  * @arg {string} params.appId PlaceKit application ID
  * @arg {string} params.apiKey PlaceKit API key
- * @arg {Object} params.options Global parameters
- * @arg {string} params.options.language Results language (ISO 639-1)
- * @arg {string[]} params.options.countries Countries whitelist (ISO 639-1)
- * @arg {string} params.options.type Results type
- * @arg {boolean} params.options.postcodeSearch Search only postCode
- * @arg {string} params.options.aroundLatLng Coordinates search starts around
- * @arg {boolean} params.options.aroundLatLngViaIP Geolocalize using IP address
- * @arg {number} params.options.aroundRadius Radius around `aroundLatLng`
- * @arg {string} params.options.insideBoundingBox Filter inside rectangle area
- * @arg {string} params.options.insidePolygon Filter inside polygon
- * @arg {string} params.options.getRankingInfo Include ranking info in results
- * @arg {boolean} params.options.useDeviceLocation Filter inside polygon
- * @arg {Object} params.options.computeQueryParams Override query parameters
+ * @arg {Options} params.options PlaceKit global parameters
  *
  * @return {Object} instance
  */
@@ -26,6 +30,18 @@ const placekit = ({
   apiKey,
   options = {}
 }) => {
+  // Check appId parameter
+  if (!appId || typeof appId !== 'string') {
+    console.error('PlaceKit: missing `appId` parameter.');
+    return false;
+  }
+
+  // Check apiKey parameter
+  if (!apiKey || typeof apiKey !== 'string') {
+    console.error('PlaceKit: missing `apiKey` parameter.');
+    return false;
+  }
+
   // Cascade of hosts, both DSNs and servers, in order of retry priority.
   const hosts = [
     `https://${appId}.algolia.net/1/indexes/flowable-open-source/query`,
@@ -43,6 +59,12 @@ const placekit = ({
     return value[lang] || value.default;
   };
 
+  /**
+   * PlaceKit instance is a function to search for places
+   * @param {string} query Query
+   * @param {Options} params Override global parameters
+   * @return {Promise}
+   */
   const instance = (query, params) => {
     // TODO: keep action and language in globalParams to forward to server
     const { language, timeout, ...globalParams } = config;
@@ -93,28 +115,44 @@ const placekit = ({
     });
   };
 
+  /**
+   * @desc Check and set global parameters and default values
+   * @method configure
+   * @arg {Options} opts PlaceKit global parameters
+   */
   instance.configure = (opts = {}) => {
     config = opts;
 
-    // set language from user perference
-    if (!config.language) {
+    if (
+      config.language && (
+        typeof config.language !== 'string' || !config.language.test(/^[a-z]{2}$/i)
+      )
+    ) {
+      console.warn('PlaceKit: `options.language` must be a 2-letter string (ISO-639-1).');
+    } else if (config.language) {
+      config.language = config.language.toLocaleLowerCase();
+    } else {
+      // set language from browser
       config.language = typeof window !== 'undefined' && navigator.language ?
         window.navigator.language.replace(/-\w+$/, '') :
         'default';
     }
 
     // ask for device location
-    if (config.useDeviceLocation) {
+    if (!!config.useDeviceLocation) {
       instance.askDeviceLocation();
     }
-
-    // TODO: type-check all options
   };
 
-  // Asks for the device's location and update global config accordingly
+  /**
+   * @desc Ask for the device's location
+   * @method askDeviceLocation
+   */
   instance.usingDeviceLocation = false;
   instance.askDeviceLocation = () => {
-    if (typeof window !== 'undefined' && navigator.geolocation) {
+    if (typeof window === 'undefined' || !navigator.geolocation) {
+      console.warn('Device geolocation is only available in the browser.');
+    } else {
       navigator.geolocation.getCurrentPosition(
         ({ coords }) => {
           instance.usingDeviceLocation = true;
@@ -129,8 +167,6 @@ const placekit = ({
           timeout: 5000
         }
       );
-    } else {
-      console.warn('Device geolocation is only available in the browser.');
     }
   };
 
