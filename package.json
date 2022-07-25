@@ -33,7 +33,7 @@
   "scripts": {
     "clear": "rimraf dist",
     "build:lib": "rollup -c",
-    "build:types": "tsc --allowJs -d --emitDeclarationOnly --removeComments src/index.js -outFile dist/index.d.ts",
+    "build:types": "tsc --allowJs -d --emitDeclarationOnly --removeComments src/index.js -outDir dist",
     "build": "npm run build:lib && npm run build:types",
     "lint": "eslint ./src",
     "format": "eslint ./src --fix"

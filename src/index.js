@@ -29,7 +29,7 @@
  * @arg {PKParams} params.options PlaceKit global parameters
  * @return {(instance|false)}
  */
-module.exports = ({
+const placekit = ({
   appId,
   apiKey,
   options = {}
@@ -188,3 +188,5 @@ module.exports = ({
   instance.configure(options);
   return instance;
 };
+
+module.exports = placekit;
