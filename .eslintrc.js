@@ -34,7 +34,7 @@ module.exports = {
       'ignoreTemplateLiterals': true,
     }],
     'new-cap': 'off',
-    'no-console': 'error',
+    'no-console': 'off',
     'no-throw-literal': 'off',
     'object-curly-spacing': ['error', 'always']
   }

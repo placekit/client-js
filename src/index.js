@@ -1,9 +1,32 @@
+/**
+ * PlaceKIt initialization closure
+ * @desc Fetch wrapper over the PlaceKit API to implement a retry strategy and parameters checking.
+ *
+ * @arg {Object} params
+ * @arg {string} params.appId PlaceKit application ID
+ * @arg {string} params.apiKey PlaceKit API key
+ * @arg {Object} params.options Global parameters
+ * @arg {string} params.options.language Results language (ISO 639-1)
+ * @arg {string[]} params.options.countries Countries whitelist (ISO 639-1)
+ * @arg {string} params.options.type Results type
+ * @arg {boolean} params.options.postcodeSearch Search only postCode
+ * @arg {string} params.options.aroundLatLng Coordinates search starts around
+ * @arg {boolean} params.options.aroundLatLngViaIP Geolocalize using IP address
+ * @arg {number} params.options.aroundRadius Radius around `aroundLatLng`
+ * @arg {string} params.options.insideBoundingBox Filter inside rectangle area
+ * @arg {string} params.options.insidePolygon Filter inside polygon
+ * @arg {string} params.options.getRankingInfo Include ranking info in results
+ * @arg {boolean} params.options.useDeviceLocation Filter inside polygon
+ * @arg {Object} params.options.computeQueryParams Override query parameters
+ *
+ * @return {Object} instance
+ */
 const placekit = ({
   appId,
   apiKey,
   options = {}
 }) => {
-  // declare hosts cascade for the retry strategy
+  // Cascade of hosts, both DSNs and servers, in order of retry priority.
   const hosts = [
     `https://${appId}.algolia.net/1/indexes/flowable-open-source/query`,
     `https://${appId}-dsn.algolia.net/1/indexes/flowable-open-source/query`,
@@ -11,6 +34,7 @@ const placekit = ({
     `https://${appId}-2.algolianet.com/1/indexes/flowable-open-source/query`,
     `https://${appId}-3.algolianet.com/1/indexes/flowable-open-source/query`,
   ];
+
   let currentHost = 0;
   let config = {};
 
@@ -74,15 +98,43 @@ const placekit = ({
 
     // set language from user perference
     if (!config.language) {
-      config.language = typeof window !== 'undefined' && window.navigator.language ?
+      config.language = typeof window !== 'undefined' && navigator.language ?
         window.navigator.language.replace(/-\w+$/, '') :
         'default';
+    }
+
+    // ask for device location
+    if (config.useDeviceLocation) {
+      instance.askDeviceLocation();
     }
 
     // TODO: type-check all options
   };
 
-  // set global configuration
+  // Asks for the device's location and update global config accordingly
+  instance.usingDeviceLocation = false;
+  instance.askDeviceLocation = () => {
+    if (typeof window !== 'undefined' && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        ({ coords }) => {
+          instance.usingDeviceLocation = true;
+          config.aroundLatLng = `${coords.latitude}, ${coords.longitude}`;
+        },
+        (err) => {
+          console.warn(`ERROR(${err.code}): ${err.message}`);
+          instance.usingDeviceLocation = false;
+          delete config.aroundLatLn;
+        },
+        {
+          timeout: 5000
+        }
+      );
+    } else {
+      console.warn('Device geolocation is only available in the browser.');
+    }
+  };
+
+  // Set global configuration and return instance
   instance.configure(options);
   return instance;
 };
