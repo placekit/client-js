@@ -22,7 +22,7 @@
  * @arg {string} params.apiKey PlaceKit API key
  * @arg {Options} params.options PlaceKit global parameters
  *
- * @return {Object} instance
+ * @return {(Object|false)} instance
  */
 const placekit = ({
   appId,
@@ -138,30 +138,40 @@ const placekit = ({
     }
   };
 
+
+  // Make `instance.usingDeviceLocation` read-only
+  let usingDeviceLocation = false;
+  Object.defineProperty(instance, 'usingDeviceLocation', {
+    get: () => usingDeviceLocation,
+  });
+
   /**
    * @desc Ask for the device's location
    * @method askDeviceLocation
+   * @return {Promise}
    */
-  instance.usingDeviceLocation = false;
   instance.askDeviceLocation = () => {
-    if (typeof window === 'undefined' || !navigator.geolocation) {
-      console.warn('Device geolocation is only available in the browser.');
-    } else {
-      navigator.geolocation.getCurrentPosition(
-        ({ coords }) => {
-          instance.usingDeviceLocation = true;
-          config.aroundLatLng = `${coords.latitude}, ${coords.longitude}`;
-        },
-        (err) => {
-          console.warn(`ERROR(${err.code}): ${err.message}`);
-          instance.usingDeviceLocation = false;
-          delete config.aroundLatLn;
-        },
-        {
-          timeout: 5000
-        }
-      );
-    }
+    return new Promise((resolve, reject) => {
+      if (typeof window === 'undefined' || !navigator.geolocation) {
+        reject(Error('PlaceKit: geolocation is only available in the browser.'));
+      } else {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            usingDeviceLocation = true;
+            config.aroundLatLng = `${pos.coords.latitude}, ${pos.coords.longitude}`;
+            resolve(pos);
+          },
+          (err) => {
+            usingDeviceLocation = false;
+            delete config.aroundLatLn;
+            reject(Error(`PlaceKit: (${err.code}) ${err.message}`));
+          },
+          {
+            timeout: 5000
+          }
+        );
+      }
+    });
   };
 
   // Set global configuration and return instance
