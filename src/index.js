@@ -10,7 +10,6 @@
  * @prop {string} insideBoundingBox Filter inside rectangle area
  * @prop {string} insidePolygon Filter inside polygon
  * @prop {string} getRankingInfo Include ranking info in results
- * @prop {boolean} useDeviceLocation Filter inside polygon
  * @prop {Object} computeQueryParams Override query parameters
  */
 
@@ -136,11 +135,6 @@ const placekit = ({
       config.language = typeof window !== 'undefined' && navigator.language ?
         window.navigator.language.replace(/-\w+$/, '') :
         'default';
-    }
-
-    // ask for device location
-    if (!!config.useDeviceLocation) {
-      instance.askDeviceLocation();
     }
   };
 
