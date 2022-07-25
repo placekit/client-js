@@ -6,18 +6,6 @@ module.exports = {
   extends: [
     'google'
   ],
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true
-    },
-    sourceType: 'module'
-  },
-  ignorePatterns: [
-    'node_modules',
-    'dist',
-    'examples',
-    'test.js',
-  ],
   rules: {
     'comma-dangle': ['error', 'only-multiline'],
     'indent': ['error', 2, {

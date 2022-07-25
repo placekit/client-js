@@ -35,8 +35,8 @@
     "build:lib": "rollup -c",
     "build:types": "tsc --allowJs -d --emitDeclarationOnly --removeComments src/index.js -outFile dist/index.d.ts",
     "build": "npm run build:lib && npm run build:types",
-    "lint": "eslint .",
-    "format": "eslint . --fix"
+    "lint": "eslint ./src",
+    "format": "eslint ./src --fix"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^22.0.0",
