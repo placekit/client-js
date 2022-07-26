@@ -37,17 +37,18 @@ const placekit = ({
 }) => {
   // Check appId parameter
   if (!appId || typeof appId !== 'string') {
-    console.error('PlaceKit: missing `appId` parameter.');
+    console.error('PlaceKit disabled: missing `appId` parameter.');
     return false;
   }
 
   // Check apiKey parameter
   if (!apiKey || typeof apiKey !== 'string') {
-    console.error('PlaceKit: missing `apiKey` parameter.');
+    console.error('PlaceKit disabled: missing `apiKey` parameter.');
     return false;
   }
 
   // Cascade of hosts, both DSNs and servers, in order of retry priority.
+  let currentHost = 0;
   const hosts = [
     `https://${appId}.algolia.net/1/indexes/flowable-open-source/query`,
     `https://${appId}-dsn.algolia.net/1/indexes/flowable-open-source/query`,
@@ -56,7 +57,7 @@ const placekit = ({
     `https://${appId}-3.algolianet.com/1/indexes/flowable-open-source/query`,
   ];
 
-  let currentHost = 0;
+  // Set global params default values
   const globalParams = {
     retryTimeout: 2000,
     language: typeof window !== 'undefined' && navigator.language ?
@@ -81,7 +82,7 @@ const placekit = ({
    */
   const checkParams = (opts = {}) => {
     if (opts.retryTimeout && (!Number.isInteger(ops.retryTimeout) || opts.retryTimeout < 0)) {
-      console.warn('PlaceKit: `options.retryTimeout` must be a positive integer.');
+      throw Error('PlaceKit: `options.retryTimeout` must be a positive integer.');
     }
 
     if (opts.language) {
@@ -90,7 +91,7 @@ const placekit = ({
         opts.language !== 'default' ||
         !opts.language.test(/^[a-z]{2}$/i)
       ) {
-        console.warn('PlaceKit: `options.language` must be a 2-letter string (ISO-639-1).');
+        throw Error('PlaceKit: `options.language` must be a 2-letter string (ISO-639-1) or "default".');
       } else {
         opts.language = opts.language.toLocaleLowerCase();
       }
@@ -164,10 +165,10 @@ const placekit = ({
   /**
    * Set global parameters
    * @memberof instance
-   * @arg {PKOptions} options PlaceKit global parameters
+   * @arg {PKOptions} opts PlaceKit global parameters
    */
-  instance.configure = (options) => {
-    Object.assign(globalParams, checkParams(options));
+  instance.configure = (opts) => {
+    Object.assign(globalParams, checkParams(opts));
   };
 
 
