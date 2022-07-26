@@ -2,6 +2,7 @@
 
 /**
  * @typedef {Object} PKOptions PlaceKit parameters
+ * @prop {number} retryTimeout Retry timeout in ms
  * @prop {string} language Results language (ISO 639-1)
  * @prop {string[]} countries Countries whitelist (ISO 639-1)
  * @prop {string} type Results type
@@ -56,7 +57,22 @@ const placekit = ({
   ];
 
   let currentHost = 0;
-  let globalParams = {};
+  const globalParams = {
+    retryTimeout: 2000,
+    language: typeof window !== 'undefined' && navigator.language ?
+      navigator.language.replace(/-[a-z]+$/, '') :
+      'default',
+    // countries: [],
+    // type: '',
+    // postcodeSearch: '',
+    // aroundLatLng: '',
+    // aroundLatLngViaIP: '',
+    // aroundRadius: '',
+    // insideBoundingBox: '',
+    // insidePolygon: '',
+    // getRankingInfo: '',
+    // computeQueryParams: '',
+  };
 
   /**
    * Check and sanitize parameters
@@ -64,19 +80,20 @@ const placekit = ({
    * @return {PKOptions}
    */
   const checkParams = (opts = {}) => {
-    if (
-      opts.language && (
-        typeof opts.language !== 'string' || !opts.language.test(/^[a-z]{2}$/i)
-      )
-    ) {
-      console.warn('PlaceKit: `options.language` must be a 2-letter string (ISO-639-1).');
-    } else if (opts.language) {
-      opts.language = opts.language.toLocaleLowerCase();
-    } else {
-      // set language from browser
-      opts.language = typeof window !== 'undefined' && navigator.language ?
-        window.navigator.language.replace(/-\w+$/, '') :
-        'default';
+    if (opts.retryTimeout && (!Number.isInteger(ops.retryTimeout) || opts.retryTimeout < 0)) {
+      console.warn('PlaceKit: `options.retryTimeout` must be a positive integer.');
+    }
+
+    if (opts.language) {
+      if (
+        typeof opts.language !== 'string' ||
+        opts.language !== 'default' ||
+        !opts.language.test(/^[a-z]{2}$/i)
+      ) {
+        console.warn('PlaceKit: `options.language` must be a 2-letter string (ISO-639-1).');
+      } else {
+        opts.language = opts.language.toLocaleLowerCase();
+      }
     }
     return opts;
   };
@@ -94,12 +111,12 @@ const placekit = ({
    */
   const instance = (query, options) => {
     // TODO: keep action and language in globalParams to forward to server
-    const { language, timeout, ...params } = {
+    const { language, retryTimeout, ...params } = {
       ...globalParams,
-      ...checkParams(options)
+      ...checkParams(options),
     };
     const controller = new AbortController();
-    const id = setTimeout(() => controller.abort(), timeout || 2000);
+    const id = setTimeout(() => controller.abort(), retryTimeout || 2000);
     return fetch(hosts[currentHost], {
       method: 'POST',
       signal: controller.signal,
@@ -145,12 +162,12 @@ const placekit = ({
   };
 
   /**
-   * Check and set global parameters and default values
+   * Set global parameters
    * @memberof instance
    * @arg {PKOptions} options PlaceKit global parameters
    */
   instance.configure = (options) => {
-    globalParams = checkParams(options);
+    Object.assign(globalParams, checkParams(options));
   };
 
 
