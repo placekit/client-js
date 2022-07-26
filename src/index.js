@@ -30,7 +30,7 @@
  * @arg {PKOptions} params.options PlaceKit global parameters
  * @return {(instance|false)}
  */
-const placekit = ({
+const PlaceKit = ({
   appId,
   apiKey,
   options = {}
@@ -76,11 +76,11 @@ const placekit = ({
   };
 
   /**
-   * Check and sanitize parameters
+   * Check and sanitize options
    * @arg {PKOptions} opts PlaceKit options
    * @return {PKOptions}
    */
-  const checkParams = (opts = {}) => {
+  const checkOptions = (opts = {}) => {
     if (opts.retryTimeout && (!Number.isInteger(ops.retryTimeout) || opts.retryTimeout < 0)) {
       throw Error('PlaceKit: `options.retryTimeout` must be a positive integer.');
     }
@@ -107,14 +107,14 @@ const placekit = ({
   /**
    * PlaceKit instance is a function to search for places
    * @param {string} query Query
-   * @param {PKOptions} options Override global parameters
+   * @param {PKOptions} opts Override global parameters
    * @return {Promise<PKResponse>}
    */
-  const instance = (query, options) => {
+  const instance = (query, opts) => {
     // TODO: keep action and language in globalParams to forward to server
     const { language, retryTimeout, ...params } = {
       ...globalParams,
-      ...checkParams(options),
+      ...checkOptions(opts),
     };
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), retryTimeout || 2000);
@@ -155,7 +155,7 @@ const placekit = ({
         // change host and retry if timeout or 50x
         currentHost++;
         if (currentHost < hosts.length-1) {
-          return request(query, options);
+          return instance(query, options);
         }
       }
       throw err;
@@ -168,7 +168,7 @@ const placekit = ({
    * @arg {PKOptions} opts PlaceKit global parameters
    */
   instance.configure = (opts) => {
-    Object.assign(globalParams, checkParams(opts));
+    Object.assign(globalParams, checkOptions(opts));
   };
 
 
@@ -218,4 +218,4 @@ const placekit = ({
   return instance;
 };
 
-module.exports = placekit;
+module.exports = PlaceKit;

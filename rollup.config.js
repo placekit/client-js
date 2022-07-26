@@ -27,7 +27,7 @@ export default {
     {
       file: 'dist/index.umd.js',
       format: 'umd',
-      name: 'placekit',
+      name: 'PlaceKit',
       plugins: [
         terser({
           format: {

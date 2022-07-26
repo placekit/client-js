@@ -1,7 +1,7 @@
 require('dotenv').config({ });
-const placekit = require('../../src/index.js');
+const PlaceKit = require('../../src/index.js');
 
-const pkSearch = placekit({
+const pkSearch = PlaceKit({
   appId: process.env.PLACEKIT_APP_ID,
   apiKey: process.env.PLACEKIT_API_KEY,
   options: {
