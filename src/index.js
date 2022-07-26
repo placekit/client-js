@@ -186,9 +186,10 @@ const placekit = ({
   /**
    * Request the device's location
    * @memberof instance
+   * @arg {number} timeout Geolocation request timeout
    * @return {Promise<Position>}
    */
-  instance.requestGeolocation = () => {
+  instance.requestGeolocation = (timeout = 0) => {
     return new Promise((resolve, reject) => {
       if (typeof window === 'undefined' || !navigator.geolocation) {
         reject(Error('PlaceKit: geolocation is only available in the browser.'));
@@ -205,7 +206,7 @@ const placekit = ({
             reject(Error(`PlaceKit: (${err.code}) ${err.message}`));
           },
           {
-            timeout: 5000
+            timeout,
           }
         );
       }
