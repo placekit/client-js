@@ -1,16 +1,16 @@
 {
-  "name": "@cocazez/jsclient",
+  "name": "@placekit/jsclient",
   "version": "0.0.1",
   "author": "Nicolas Torres <hi@noclat.com>",
   "description": "",
   "license": "MIT",
-  "homepage": "https://github.com/cocazez/jsclient#readme",
+  "homepage": "https://github.com/placekit/jsclient#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cocazez/jsclient.git"
+    "url": "git+https://github.com/placekit/jsclient.git"
   },
   "bugs": {
-    "url": "https://github.com/cocazez/jsclient/issues"
+    "url": "https://github.com/placekit/jsclient/issues"
   },
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
