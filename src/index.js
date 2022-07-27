@@ -36,13 +36,17 @@ const PlaceKit = ({
   options = {}
 }) => {
   // Check appId parameter
-  if (!appId || typeof appId !== 'string') {
-    console.warn('PlaceKit: missing `appId` parameter.');
+  if (!['string', 'undefined'].includes(typeof appId)) {
+    throw Error('PlaceKit initialization: `appId` parameter is invalid, expected a string.');
+  } else if (!appId) {
+    console.warn('PlaceKit initialization: missing or empty `appId` parameter.');
   }
 
   // Check apiKey parameter
-  if (!apiKey || typeof apiKey !== 'string') {
-    console.warn('PlaceKit: missing `apiKey` parameter.');
+  if (!['string', 'undefined'].includes(typeof apiKey)) {
+    throw Error('PlaceKit initialization: `apiKey` parameter is invalid, expected a string.');
+  } else if (!apiKey) {
+    console.warn('PlaceKit initialization: missing or empty `apiKey` parameter.');
   }
 
   // Cascade of hosts, both DSNs and servers, in order of retry priority.
@@ -99,7 +103,14 @@ const PlaceKit = ({
    * @param {PKOptions} opts Override global parameters
    * @return {Promise<PKResponse>}
    */
-  const instance = (query, opts) => {
+  const instance = (query, opts = {}) => {
+    if (!['string', 'undefined'].includes(typeof query)) {
+      throw Error('PlaceKit: `query` parameter is invalid, expected a string.');
+    }
+    if (typeof opts !== 'object' || Array.isArray(opts) || opts === null) {
+      throw Error('PlaceKit: `opts` parameter is invalid, expected an object.');
+    }
+
     // TODO: keep action and language in globalParams to forward to server
     const { language, retryTimeout, ...params } = {
       ...globalParams,
@@ -156,7 +167,11 @@ const PlaceKit = ({
    * @memberof instance
    * @arg {PKOptions} opts PlaceKit global parameters
    */
-  instance.configure = (opts) => {
+  instance.configure = (opts = {}) => {
+    if (typeof opts !== 'object' || Array.isArray(opts) || opts === null) {
+      throw Error('PlaceKit.configure: `opts` parameter is invalid, expected an object.');
+    }
+
     Object.assign(globalParams, checkOptions(opts));
   };
 
@@ -179,9 +194,13 @@ const PlaceKit = ({
    * @return {Promise<Position>}
    */
   instance.requestGeolocation = (timeout = 0) => {
+    if (typeof timeout !== 'number' || !Number.isInteger(timeout) || timeout < 0) {
+      throw Error('PlaceKit.requestGeolocation: `timeout` parameter is invalid, expected a positive integer.');
+    }
+
     return new Promise((resolve, reject) => {
       if (typeof window === 'undefined' || !navigator.geolocation) {
-        reject(Error('PlaceKit: geolocation is only available in the browser.'));
+        reject(Error('PlaceKit.requestGeolocation: geolocation is only available in the browser.'));
       } else {
         navigator.geolocation.getCurrentPosition(
           (pos) => {
