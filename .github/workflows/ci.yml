@@ -8,7 +8,7 @@ on:
 
 jobs:
   run:
-    name: Lint & Build
+    name: Lint & Build & Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -20,3 +20,4 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm run lint
       - run: npm run build
+      - run: npm run test:ci

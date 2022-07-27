@@ -31,17 +31,21 @@
     "LICENSE"
   ],
   "scripts": {
-    "clear": "rimraf dist",
+    "clear": "rimraf ./dist",
     "build:lib": "rollup -c",
-    "build:types": "tsc --allowJs -d --emitDeclarationOnly --removeComments src/index.js -outDir dist",
-    "build": "npm run build:lib && npm run build:types",
+    "build:types": "tsc --allowJs -d --emitDeclarationOnly --removeComments ./src/index.js -outDir ./dist",
     "lint": "eslint ./src",
-    "format": "eslint ./src --fix"
+    "format": "eslint ./src --fix",
+    "build": "npm run build:lib && npm run build:types",
+    "test": "jest --runInBand --detectOpenHandles --forceExit --roots ./src",
+    "test:watch": "jest --runInBand --detectOpenHandles --forceExit --roots ./src --onlyFailures --watch",
+    "test:ci": "jest --runInBand --detectOpenHandles --forceExit --roots ./src --ci"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^22.0.0",
     "eslint": "^8.17.0",
     "eslint-config-google": "^0.14.0",
+    "jest": "^28.1.3",
     "rimraf": "^3.0.2",
     "rollup": "^2.75.6",
     "rollup-plugin-cleanup": "^3.2.1",
