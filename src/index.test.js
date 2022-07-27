@@ -4,7 +4,7 @@ afterEach(() => {
   jest.restoreAllMocks();
 });
 
-describe('Initialization', () => {
+describe('Initialize', () => {
   test('should warn if appId or apiKey is missing', () => {
     const warnSpy = jest.spyOn(console, 'warn');
     placekit();
@@ -50,4 +50,13 @@ describe('Initialization', () => {
     expect(typeof pkSearch.requestGeolocation).toBe('function');
     expect(warnSpy).not.toHaveBeenCalled();
   });
+});
+
+describe('Configure', () => {
+});
+
+describe('Request Geolocation', () => {
+});
+
+describe('Search', () => {
 });
