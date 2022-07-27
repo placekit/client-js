@@ -28,7 +28,7 @@
  * @arg {string} params.appId PlaceKit application ID
  * @arg {string} params.apiKey PlaceKit API key
  * @arg {PKOptions} params.options PlaceKit global parameters
- * @return {(instance|false)}
+ * @return {instance}
  */
 const PlaceKit = ({
   appId,
@@ -37,14 +37,12 @@ const PlaceKit = ({
 }) => {
   // Check appId parameter
   if (!appId || typeof appId !== 'string') {
-    console.error('PlaceKit disabled: missing `appId` parameter.');
-    return false;
+    console.warn('PlaceKit: missing `appId` parameter.');
   }
 
   // Check apiKey parameter
   if (!apiKey || typeof apiKey !== 'string') {
-    console.error('PlaceKit disabled: missing `apiKey` parameter.');
-    return false;
+    console.warn('PlaceKit: missing `apiKey` parameter.');
   }
 
   // Cascade of hosts, both DSNs and servers, in order of retry priority.
@@ -61,7 +59,7 @@ const PlaceKit = ({
   const globalParams = {
     retryTimeout: 2000,
     language: typeof window !== 'undefined' && navigator.language ?
-      navigator.language.replace(/-[a-z]+$/, '') :
+      navigator.language.slice(0, 2) :
       'default',
     // countries: [],
     // type: '',
@@ -76,25 +74,16 @@ const PlaceKit = ({
   };
 
   /**
-   * Check and sanitize options
+   * Sanitize options
    * @arg {PKOptions} opts PlaceKit options
    * @return {PKOptions}
    */
   const checkOptions = (opts = {}) => {
-    if (opts.retryTimeout && (!Number.isInteger(ops.retryTimeout) || opts.retryTimeout < 0)) {
-      throw Error('PlaceKit: `options.retryTimeout` must be a positive integer.');
+    if (opts.retryTimeout && Number.isInteger(ops.retryTimeout)) {
+      opts.retryTimeout = Math.max(0, opts.retryTimeout);
     }
-
-    if (opts.language) {
-      if (
-        typeof opts.language !== 'string' ||
-        opts.language !== 'default' ||
-        !opts.language.test(/^[a-z]{2}$/i)
-      ) {
-        throw Error('PlaceKit: `options.language` must be a 2-letter string (ISO-639-1) or "default".');
-      } else {
-        opts.language = opts.language.toLocaleLowerCase();
-      }
+    if (typeof opts.language === 'string' && opts.language !== 'default') {
+      opts.language = opts.language.slice(0, 2).toLocaleLowerCase();
     }
     return opts;
   };
@@ -213,7 +202,7 @@ const PlaceKit = ({
     });
   };
 
-  // Set global configuration and return instance
+  // Save global parameters and return instance
   instance.configure(options);
   return instance;
 };
