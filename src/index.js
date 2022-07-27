@@ -211,7 +211,7 @@ const PlaceKit = ({
           (err) => {
             hasGeolocation = false;
             delete globalParams.aroundLatLn;
-            reject(Error(`PlaceKit: (${err.code}) ${err.message}`));
+            reject(Error(`PlaceKit.requestGeolocation: (${err.code}) ${err.message}`));
           },
           {
             timeout,
