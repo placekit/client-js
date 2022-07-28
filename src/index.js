@@ -22,7 +22,7 @@
  */
 
 /**
- * PlaceKIt initialization closure
+ * PlaceKit initialization closure
  * @desc Fetch wrapper over the PlaceKit API to implement a retry strategy and parameters checking.
  * @arg {Object} params
  * @arg {string} params.appId PlaceKit application ID
@@ -34,7 +34,7 @@ const PlaceKit = ({
   appId,
   apiKey,
   options = {}
-}) => {
+} = {}) => {
   // Check appId parameter
   if (!['string', 'undefined'].includes(typeof appId)) {
     throw Error('PlaceKit initialization: `appId` parameter is invalid, expected a string.');
@@ -83,7 +83,7 @@ const PlaceKit = ({
    * @return {PKOptions}
    */
   const checkOptions = (opts = {}) => {
-    if (opts.retryTimeout && Number.isInteger(ops.retryTimeout)) {
+    if (opts.retryTimeout && Number.isInteger(opts.retryTimeout)) {
       opts.retryTimeout = Math.max(0, opts.retryTimeout);
     }
     if (typeof opts.language === 'string' && opts.language !== 'default') {
@@ -107,7 +107,7 @@ const PlaceKit = ({
     if (!['string', 'undefined'].includes(typeof query)) {
       throw Error('PlaceKit: `query` parameter is invalid, expected a string.');
     }
-    if (typeof opts !== 'object' || Array.isArray(opts) || opts === null) {
+    if (!['object', 'undefined'].includes(typeof opts) || Array.isArray(opts) || opts === null) {
       throw Error('PlaceKit: `opts` parameter is invalid, expected an object.');
     }
 
@@ -163,22 +163,31 @@ const PlaceKit = ({
   };
 
   /**
+   * Make `instance.options` read-only
+   * @member {boolean}
+   * @memberof instance
+   * @readonly
+   */
+  Object.defineProperty(instance, 'options', {
+    get: () => globalParams,
+  });
+
+  /**
    * Set global parameters
    * @memberof instance
    * @arg {PKOptions} opts PlaceKit global parameters
    */
   instance.configure = (opts = {}) => {
-    if (typeof opts !== 'object' || Array.isArray(opts) || opts === null) {
+    if (!['object', 'undefined'].includes(typeof opts) || Array.isArray(opts) || opts === null) {
       throw Error('PlaceKit.configure: `opts` parameter is invalid, expected an object.');
     }
 
     Object.assign(globalParams, checkOptions(opts));
   };
 
-
-  // Make `instance.hasGeolocation` read-only
   let hasGeolocation = false;
   /**
+   * Make `instance.hasGeolocation` read-only
    * @member {boolean}
    * @memberof instance
    * @readonly
@@ -194,7 +203,7 @@ const PlaceKit = ({
    * @return {Promise<Position>}
    */
   instance.requestGeolocation = (timeout = 0) => {
-    if (typeof timeout !== 'number' || !Number.isInteger(timeout) || timeout < 0) {
+    if (!['number', 'undefined'].includes(typeof opts) || !Number.isInteger(timeout) || timeout < 0) {
       throw Error('PlaceKit.requestGeolocation: `timeout` parameter is invalid, expected a positive integer.');
     }
 
@@ -210,7 +219,7 @@ const PlaceKit = ({
           },
           (err) => {
             hasGeolocation = false;
-            delete globalParams.aroundLatLn;
+            globalParams.aroundLatLng = null;
             reject(Error(`PlaceKit.requestGeolocation: (${err.code}) ${err.message}`));
           },
           {
