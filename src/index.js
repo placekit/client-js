@@ -163,6 +163,16 @@ const PlaceKit = ({
   };
 
   /**
+   * Make `instance.options` read-only
+   * @member {boolean}
+   * @memberof instance
+   * @readonly
+   */
+  Object.defineProperty(instance, 'options', {
+    get: () => globalParams,
+  });
+
+  /**
    * Set global parameters
    * @memberof instance
    * @arg {PKOptions} opts PlaceKit global parameters
@@ -175,10 +185,9 @@ const PlaceKit = ({
     Object.assign(globalParams, checkOptions(opts));
   };
 
-
-  // Make `instance.hasGeolocation` read-only
   let hasGeolocation = false;
   /**
+   * Make `instance.hasGeolocation` read-only
    * @member {boolean}
    * @memberof instance
    * @readonly
@@ -210,7 +219,7 @@ const PlaceKit = ({
           },
           (err) => {
             hasGeolocation = false;
-            delete globalParams.aroundLatLn;
+            globalParams.aroundLatLng = null;
             reject(Error(`PlaceKit.requestGeolocation: (${err.code}) ${err.message}`));
           },
           {

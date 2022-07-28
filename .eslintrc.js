@@ -6,6 +6,7 @@ module.exports = {
   extends: [
     'google'
   ],
+  ignorePatterns: ['*.test.js'],
   rules: {
     'comma-dangle': ['error', 'only-multiline'],
     'indent': ['error', 2, {
