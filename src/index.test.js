@@ -186,7 +186,7 @@ describe('Search', () => {
     );
   });
 
-  it('retry with next host on timeout', async () => {
+  it('retries with next host on timeout', async () => {
     fetch.mockResolvedValue({
       ok: true,
       status: 200,
@@ -211,7 +211,7 @@ describe('Search', () => {
     );
   });
 
-  it('retry with next host on 500', async () => {
+  it('retries with next host on 500', async () => {
     fetch.mockResolvedValueOnce({
       ok: false,
       status: 500,
@@ -237,5 +237,23 @@ describe('Search', () => {
       'https://your-app-id-dsn.algolia.net/1/indexes/flowable-open-source/query',
       expect.anything()
     );
+  });
+
+  it('rejects on 40x', async () => {
+    fetch.mockResolvedValueOnce({
+      ok: false,
+      status: 403,
+      statusText: '',
+    });
+    const pkSearch = placekit({
+      appId: 'your-app-id',
+      apiKey: 'your-api-key',
+    });
+    const err = await pkSearch('').catch((err) => err);
+    expect(fetch).toHaveBeenCalled();
+    expect(err).toMatchObject({
+      status: 403,
+      statusText: expect.any(String),
+    })
   });
 });
