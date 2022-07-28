@@ -161,7 +161,7 @@ describe('Search', () => {
     }).toThrow(/opts/i);
   });
 
-  it('set proper request parameters', async () => {
+  it('sends proper request', async () => {
     fetch.mockResolvedValue({
       ok: true,
       status: 200,
@@ -171,7 +171,7 @@ describe('Search', () => {
       appId: 'your-app-id',
       apiKey: 'your-api-key',
     });
-    await pkSearch('');
+    const res = await pkSearch('');
     expect(fetch).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
@@ -184,6 +184,7 @@ describe('Search', () => {
         },
       })
     );
+    expect(res.hits).toHaveLength(0);
   });
 
   it('retries with next host on timeout', async () => {
@@ -240,7 +241,7 @@ describe('Search', () => {
   });
 
   it('rejects on 40x', async () => {
-    fetch.mockResolvedValueOnce({
+    fetch.mockResolvedValue({
       ok: false,
       status: 403,
       statusText: '',
