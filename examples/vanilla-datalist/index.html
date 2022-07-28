@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="../../dist/index.umd.js"></script>
+</head>
+<body>
+  <label for="place">Search for places:</label>
+  <input name="place" id="place" list="suggestions" autocomplete="off" />
+  <datalist id="suggestions">
+    <option value=""></option>
+  </datalist>
+
+  <script>
+    const pkSearch = PlaceKit({
+      appId: '<your-app-id>',
+      apiKey: '<your-api-key>',
+      options: {
+        hitsPerPage: 5,
+      },
+    });
+
+    const input = document.getElementById('place');
+    const suggestions = document.getElementById('suggestions');
+
+    input.addEventListener('keyup', (e) => {
+      pkSearch(e.target.value).then((res) => {
+        suggestions.innerHTML = res.hits.map((item) => {
+          const value = [item.name, item.zipcode, item.county].join(' ');
+          return `<option>${value}</option>`;
+        }).join('');
+      });
+    });
+  </script>
+</body>
+</html>

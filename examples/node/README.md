@@ -1,11 +1,14 @@
 ```sh
-git clone ... <folder>
-cd <folder>
-npm install
-npm run build
+# clone project and access this example
+git clone git@github.com:placekit/placekit-js.git
+cd placekit-js/examples/node
 
-cd examples/node
+# install dependencies
 npm install
-cp .env.sample .env # populate .env with your credentials
+
+# create .env and populate with your credentials
+cp .env.sample .env
+
+# execute example
 node index.js
 ```
