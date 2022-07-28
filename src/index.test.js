@@ -89,10 +89,10 @@ describe('Configure', () => {
       apiKey: 'your-api-key',
     });
     pkSearch.configure({
-      retryTimeout: 1000,
-      language: 'FR', // should sanitize
+      retryTimeout: -100,
+      language: 'FR',
     });
-    expect(pkSearch.options.retryTimeout).toEqual(1000);
+    expect(pkSearch.options.retryTimeout).toEqual(0);
     expect(pkSearch.options.language).toEqual('fr');
   });
 });
