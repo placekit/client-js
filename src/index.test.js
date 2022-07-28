@@ -82,6 +82,19 @@ describe('Configure', () => {
       pkSearch.configure('invalid');
     }).toThrow(/opts/i);
   });
+
+  it('updates and sanitizes global options', () => {
+    const pkSearch = placekit({
+      appId: 'your-app-id',
+      apiKey: 'your-api-key',
+    });
+    pkSearch.configure({
+      retryTimeout: 1000,
+      language: 'FR', // should sanitize
+    });
+    expect(pkSearch.options.retryTimeout).toEqual(1000);
+    expect(pkSearch.options.language).toEqual('fr');
+  });
 });
 
 describe('Request Geolocation', () => {

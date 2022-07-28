@@ -83,7 +83,7 @@ const PlaceKit = ({
    * @return {PKOptions}
    */
   const checkOptions = (opts = {}) => {
-    if (opts.retryTimeout && Number.isInteger(ops.retryTimeout)) {
+    if (opts.retryTimeout && Number.isInteger(opts.retryTimeout)) {
       opts.retryTimeout = Math.max(0, opts.retryTimeout);
     }
     if (typeof opts.language === 'string' && opts.language !== 'default') {
