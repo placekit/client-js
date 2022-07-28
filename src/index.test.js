@@ -37,24 +37,22 @@ describe('Initialize', () => {
     expect(warnSpy).toHaveBeenCalledWith(expect.stringMatching(/apiKey/i));
   });
 
-  it('throws when appId is invalid', () => {
+  it('throws when appId or apiKey is invalid', () => {
     expect(() => {
       placekit({
-        appId: 3,
+        appId: null,
       });
     }).toThrow(/appId/i);
-  });
 
-  it('throws when apiKey is invalid', () => {
     expect(() => {
       placekit({
         appId: 'your-app-id',
-        apiKey: [],
+        apiKey: null,
       });
     }).toThrow(/apiKey/i);
   });
 
-  test('returns instance if parameters are valid', () => {
+  test('returns instance when parameters are valid', () => {
     const warnSpy = jest.spyOn(console, 'warn');
     const pkSearch = placekit({
       appId: 'your-app-id',
@@ -145,4 +143,21 @@ describe('Request Geolocation', () => {
 });
 
 describe('Search', () => {
+  it('throws when args are invalid', () => {
+    expect(() => {
+      const pkSearch = placekit({
+        appId: 'your-app-id',
+        apiKey: 'your-api-key',
+      });
+      pkSearch(null);
+    }).toThrow(/query/i);
+
+    expect(() => {
+      const pkSearch = placekit({
+        appId: 'your-app-id',
+        apiKey: 'your-api-key',
+      });
+      pkSearch('', null);
+    }).toThrow(/opts/i);
+  });
 });
