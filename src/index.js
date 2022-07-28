@@ -6,6 +6,7 @@
  * @prop {string} language Results language (ISO 639-1)
  * @prop {string[]} countries Countries whitelist (ISO 639-1)
  * @prop {string} type Results type
+ * @prop {number} hitsPerPage Results per page
  * @prop {boolean} postcodeSearch Search only postCode
  * @prop {string} aroundLatLng Coordinates search starts around
  * @prop {boolean} aroundLatLngViaIP Geolocalize using IP address
@@ -65,6 +66,7 @@ const PlaceKit = ({
     language: typeof window !== 'undefined' && navigator.language ?
       navigator.language.slice(0, 2) :
       'default',
+    hitsPerPage: 10,
     // countries: [],
     // type: '',
     // postcodeSearch: '',
@@ -88,6 +90,9 @@ const PlaceKit = ({
     }
     if (typeof opts.language === 'string' && opts.language !== 'default') {
       opts.language = opts.language.slice(0, 2).toLocaleLowerCase();
+    }
+    if (opts.hitsPerPage && Number.isInteger(opts.hitsPerPage)) {
+      opts.hitsPerPage = Math.max(0, opts.hitsPerPage);
     }
     return opts;
   };

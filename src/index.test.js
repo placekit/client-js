@@ -89,9 +89,13 @@ describe('Configure', () => {
     pkSearch.configure({
       retryTimeout: -100,
       language: 'FR',
+      hitsPerPage: -100,
     });
-    expect(pkSearch.options.retryTimeout).toEqual(0);
-    expect(pkSearch.options.language).toEqual('fr');
+    expect(pkSearch.options).toMatchObject({
+      retryTimeout: 0,
+      language: 'fr',
+      hitsPerPage: 0,
+    });
   });
 });
 
@@ -255,6 +259,6 @@ describe('Search', () => {
     expect(err).toMatchObject({
       status: 403,
       statusText: expect.any(String),
-    })
+    });
   });
 });
