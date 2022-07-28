@@ -160,4 +160,82 @@ describe('Search', () => {
       pkSearch('', null);
     }).toThrow(/opts/i);
   });
+
+  it('set proper request parameters', async () => {
+    fetch.mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: () => ({ hits: [] })
+    });
+    const pkSearch = placekit({
+      appId: 'your-app-id',
+      apiKey: 'your-api-key',
+    });
+    await pkSearch('');
+    expect(fetch).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        method: 'POST',
+        signal: expect.anything(),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'X-Algolia-Application-Id': 'your-app-id',
+          'X-Algolia-API-Key': 'your-api-key',
+        },
+      })
+    );
+  });
+
+  it('retry with next host on timeout', async () => {
+    fetch.mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: () => ({ hits: [] })
+    });
+    fetch.mockRejectedValueOnce({ name: 'AbortError' });
+    const pkSearch = placekit({
+      appId: 'your-app-id',
+      apiKey: 'your-api-key',
+    });
+    await pkSearch('');
+    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(fetch).toHaveBeenNthCalledWith(
+      1,
+      'https://your-app-id.algolia.net/1/indexes/flowable-open-source/query',
+      expect.anything()
+    );
+    expect(fetch).toHaveBeenNthCalledWith(
+      2,
+      'https://your-app-id-dsn.algolia.net/1/indexes/flowable-open-source/query',
+      expect.anything()
+    );
+  });
+
+  it('retry with next host on 500', async () => {
+    fetch.mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+    });
+    fetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => ({ hits: [] })
+    });
+    const pkSearch = placekit({
+      appId: 'your-app-id',
+      apiKey: 'your-api-key',
+    });
+    await pkSearch('');
+    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(fetch).toHaveBeenNthCalledWith(
+      1,
+      'https://your-app-id.algolia.net/1/indexes/flowable-open-source/query',
+      expect.anything()
+    );
+    expect(fetch).toHaveBeenNthCalledWith(
+      2,
+      'https://your-app-id-dsn.algolia.net/1/indexes/flowable-open-source/query',
+      expect.anything()
+    );
+  });
 });
