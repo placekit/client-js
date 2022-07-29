@@ -62,21 +62,14 @@ For advanced usages, visit our [online documentation](https://placekit.io/docs).
 
 ### CDN
 
-First, add this line inside the `<head>` tag in your HTML to import PlaceKit JavaScript Client:
+First, add this line before the closing `</body>` tag in your HTML to import PlaceKit JavaScript Client:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/placekit-js@1.0.0/dist/placekit.umd.js"></script>
 ```
 
-Or if you are using native ES Modules:
-
-```html
-<script type="module">
-  import PlaceKit from 'https://cdn.jsdelivr.net/npm/placekit-js@1.0.0/dist/placekit.esm.js'
-</script>
-```
-
-Then it works the same as the node example above, as `PlaceKit` is available as a global:
+Then it works the same as the node example above.
+After importing the library, `PlaceKit` beomces available as a global:
 
 ```html
 <script>
@@ -91,6 +84,16 @@ Then it works the same as the node example above, as `PlaceKit` is available as 
   pkSearch('Paris').then((res) => {
     console.log(res.hits);
   });
+</script>
+```
+
+Or if you are using native ES Modules:
+
+```html
+<script type="module">
+  import PlaceKit from 'https://cdn.jsdelivr.net/npm/placekit-js@1.0.0/dist/placekit.esm.js';
+  const pkSearch = PlaceKit(/* ... */);
+  // ...
 </script>
 ```
 
