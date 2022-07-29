@@ -12,6 +12,6 @@ const pkSearch = PlaceKit({
 const [query] = process.argv.slice(2);
 
 (async () => {
-  const res = await pkSearch(query);
+  const res = await pkSearch(query || '');
   console.log(res);
 })();

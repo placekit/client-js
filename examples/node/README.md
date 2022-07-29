@@ -22,5 +22,5 @@ Open the `.env` file and replace `<your-app-id>` and `<your-api-key>` with your 
 Then run, replacing `<yourQuery>` with whatever city or address you want:
 
 ```sh
-node index.js <yourQuery>
+node index.js "<yourQuery>"
 ```
