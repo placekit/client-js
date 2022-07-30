@@ -11,7 +11,7 @@
   🎯 <a href="#-quick-start">Quick start</a> • 
   🏗 <a href="./examples">Examples</a> • 
   📚 <a href="https://placekit.io/docs">Documentation</a> • 
-  ⚖️ <a href="#-license">License</a>
+  ⚖️ <a href="#%EF%B8%8F-license">License</a>
 </p>
 
 ---
