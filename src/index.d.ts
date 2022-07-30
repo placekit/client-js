@@ -4,18 +4,18 @@ export as namespace PlaceKit;
 declare function PlaceKit({ appId, apiKey, options }?: {
   appId: string;
   apiKey: string;
-  options: Partial<PKOptions>;
-}): PKClient;
+  options: PKOptions;
+}): PKInstance;
 
-export interface PKClient {
-  (query: string, opts?: Partial<PKOptions>): Promise<PKResponse>;
+export interface PKInstance {
+  (query: string, opts?: PKOptions): Promise<PKResponse>;
   readonly options: PKOptions;
-  configure(opts?: Partial<PKOptions>): void;
+  configure(opts?: PKOptions): void;
   readonly hasGeolocation: boolean;
   requestGeolocation(timeout?: number): Promise<GeolocationPosition>;
 }
 
-export type PKOptions = {
+export type PKOptions = Partial<{
   retryTimeout: number;
   language: string;
   countries: string[];
@@ -29,7 +29,7 @@ export type PKOptions = {
   insidePolygon: string;
   getRankingInfo: string;
   computeQueryParams: any;
-};
+}>;
 
 export type PKResponse = {
   hits: any[];
