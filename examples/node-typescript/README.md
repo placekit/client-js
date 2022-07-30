@@ -1,7 +1,9 @@
-# Node.js TypeScript
+# TypeScript
 
 This example simply performs a search server-side with TypeScript, and outputs the response with `console.log`. 
 It uses [dotenv](https://www.npmjs.com/package/dotenv) package to safely set credentials in an non-versioned file.
+
+The purpose of this example is simply to showcase the available types, even though most of the time you won't need them as they are [inferred](https://www.typescriptlang.org/docs/handbook/type-inference.html).
 
 ## Run
 
