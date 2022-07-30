@@ -1,5 +1,6 @@
 import commonjs from '@rollup/plugin-commonjs';
 import cleanup from 'rollup-plugin-cleanup';
+import copy from 'rollup-plugin-copy';
 import { terser } from 'rollup-plugin-terser';
 
 import packageJSON from './package.json';
@@ -27,7 +28,7 @@ export default {
     {
       file: 'dist/placekit.umd.js',
       format: 'umd',
-      name: 'PlaceKit',
+      name: 'placekit',
       plugins: [
         terser({
           format: {
@@ -42,5 +43,14 @@ export default {
   plugins: [
     commonjs(),
     cleanup(),
+    copy({
+      targets: [
+        {
+          src: 'src/index.d.ts',
+          dest: 'dist/',
+          rename: 'placekit.d.ts',
+        },
+      ]
+    })
   ],
 };

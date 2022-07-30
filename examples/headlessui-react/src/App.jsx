@@ -1,9 +1,9 @@
 import { Fragment, useEffect, useState } from 'react';
 import { Combobox, Transition } from '@headlessui/react';
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
-import PlaceKit from '../../../dist/placekit.esm.js';
+import placekit from '../../../';
 
-const pkSearch = PlaceKit({
+const pkSearch = placekit({
   appId: process.env.PLACEKIT_APP_ID,
   apiKey: process.env.PLACEKIT_API_KEY,
   options: {

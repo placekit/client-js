@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "dependencies": {
+    "dotenv": "^16.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  }
+}

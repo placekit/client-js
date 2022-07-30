@@ -1,7 +1,7 @@
 /** @external Position built-in Geolocation position type */
 
 /**
- * @typedef {Object} PKOptions PlaceKit parameters
+ * @typedef {Object} Options PlaceKit parameters
  * @prop {number} retryTimeout Retry timeout in ms
  * @prop {string} language Results language (ISO 639-1)
  * @prop {string[]} countries Countries whitelist (ISO 639-1)
@@ -18,20 +18,21 @@
  */
 
 /**
- * @typedef {Object} PKResponse PlaceKit response
+ * @typedef {Object} Response PlaceKit response
  * @prop {Object[]} hits Results
  */
 
 /**
  * PlaceKit initialization closure
  * @desc Fetch wrapper over the PlaceKit API to implement a retry strategy and parameters checking.
+ * @module PlaceKit
  * @arg {Object} params
  * @arg {string} params.appId PlaceKit application ID
  * @arg {string} params.apiKey PlaceKit API key
- * @arg {PKOptions} params.options PlaceKit global parameters
+ * @arg {Options} params.options PlaceKit global parameters
  * @return {instance}
  */
-const PlaceKit = ({
+module.exports = ({
   appId,
   apiKey,
   options = {}
@@ -81,8 +82,8 @@ const PlaceKit = ({
 
   /**
    * Sanitize options
-   * @arg {PKOptions} opts PlaceKit options
-   * @return {PKOptions}
+   * @arg {Options} opts PlaceKit options
+   * @return {Options}
    */
   const checkOptions = (opts = {}) => {
     if (opts.retryTimeout && Number.isInteger(opts.retryTimeout)) {
@@ -106,8 +107,8 @@ const PlaceKit = ({
   /**
    * PlaceKit instance is a function to search for places
    * @param {string} query Query
-   * @param {PKOptions} opts Override global parameters
-   * @return {Promise<PKResponse>}
+   * @param {Options} opts Override global parameters
+   * @return {Promise<Response>}
    */
   const instance = (query, opts = {}) => {
     if (!['string', 'undefined'].includes(typeof query)) {
@@ -171,7 +172,7 @@ const PlaceKit = ({
 
   /**
    * Make `instance.options` read-only
-   * @member {boolean}
+   * @member {Options}
    * @memberof instance
    * @readonly
    */
@@ -182,7 +183,7 @@ const PlaceKit = ({
   /**
    * Set global parameters
    * @memberof instance
-   * @arg {PKOptions} opts PlaceKit global parameters
+   * @arg {Options} opts PlaceKit global parameters
    */
   instance.configure = (opts = {}) => {
     if (!['object', 'undefined'].includes(typeof opts) || Array.isArray(opts) || opts === null) {
@@ -241,5 +242,3 @@ const PlaceKit = ({
   instance.configure(options);
   return instance;
 };
-
-module.exports = PlaceKit;

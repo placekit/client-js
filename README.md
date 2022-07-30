@@ -40,12 +40,12 @@ Then import the package and perform your first address search:
 
 ```js
 // CommonJS syntax:
-const PlaceKit = require('@placekit/placekit-js');
+const placekit = require('@placekit/placekit-js');
 
 // ES6 Modules syntax:
-import PlaceKit from '@placekit/placekit-js';
+import placekit from '@placekit/placekit-js';
 
-const pkSearch = PlaceKit({
+const pkSearch = placekit({
   appId: '<your-app-id>',
   apiKey: '<your-api-key>',
   options: {
@@ -73,7 +73,7 @@ After importing the library, `PlaceKit` beomces available as a global:
 
 ```html
 <script>
-  const pkSearch = PlaceKit({
+  const pkSearch = placekit({
     appId: '<your-app-id>',
     apiKey: '<your-api-key>',
     options: {
@@ -91,8 +91,8 @@ Or if you are using native ES Modules:
 
 ```html
 <script type="module">
-  import PlaceKit from 'https://cdn.jsdelivr.net/npm/placekit-js@1.0.0/dist/placekit.esm.js';
-  const pkSearch = PlaceKit(/* ... */);
+  import placekit from 'https://cdn.jsdelivr.net/npm/placekit-js@1.0.0/dist/placekit.esm.js';
+  const pkSearch = placekit(/* ... */);
   // ...
 </script>
 ```

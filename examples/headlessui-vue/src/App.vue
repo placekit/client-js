@@ -74,9 +74,9 @@
     TransitionRoot,
   } from '@headlessui/vue';
   import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid';
-  import PlaceKit from '../../../dist/placekit.esm.js';
+  import placekit from '../../../';
 
-  const pkSearch = PlaceKit({
+  const pkSearch = placekit({
     appId: process.env.PLACEKIT_APP_ID,
     apiKey: process.env.PLACEKIT_API_KEY,
     options: {

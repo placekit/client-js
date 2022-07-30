@@ -1,8 +1,8 @@
 require('dotenv').config({});
 const express = require('express');
-const PlaceKit = require('../../dist/placekit.cjs.js');
+const placekit = require('../../');
 
-const pkSearch = PlaceKit({
+const pkSearch = placekit({
   appId: process.env.PLACEKIT_APP_ID,
   apiKey: process.env.PLACEKIT_API_KEY,
 });
