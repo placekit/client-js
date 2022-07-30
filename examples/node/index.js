@@ -1,4 +1,4 @@
-require('dotenv').config({});
+require('dotenv').config();
 const placekit = require('../../');
 
 const pkSearch = placekit({

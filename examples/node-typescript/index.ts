@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-dotenv.config({});
+dotenv.config();
 
 import PlaceKit from '../../';
 import type { PKInstance, PKOptions, PKResponse } from '../../';
