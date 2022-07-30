@@ -5,9 +5,9 @@ declare function PlaceKit({ appId, apiKey, options }?: {
   appId: string;
   apiKey: string;
   options: Partial<PKOptions>;
-}): PKInstance;
+}): PKClient;
 
-export interface PKInstance {
+export interface PKClient {
   (query: string, opts?: Partial<PKOptions>): Promise<PKResponse>;
   readonly options: PKOptions;
   configure(opts?: Partial<PKOptions>): void;

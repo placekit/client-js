@@ -2,13 +2,13 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import PlaceKit from '../../';
-import type { PKInstance, PKOptions, PKResponse } from '../../';
+import type { PKClient, PKOptions, PKResponse } from '../../';
 
 const options: Partial<PKOptions> = {
   hitsPerPage: 5,
 };
 
-const pkSearch: PKInstance = PlaceKit({
+const pkSearch: PKClient = PlaceKit({
   appId: `${process.env.PLACEKIT_APP_ID}`,
   apiKey: `${process.env.PLACEKIT_API_KEY}`,
   options,

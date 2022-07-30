@@ -52,7 +52,7 @@ describe('Initialize', () => {
     }).toThrow(/apiKey/i);
   });
 
-  test('returns instance when parameters are valid', () => {
+  test('returns client when parameters are valid', () => {
     const warnSpy = jest.spyOn(console, 'warn');
     const pkSearch = placekit({
       appId: 'your-app-id',

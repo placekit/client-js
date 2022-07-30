@@ -30,7 +30,7 @@
  * @arg {string} params.appId PlaceKit application ID
  * @arg {string} params.apiKey PlaceKit API key
  * @arg {Options} params.options PlaceKit global parameters
- * @return {instance}
+ * @return {client}
  */
 module.exports = ({
   appId,
@@ -105,12 +105,12 @@ module.exports = ({
   };
 
   /**
-   * PlaceKit instance is a function to search for places
+   * PlaceKit client is a function to search for places
    * @param {string} query Query
    * @param {Options} opts Override global parameters
    * @return {Promise<Response>}
    */
-  const instance = (query, opts = {}) => {
+  const client = (query, opts = {}) => {
     if (!['string', 'undefined'].includes(typeof query)) {
       throw Error('PlaceKit: `query` parameter is invalid, expected a string.');
     }
@@ -163,7 +163,7 @@ module.exports = ({
         // change host and retry if timeout or 50x
         currentHost++;
         if (currentHost < hosts.length-1) {
-          return instance(query, options);
+          return client(query, options);
         }
       }
       throw err;
@@ -171,21 +171,21 @@ module.exports = ({
   };
 
   /**
-   * Make `instance.options` read-only
+   * Make `client.options` read-only
    * @member {Options}
-   * @memberof instance
+   * @memberof client
    * @readonly
    */
-  Object.defineProperty(instance, 'options', {
+  Object.defineProperty(client, 'options', {
     get: () => globalParams,
   });
 
   /**
    * Set global parameters
-   * @memberof instance
+   * @memberof client
    * @arg {Options} opts PlaceKit global parameters
    */
-  instance.configure = (opts = {}) => {
+  client.configure = (opts = {}) => {
     if (!['object', 'undefined'].includes(typeof opts) || Array.isArray(opts) || opts === null) {
       throw Error('PlaceKit.configure: `opts` parameter is invalid, expected an object.');
     }
@@ -195,22 +195,22 @@ module.exports = ({
 
   let hasGeolocation = false;
   /**
-   * Make `instance.hasGeolocation` read-only
+   * Make `client.hasGeolocation` read-only
    * @member {boolean}
-   * @memberof instance
+   * @memberof client
    * @readonly
    */
-  Object.defineProperty(instance, 'hasGeolocation', {
+  Object.defineProperty(client, 'hasGeolocation', {
     get: () => hasGeolocation,
   });
 
   /**
    * Request the device's location
-   * @memberof instance
+   * @memberof client
    * @arg {number} timeout Geolocation request timeout
    * @return {Promise<Position>}
    */
-  instance.requestGeolocation = (timeout = 0) => {
+  client.requestGeolocation = (timeout = 0) => {
     if (!['number', 'undefined'].includes(typeof opts) || !Number.isInteger(timeout) || timeout < 0) {
       throw Error('PlaceKit.requestGeolocation: `timeout` parameter is invalid, expected a positive integer.');
     }
@@ -238,7 +238,7 @@ module.exports = ({
     });
   };
 
-  // Save global parameters and return instance
-  instance.configure(options);
-  return instance;
+  // Save global parameters and return client
+  client.configure(options);
+  return client;
 };
