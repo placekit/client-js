@@ -69,7 +69,7 @@ First, add this line before the closing `</body>` tag in your HTML to import Pla
 ```
 
 Then it works the same as the node example above.
-After importing the library, `PlaceKit` beomces available as a global:
+After importing the library, `placekit` becomes available as a global:
 
 ```html
 <script>
