@@ -3,6 +3,8 @@ import { Combobox, Transition } from '@headlessui/react';
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
 import placekit from '../../../';
 
+// Make sure to call `placekit` outside of a component’s render to avoid
+// recreating the `PlaceKit.Client` object on every render.
 const pkSearch = placekit({
   appId: process.env.PLACEKIT_APP_ID,
   apiKey: process.env.PLACEKIT_API_KEY,
