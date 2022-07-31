@@ -1,3 +1,5 @@
+import path from 'path';
+
 import commonjs from '@rollup/plugin-commonjs';
 import cleanup from 'rollup-plugin-cleanup';
 import copy from 'rollup-plugin-copy';
@@ -15,18 +17,18 @@ export default {
   input: 'src/index.js',
   output: [
     {
-      file: 'dist/placekit.esm.js',
+      file: packageJSON.module,
       format: 'es',
       banner,
     },
     {
-      file: 'dist/placekit.cjs.js',
+      file: packageJSON.main,
       format: 'cjs',
       exports: 'auto',
       banner,
     },
     {
-      file: 'dist/placekit.umd.js',
+      file: packageJSON.browser,
       format: 'umd',
       name: 'placekit',
       plugins: [
@@ -47,8 +49,9 @@ export default {
       targets: [
         {
           src: 'src/index.d.ts',
-          dest: 'dist/',
-          rename: 'placekit.d.ts',
+          dest: path.dirname(packageJSON.types),
+          rename: path.basename(packageJSON.types),
+          transform: (content) => [banner, content].join("\n"),
         },
       ]
     })
