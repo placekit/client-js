@@ -102,11 +102,9 @@ For the full autocomplete experience, check out our [examples](./examples).
 
 ## 🧰 Reference
 
-**Note:** `placekit()` initialization function returns a client, named `pkSearch` in all examples.
-
 ### placekit()
 
-PlaceKit initialization function returns a PlaceKit client.
+PlaceKit initialization function returns a PlaceKit client, named `pkSearch` in all examples.
 
 ```js
 const pkSearch = placekit({
@@ -143,7 +141,7 @@ pkSearch('Paris', { hitsPerPage: 5 }).then((res) => {
 
 ### client.options (read-only)
 
-Reads the global parameters set by the initialization function of by `client.configure()` (read-only).
+Reads the global parameters set by the initialization function of by `client.configure()` (read-only), see [options](#options).
 
 ```js
 console.log(pkSearch.options); // { "language": "en", "hitsPerPage": 10, ... }

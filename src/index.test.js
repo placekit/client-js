@@ -6,7 +6,6 @@ require('jest-fetch-mock').enableMocks();
 
 const mockGeolocation = {
   getCurrentPosition: jest.fn(),
-  watchPosition: jest.fn(),
 };
 global.navigator.geolocation = mockGeolocation;
 
@@ -15,7 +14,6 @@ const placekit = require('./index.js');
 beforeEach(() => {
   jest.restoreAllMocks();
   mockGeolocation.getCurrentPosition.mockReset();
-  mockGeolocation.watchPosition.mockReset();
   fetch.resetMocks();
 });
 
@@ -129,8 +127,8 @@ describe('Request Geolocation', () => {
 
   it('provides geolocation', async () => {
     const coords = {
-      latitude: 51.1,
-      longitude: 45.3
+      latitude: 48.86,
+      longitude: 2.29,
     };
     mockGeolocation.getCurrentPosition.mockImplementation(
       (success) => Promise.resolve(success({ coords }))
