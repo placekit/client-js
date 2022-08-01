@@ -98,12 +98,6 @@ module.exports = ({
     return opts;
   };
 
-  // TODO: remove this helper, should happen server-side
-  const getLangAttr = (value, lang) => {
-    const prop = value[lang] || value.default;
-    return prop ? prop[0] : '';
-  };
-
   /**
    * PlaceKit client is a function to search for places
    * @param {string} query Query
@@ -148,14 +142,18 @@ module.exports = ({
       return res.json();
     }).then((res) => {
       // TODO: move records remapping server-side
+      const getLangAttr = (value) => {
+        const prop = value[language] || value.default;
+        return prop ? prop[0] : '';
+      };
       return {
         ...res,
         hits: res.hits.map((item) => ({
           id: item.objectID,
-          name: getLangAttr(item.name, language),
+          name: getLangAttr(item.name),
           zipcode: item.zipcode ? item.zipcode[0] : '',
-          county: getLangAttr(item.county, language),
-          country: getLangAttr(item.country, language),
+          county: getLangAttr(item.county),
+          country: getLangAttr(item.country),
         })),
       };
     }).catch((err) => {
