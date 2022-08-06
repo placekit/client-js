@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import PlaceKit from '../../';
-import type { PKClient, PKOptions, PKResponse } from '../../';
+import type { PKClient, PKOptions, PKSearchResponse } from '../../';
 
 const options: Partial<PKOptions> = {
   hitsPerPage: 5,
@@ -17,6 +17,6 @@ const pkClient: PKClient = PlaceKit({
 const [query] = process.argv.slice(2);
 
 (async () => {
-  const res: PKResponse = await pkClient.search(query || '');
+  const res: PKSearchResponse = await pkClient.search(query || '');
   console.log(res);
 })();
