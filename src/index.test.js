@@ -52,18 +52,18 @@ describe('Initialize', () => {
 
   test('returns client when parameters are valid', () => {
     const warnSpy = jest.spyOn(console, 'warn');
-    const pkSearch = placekit({
+    const pkClient = placekit({
       appId: 'your-app-id',
       apiKey: 'your-api-key',
     });
-    expect(typeof pkSearch).toBe('function');
-    expect(typeof pkSearch.configure).toBe('function');
-    expect(typeof pkSearch.requestGeolocation).toBe('function');
-    expect(typeof pkSearch.requestGeolocation).toBe('function');
-    pkSearch.options = 'invalid'; // should be read-only
-    expect(typeof pkSearch.options).toBe('object');
-    pkSearch.hasGeolocation = true; // should be read-only
-    expect(pkSearch.hasGeolocation).toBeFalsy();
+    expect(typeof pkClient.search).toBe('function');
+    expect(typeof pkClient.configure).toBe('function');
+    expect(typeof pkClient.requestGeolocation).toBe('function');
+    expect(typeof pkClient.requestGeolocation).toBe('function');
+    pkClient.options = 'invalid'; // should be read-only
+    expect(typeof pkClient.options).toBe('object');
+    pkClient.hasGeolocation = true; // should be read-only
+    expect(pkClient.hasGeolocation).toBeFalsy();
     expect(warnSpy).not.toHaveBeenCalled();
   });
 });
@@ -71,25 +71,25 @@ describe('Initialize', () => {
 describe('Configure', () => {
   it('throws when args are invalid', () => {
     expect(() => {
-      const pkSearch = placekit({
+      const pkClient = placekit({
         appId: 'your-app-id',
         apiKey: 'your-api-key',
       });
-      pkSearch.configure('invalid');
+      pkClient.configure('invalid');
     }).toThrow(/opts/i);
   });
 
   it('updates and sanitizes global options', () => {
-    const pkSearch = placekit({
+    const pkClient = placekit({
       appId: 'your-app-id',
       apiKey: 'your-api-key',
     });
-    pkSearch.configure({
+    pkClient.configure({
       retryTimeout: -100,
       language: 'FR',
       hitsPerPage: -100,
     });
-    expect(pkSearch.options).toMatchObject({
+    expect(pkClient.options).toMatchObject({
       retryTimeout: 0,
       language: 'fr',
       hitsPerPage: 0,
@@ -100,11 +100,11 @@ describe('Configure', () => {
 describe('Request Geolocation', () => {
   it('throws when args are invalid', () => {
     expect(() => {
-      const pkSearch = placekit({
+      const pkClient = placekit({
         appId: 'your-app-id',
         apiKey: 'your-api-key',
       });
-      pkSearch.requestGeolocation('invalid');
+      pkClient.requestGeolocation('invalid');
     }).toThrow(/timeout/i);
   });
 
@@ -115,14 +115,14 @@ describe('Request Geolocation', () => {
         message: '',
       }))
     );
-    const pkSearch = placekit({
+    const pkClient = placekit({
       appId: 'your-app-id',
       apiKey: 'your-api-key',
     });
-    const err = await pkSearch.requestGeolocation().catch((err) => err);
+    const err = await pkClient.requestGeolocation().catch((err) => err);
     expect(mockGeolocation.getCurrentPosition).toHaveBeenCalled();
     expect(err).toBeInstanceOf(Error);
-    expect(pkSearch.hasGeolocation).toBeFalsy();
+    expect(pkClient.hasGeolocation).toBeFalsy();
   });
 
   it('provides geolocation', async () => {
@@ -133,33 +133,33 @@ describe('Request Geolocation', () => {
     mockGeolocation.getCurrentPosition.mockImplementation(
       (success) => Promise.resolve(success({ coords }))
     );
-    const pkSearch = placekit({
+    const pkClient = placekit({
       appId: 'your-app-id',
       apiKey: 'your-api-key',
     });
-    const res = await pkSearch.requestGeolocation().catch((err) => err);
+    const res = await pkClient.requestGeolocation().catch((err) => err);
     expect(mockGeolocation.getCurrentPosition).toHaveBeenCalled();
     expect(res).toMatchObject({ coords });
-    expect(pkSearch.hasGeolocation).toBeTruthy();
+    expect(pkClient.hasGeolocation).toBeTruthy();
   });
 });
 
 describe('Search', () => {
   it('throws when args are invalid', () => {
     expect(() => {
-      const pkSearch = placekit({
+      const pkClient = placekit({
         appId: 'your-app-id',
         apiKey: 'your-api-key',
       });
-      pkSearch(null);
+      pkClient.search(null);
     }).toThrow(/query/i);
 
     expect(() => {
-      const pkSearch = placekit({
+      const pkClient = placekit({
         appId: 'your-app-id',
         apiKey: 'your-api-key',
       });
-      pkSearch('', null);
+      pkClient.search('', null);
     }).toThrow(/opts/i);
   });
 
@@ -169,11 +169,11 @@ describe('Search', () => {
       status: 200,
       json: () => ({ hits: [] })
     });
-    const pkSearch = placekit({
+    const pkClient = placekit({
       appId: 'your-app-id',
       apiKey: 'your-api-key',
     });
-    const res = await pkSearch('');
+    const res = await pkClient.search('');
     expect(fetch).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
@@ -196,11 +196,11 @@ describe('Search', () => {
       json: () => ({ hits: [] })
     });
     fetch.mockRejectedValueOnce({ name: 'AbortError' });
-    const pkSearch = placekit({
+    const pkClient = placekit({
       appId: 'your-app-id',
       apiKey: 'your-api-key',
     });
-    await pkSearch('');
+    await pkClient.search('');
     expect(fetch).toHaveBeenCalledTimes(2);
     expect(fetch).toHaveBeenNthCalledWith(
       1,
@@ -224,11 +224,11 @@ describe('Search', () => {
       status: 200,
       json: () => ({ hits: [] })
     });
-    const pkSearch = placekit({
+    const pkClient = placekit({
       appId: 'your-app-id',
       apiKey: 'your-api-key',
     });
-    await pkSearch('');
+    await pkClient.search('');
     expect(fetch).toHaveBeenCalledTimes(2);
     expect(fetch).toHaveBeenNthCalledWith(
       1,
@@ -248,11 +248,11 @@ describe('Search', () => {
       status: 403,
       statusText: '',
     });
-    const pkSearch = placekit({
+    const pkClient = placekit({
       appId: 'your-app-id',
       apiKey: 'your-api-key',
     });
-    const err = await pkSearch('').catch((err) => err);
+    const err = await pkClient.search('').catch((err) => err);
     expect(fetch).toHaveBeenCalled();
     expect(err).toMatchObject({
       status: 403,

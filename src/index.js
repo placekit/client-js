@@ -18,7 +18,7 @@
  */
 
 /**
- * @typedef {Object} Response PlaceKit response
+ * @typedef {Object} SearchResponse PlaceKit response
  * @prop {Object[]} hits Results
  */
 
@@ -99,38 +99,29 @@ module.exports = ({
   };
 
   /**
-   * PlaceKit client is a function to search for places
-   * @param {string} query Query
-   * @param {Options} opts Override global parameters
-   * @return {Promise<Response>}
+   * Request wrapper
+   * @param {string} method
+   * @param {string} resource
+   * @param {Object} opts
+   * @return {Promise<SearchResponse>}
    */
-  const client = (query, opts = {}) => {
-    if (!['string', 'undefined'].includes(typeof query)) {
-      throw Error('PlaceKit: `query` parameter is invalid, expected a string.');
-    }
-    if (!['object', 'undefined'].includes(typeof opts) || Array.isArray(opts) || opts === null) {
-      throw Error('PlaceKit: `opts` parameter is invalid, expected an object.');
-    }
-
-    // TODO: keep action and language in globalParams to forward to server
-    const { language, retryTimeout, ...params } = {
-      ...globalParams,
-      ...checkOptions(opts),
-    };
+  const request = (method = 'POST', resource = '', opts = {}) => {
+    const { language, retryTimeout, ...params } = opts;
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), retryTimeout || 2000);
-    return fetch(hosts[currentHost], {
-      method: 'POST',
+    const url = [
+      hosts[currentHost],
+      resource.trim().replace(/^\/+/, '')
+    ].filter((s) => s).join('/');
+    return fetch(url, {
+      method,
       signal: controller.signal,
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'X-Algolia-Application-Id': appId,
         'X-Algolia-API-Key': apiKey,
       },
-      body: JSON.stringify({
-        ...params,
-        query,
-      }),
+      body: JSON.stringify(params),
     }).then((res) => {
       clearTimeout(id);
       if (!res.ok) {
@@ -161,11 +152,38 @@ module.exports = ({
         // change host and retry if timeout or 50x
         currentHost++;
         if (currentHost < hosts.length-1) {
-          return client(query, options);
+          return request(method, resource, opts);
         }
       }
       throw err;
     });
+  };
+
+  /**
+   * PlaceKit client
+   */
+  const client = {};
+
+  /**
+   * PlaceKit search
+   * @memberof client
+   * @param {string} query Query
+   * @param {Options} opts Override global parameters
+   * @return {Promise<SearchResponse>}
+   */
+  client.search = (query, opts = {}) => {
+    if (!['string', 'undefined'].includes(typeof query)) {
+      throw Error('PlaceKit: `query` parameter is invalid, expected a string.');
+    }
+    if (!['object', 'undefined'].includes(typeof opts) || Array.isArray(opts) || opts === null) {
+      throw Error('PlaceKit: `opts` parameter is invalid, expected an object.');
+    }
+    const params = {
+      ...globalParams,
+      ...checkOptions(opts),
+      query,
+    };
+    return request('POST', '', params);
   };
 
   /**

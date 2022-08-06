@@ -8,7 +8,7 @@ const options: Partial<PKOptions> = {
   hitsPerPage: 5,
 };
 
-const pkSearch: PKClient = PlaceKit({
+const pkClient: PKClient = PlaceKit({
   appId: `${process.env.PLACEKIT_APP_ID}`,
   apiKey: `${process.env.PLACEKIT_API_KEY}`,
   options,
@@ -17,6 +17,6 @@ const pkSearch: PKClient = PlaceKit({
 const [query] = process.argv.slice(2);
 
 (async () => {
-  const res: PKResponse = await pkSearch(query || '');
+  const res: PKResponse = await pkClient.search(query || '');
   console.log(res);
 })();

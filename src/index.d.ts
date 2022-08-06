@@ -8,7 +8,7 @@ declare function PlaceKit({ appId, apiKey, options }?: {
 }): PKClient;
 
 export interface PKClient {
-  (query: string, opts?: PKOptions): Promise<PKResponse>;
+  search(query: string, opts?: PKOptions): Promise<PKSearchResponse>;
   readonly options: PKOptions;
   configure(opts?: PKOptions): void;
   readonly hasGeolocation: boolean;
@@ -31,6 +31,6 @@ export type PKOptions = Partial<{
   computeQueryParams: any;
 }>;
 
-export type PKResponse = {
+export type PKSearchResponse = {
   hits: any[];
 };

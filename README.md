@@ -46,7 +46,7 @@ const placekit = require('@placekit/placekit-js');
 // ES6 Modules syntax:
 import placekit from '@placekit/placekit-js';
 
-const pkSearch = placekit({
+const pkClient = placekit({
   appId: '<your-app-id>',
   apiKey: '<your-api-key>',
   options: {
@@ -54,7 +54,7 @@ const pkSearch = placekit({
   },
 });
 
-pkSearch('Paris').then((res) => {
+pkClient.search('Paris').then((res) => {
   console.log(res.hits);
 });
 ```
@@ -74,7 +74,7 @@ After importing the library, `placekit` becomes available as a global:
 
 ```html
 <script>
-  const pkSearch = placekit({
+  const pkClient = placekit({
     appId: '<your-app-id>',
     apiKey: '<your-api-key>',
     options: {
@@ -82,7 +82,7 @@ After importing the library, `placekit` becomes available as a global:
     },
   });
 
-  pkSearch('Paris').then((res) => {
+  pkClient.search('Paris').then((res) => {
     console.log(res.hits);
   });
 </script>
@@ -93,7 +93,7 @@ Or if you are using native ES Modules:
 ```html
 <script type="module">
   import placekit from 'https://cdn.jsdelivr.net/npm/placekit-js@1.0.0/dist/placekit.esm.js';
-  const pkSearch = placekit(/* ... */);
+  const pkClient = placekit(/* ... */);
   // ...
 </script>
 ```
@@ -104,10 +104,10 @@ For the full autocomplete experience, check out our [examples](./examples).
 
 ### placekit()
 
-PlaceKit initialization function returns a PlaceKit client, named `pkSearch` in all examples.
+PlaceKit initialization function returns a PlaceKit client, named `pkClient` in all examples.
 
 ```js
-const pkSearch = placekit({
+const pkClient = placekit({
   appId: '<your-app-id>',
   apiKey: '<your-api-key>',
   options: {
@@ -123,13 +123,13 @@ const pkSearch = placekit({
 | `apiKey` | `string` | API key |
 | `options` | `key-value mapping` (optional) | Global parameters (see [options](#options)) |
 
-### client()
+### client.search()
 
-The client itself is a function that performs a search and returns a Promise, which response is a list of results alongside some request metadata.
+Performs a search and returns a Promise, which response is a list of results alongside some request metadata.
 The options passed as second parameter override the global parameters only for the current query.
 
 ```js
-pkSearch('Paris', { hitsPerPage: 5 }).then((res) => {
+pkClient.search('Paris', { hitsPerPage: 5 }).then((res) => {
   console.log(res.hits);
 });
 ```
@@ -144,7 +144,7 @@ pkSearch('Paris', { hitsPerPage: 5 }).then((res) => {
 Reads the global parameters set by the initialization function of by `client.configure()` (read-only), see [options](#options).
 
 ```js
-console.log(pkSearch.options); // { "language": "en", "hitsPerPage": 10, ... }
+console.log(pkClient.options); // { "language": "en", "hitsPerPage": 10, ... }
 ```
 
 ### client.configure()
@@ -152,7 +152,7 @@ console.log(pkSearch.options); // { "language": "en", "hitsPerPage": 10, ... }
 Updates global parameters. Returns `void`.
 
 ```js
-pkSearch.configure({
+pkClient.configure({
   language: 'fr',
   hitsPerPage: 5,
 });
@@ -167,7 +167,7 @@ pkSearch.configure({
 Reads if device geolocation is activated or not (read-only).
 
 ```js
-console.log(pkSearch.hasGeolocation); // true or false
+console.log(pkClient.hasGeolocation); // true or false
 ```
 
 ### client.requestGeolocation()
@@ -175,7 +175,7 @@ console.log(pkSearch.hasGeolocation); // true or false
 Requests device's geolocation (browser-only). Returns a Promise with a [`GeolocationPosition`](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition) object.
 
 ```js
-pkSearch.requestGeolocation(Infinity).then((pos) => console.log(pos.coords));
+pkClient.requestGeolocation(Infinity).then((pos) => console.log(pos.coords));
 ```
 
 | Parameter | Type | Description |

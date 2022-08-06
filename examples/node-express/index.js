@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const placekit = require('../../');
 
-const pkSearch = placekit({
+const pkClient = placekit({
   appId: process.env.PLACEKIT_APP_ID,
   apiKey: process.env.PLACEKIT_API_KEY,
 });
@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 
 // Search for addresses
 app.post('/address', async (req, res) => {
-  const results = await pkSearch(req.body.query, {
+  const results = await pkClient.search(req.body.query, {
     hitsPerPage: 5,
   });
   res.json(results.hits);
@@ -25,7 +25,7 @@ app.post('/address', async (req, res) => {
 
 // Search for city only
 app.post('/city', async (req, res) => {
-  const results = await pkSearch(req.body.query, {
+  const results = await pkClient.search(req.body.query, {
     type: 'city',
     hitsPerPage: 2,
   });
