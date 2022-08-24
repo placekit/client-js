@@ -6,7 +6,7 @@
  * @prop {string} language Results language (ISO 639-1)
  * @prop {string[]} countries Countries whitelist (ISO 639-1)
  * @prop {string} type Results type
- * @prop {number} hitsPerPage Results per page
+ * @prop {number} resultsPerPage Results per page
  * @prop {boolean} postcodeSearch Search only postCode
  * @prop {string} aroundLatLng Coordinates search starts around
  * @prop {boolean} aroundLatLngViaIP Geolocalize using IP address
@@ -19,7 +19,7 @@
 
 /**
  * @typedef {Object} SearchResponse PlaceKit response
- * @prop {Object[]} hits Results
+ * @prop {Object[]} results Results
  */
 
 /**
@@ -54,20 +54,16 @@ module.exports = ({
   // Cascade of hosts, both DSNs and servers, in order of retry priority.
   let currentHost = 0;
   const hosts = [
-    `https://${appId}.algolia.net/1/indexes/flowable-open-source/query`,
-    `https://${appId}-dsn.algolia.net/1/indexes/flowable-open-source/query`,
-    `https://${appId}-1.algolianet.com/1/indexes/flowable-open-source/query`,
-    `https://${appId}-2.algolianet.com/1/indexes/flowable-open-source/query`,
-    `https://${appId}-3.algolianet.com/1/indexes/flowable-open-source/query`,
+    `https://placekitgateway-7j80cxkd.ew.gateway.dev`,
   ];
 
   // Set global params default values
   const globalParams = {
-    retryTimeout: 2000,
+    retryTimeout: 2000, // NOTE: retry-stratgy not yet functional
     language: typeof window !== 'undefined' && navigator.language ?
       navigator.language.slice(0, 2) :
       'default',
-    hitsPerPage: 10,
+    resultsPerPage: 10,
     // countries: [],
     // type: '',
     // postcodeSearch: '',
@@ -92,8 +88,8 @@ module.exports = ({
     if (typeof opts.language === 'string' && opts.language !== 'default') {
       opts.language = opts.language.slice(0, 2).toLocaleLowerCase();
     }
-    if (opts.hitsPerPage && Number.isInteger(opts.hitsPerPage)) {
-      opts.hitsPerPage = Math.max(0, opts.hitsPerPage);
+    if (opts.resultsPerPage && Number.isInteger(opts.resultsPerPage)) {
+      opts.resultsPerPage = Math.max(0, opts.resultsPerPage);
     }
     return opts;
   };
@@ -106,7 +102,7 @@ module.exports = ({
    * @return {Promise<SearchResponse>}
    */
   const request = (method = 'POST', resource = '', opts = {}) => {
-    const { language, retryTimeout, ...params } = opts;
+    const { retryTimeout, ...params } = opts;
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), retryTimeout || 2000);
     const url = [
@@ -118,8 +114,8 @@ module.exports = ({
       signal: controller.signal,
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
-        'X-Algolia-Application-Id': appId,
-        'X-Algolia-API-Key': apiKey,
+        'x-app-id': appId,
+        'x-api-key': apiKey,
       },
       body: JSON.stringify(params),
     }).then((res) => {
@@ -131,22 +127,6 @@ module.exports = ({
         });
       }
       return res.json();
-    }).then((res) => {
-      // TODO: move records remapping server-side
-      const getLangAttr = (value) => {
-        const prop = value[language] || value.default;
-        return prop ? prop[0] : '';
-      };
-      return {
-        ...res,
-        hits: res.hits.map((item) => ({
-          id: item.objectID,
-          name: getLangAttr(item.name),
-          zipcode: item.zipcode ? item.zipcode[0] : '',
-          county: getLangAttr(item.county),
-          country: getLangAttr(item.country),
-        })),
-      };
     }).catch((err) => {
       if (err.name === 'AbortError' || (err.status && err.status >= 500)) {
         // change host and retry if timeout or 50x
@@ -155,6 +135,7 @@ module.exports = ({
           return request(method, resource, opts);
         }
       }
+      currentHost = 0;
       throw err;
     });
   };
@@ -183,7 +164,7 @@ module.exports = ({
       ...checkOptions(opts),
       query,
     };
-    return request('POST', '', params);
+    return request('POST', 'search', params);
   };
 
   /**

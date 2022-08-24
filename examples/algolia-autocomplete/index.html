@@ -15,11 +15,11 @@
   <script src="../../dist/placekit.umd.js"></script>
   <script>
     const { autocomplete } = window['@algolia/autocomplete-js'];
-    const pkClient = placekit({
+    const pk = placekit({
       appId: '<your-app-id>',
       apiKey: '<your-api-key>',
       options: {
-        hitsPerPage: 5,
+        resultsPerPage: 5,
       },
     });
 
@@ -31,9 +31,9 @@
           {
             sourceId: 'places',
             getItems({ query }) {
-              return pkClient.search(query).then((res) => {
+              return pk.search(query).then((res) => {
                 // getItems expects an array of results, not a response object
-                return res.hits;
+                return res.results;
               });
             },
             templates: {

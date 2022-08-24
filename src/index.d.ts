@@ -20,7 +20,7 @@ export type PKOptions = Partial<{
   language: string;
   countries: string[];
   type: string;
-  hitsPerPage: number;
+  resultsPerPage: number;
   postcodeSearch: boolean;
   aroundLatLng: string;
   aroundLatLngViaIP: boolean;
@@ -32,5 +32,5 @@ export type PKOptions = Partial<{
 }>;
 
 export type PKSearchResponse = {
-  hits: any[];
+  results: any[];
 };

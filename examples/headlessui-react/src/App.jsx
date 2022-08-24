@@ -5,11 +5,11 @@ import placekit from '../../../';
 
 // Make sure to call `placekit` outside of a component’s render to avoid
 // recreating the `PlaceKit.Client` object on every render.
-const pkClient = placekit({
+const pk = placekit({
   appId: process.env.PLACEKIT_APP_ID,
   apiKey: process.env.PLACEKIT_API_KEY,
   options: {
-    hitsPerPage: 5,
+    resultsPerPage: 5,
   },
 });
 
@@ -19,8 +19,8 @@ const App = () => {
 
   useEffect(
     () => {
-      pkClient.search(value).then((res) => {
-        setSuggestions(res.hits);
+      pk.search(value).then((res) => {
+        setSuggestions(res.results);
       });
     },
     [value]

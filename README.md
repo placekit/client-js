@@ -22,7 +22,6 @@ PlaceKit JavaScript Client abstracts interactions with our API, making your life
 ## ✨ Features
 
 - **Featherweight**, **zero-dependency** HTTP client
-- **Retry strategy** to increase service availability
 - Works both on the **browser** and **node.js**
 - Integrates with **your preferred stack** and autocomplete components (see [examples](./examples))
 - **TypeScript** compatible
@@ -46,7 +45,7 @@ const placekit = require('@placekit/placekit-js');
 // ES6 Modules syntax:
 import placekit from '@placekit/placekit-js';
 
-const pkClient = placekit({
+const pk = placekit({
   appId: '<your-app-id>',
   apiKey: '<your-api-key>',
   options: {
@@ -54,8 +53,8 @@ const pkClient = placekit({
   },
 });
 
-pkClient.search('Paris').then((res) => {
-  console.log(res.hits);
+pk.search('Paris').then((res) => {
+  console.log(res.results);
 });
 ```
 
@@ -74,7 +73,7 @@ After importing the library, `placekit` becomes available as a global:
 
 ```html
 <script>
-  const pkClient = placekit({
+  const pk = placekit({
     appId: '<your-app-id>',
     apiKey: '<your-api-key>',
     options: {
@@ -82,8 +81,8 @@ After importing the library, `placekit` becomes available as a global:
     },
   });
 
-  pkClient.search('Paris').then((res) => {
-    console.log(res.hits);
+  pk.search('Paris').then((res) => {
+    console.log(res.results);
   });
 </script>
 ```
@@ -93,7 +92,7 @@ Or if you are using native ES Modules:
 ```html
 <script type="module">
   import placekit from 'https://cdn.jsdelivr.net/npm/placekit-js@1.0.0/dist/placekit.esm.js';
-  const pkClient = placekit(/* ... */);
+  const pk = placekit(/* ... */);
   // ...
 </script>
 ```
@@ -111,15 +110,15 @@ For the full autocomplete experience, check out our [examples](./examples).
 
 ### `placekit()`
 
-PlaceKit initialization function returns a PlaceKit client, named `pkClient` in all examples.
+PlaceKit initialization function returns a PlaceKit client, named `pk` in all examples.
 
 ```js
-const pkClient = placekit({
+const pk = placekit({
   appId: '<your-app-id>',
   apiKey: '<your-api-key>',
   options: {
     language: 'en',
-    hitsPerPage: 10,
+    resultsPerPage: 10,
   },
 });
 ```
@@ -136,8 +135,8 @@ Performs a search and returns a Promise, which response is a list of results alo
 The options passed as second parameter override the global parameters only for the current query.
 
 ```js
-pkClient.search('Paris', { hitsPerPage: 5 }).then((res) => {
-  console.log(res.hits);
+pk.search('Paris', { resultsPerPage: 5 }).then((res) => {
+  console.log(res.results);
 });
 ```
 
@@ -152,23 +151,22 @@ Read-only to access global options persistent across all API calls that are set 
 Options passed at query time in `client()` override global parameters only for that specific query.
 
 ```js
-console.log(pkClient.options); // { "language": "en", "hitsPerPage": 10, ... }
+console.log(pk.options); // { "language": "en", "resultsPerPage": 10, ... }
 ```
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `retryTimeout` | `integer` | `2000` | Time in ms to wait before retrying the request |
 | `language` | `string` | `"default"` | Language of the results, two-letter language code ([ISO-639-1](https://www.google.com/search?client=safari&rls=en&q=iso-639-1&ie=UTF-8&oe=UTF-8)) or `default` |
-| `hitsPerPage` | `integer` | `10` | Number of restults per page |
+| `resultsPerPage` | `integer` | `10` | Number of restults per page |
 
 ### `client.configure()`
 
 Updates global parameters. Returns `void`.
 
 ```js
-pkClient.configure({
+pk.configure({
   language: 'fr',
-  hitsPerPage: 5,
+  resultsPerPage: 5,
 });
 ```
 
@@ -181,7 +179,7 @@ pkClient.configure({
 Reads if device geolocation is activated or not (read-only).
 
 ```js
-console.log(pkClient.hasGeolocation); // true or false
+console.log(pk.hasGeolocation); // true or false
 ```
 
 ### `client.requestGeolocation()`
@@ -189,7 +187,7 @@ console.log(pkClient.hasGeolocation); // true or false
 Requests device's geolocation (browser-only). Returns a Promise with a [`GeolocationPosition`](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition) object.
 
 ```js
-pkClient.requestGeolocation(Infinity).then((pos) => console.log(pos.coords));
+pk.requestGeolocation(Infinity).then((pos) => console.log(pos.coords));
 ```
 
 | Parameter | Type | Description |

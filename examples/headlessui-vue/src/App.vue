@@ -76,11 +76,11 @@
   import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid';
   import placekit from '../../../';
 
-  const pkClient = placekit({
+  const pk = placekit({
     appId: process.env.PLACEKIT_APP_ID,
     apiKey: process.env.PLACEKIT_API_KEY,
     options: {
-      hitsPerPage: 5,
+      resultsPerPage: 5,
     },
   });
 
@@ -89,8 +89,8 @@
 
   function search(query) {
     value.value = query;
-    pkClient.search(query).then((res) => {
-      suggestions.value = res.hits;
+    pk.search(query).then((res) => {
+      suggestions.value = res.results;
     });
   }
 </script>
