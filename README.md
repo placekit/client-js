@@ -194,6 +194,8 @@ pk.requestGeolocation(Infinity).then((pos) => console.log(pos.coords));
 | --- | --- | --- |
 | `timeout` | `integer` (optional) | `navigator.geolocation.getCurrentPosition` [timeout option](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition) |
 
+The location will be store in the `aroundLatLng` global options, you can still manually override it.
+
 ## ⚖️ License
 
 PlaceKit JavaScript Client is an open-sourced software licensed under the [MIT license](./LICENSE).
