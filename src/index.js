@@ -2,7 +2,7 @@
 
 /**
  * @typedef {Object} Options PlaceKit parameters
- * @prop {number} retryTimeout Retry timeout in ms
+ * @prop {number} timeout Timeout in ms
  * @prop {string} language Results language (ISO 639-1)
  * @prop {string[]} countries Countries whitelist (ISO 639-1)
  * @prop {string} type Results type
@@ -59,7 +59,7 @@ module.exports = ({
 
   // Set global params default values
   const globalParams = {
-    retryTimeout: 2000, // NOTE: retry-stratgy not yet functional
+    timeout: false,
     language: typeof window !== 'undefined' && navigator.language ?
       navigator.language.slice(0, 2) :
       'default',
@@ -82,8 +82,8 @@ module.exports = ({
    * @return {Options}
    */
   const checkOptions = (opts = {}) => {
-    if (opts.retryTimeout && Number.isInteger(opts.retryTimeout)) {
-      opts.retryTimeout = Math.max(0, opts.retryTimeout);
+    if (opts.timeout !== false && Number.isInteger(opts.timeout)) {
+      opts.timeout = Math.max(0, opts.timeout);
     }
     if (typeof opts.language === 'string' && opts.language !== 'default') {
       opts.language = opts.language.slice(0, 2).toLocaleLowerCase();
@@ -102,9 +102,9 @@ module.exports = ({
    * @return {Promise<SearchResponse>}
    */
   const request = (method = 'POST', resource = '', opts = {}) => {
-    const { retryTimeout, ...params } = opts;
+    const { timeout, ...params } = opts;
     const controller = new AbortController();
-    const id = setTimeout(() => controller.abort(), retryTimeout || 2000);
+    const id = timeout !== false ? setTimeout(() => controller.abort(), timeout) : undefined;
     const url = [
       hosts[currentHost],
       resource.trim().replace(/^\/+/, '')
@@ -135,7 +135,6 @@ module.exports = ({
           return request(method, resource, opts);
         }
       }
-      currentHost = 0;
       throw err;
     });
   };
