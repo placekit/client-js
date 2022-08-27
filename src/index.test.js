@@ -85,12 +85,12 @@ describe('Configure', () => {
       apiKey: 'your-api-key',
     });
     pk.configure({
-      retryTimeout: -100,
+      timeout: -100,
       language: 'FR',
       resultsPerPage: -100,
     });
     expect(pk.options).toMatchObject({
-      retryTimeout: 0,
+      timeout: 0,
       language: 'fr',
       resultsPerPage: 0,
     });
