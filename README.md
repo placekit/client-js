@@ -54,7 +54,7 @@ pk.search('Paris').then((res) => {
 });
 ```
 
-For advanced usages, visit our [online documentation](https://placekit.io/docs).
+For advanced usages, check out our [examples](./examples).
 
 ### CDN
 
