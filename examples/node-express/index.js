@@ -2,10 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const placekit = require('../../');
 
-const pk = placekit({
-  appId: process.env.PLACEKIT_APP_ID,
-  apiKey: process.env.PLACEKIT_API_KEY,
-});
+const pk = placekit(process.env.PLACEKIT_API_KEY);
 
 const app = express();
 app.set('port', process.env.PORT || 3000);

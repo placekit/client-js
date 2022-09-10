@@ -76,12 +76,8 @@
   import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid';
   import placekit from '../../../';
 
-  const pk = placekit({
-    appId: process.env.PLACEKIT_APP_ID,
-    apiKey: process.env.PLACEKIT_API_KEY,
-    options: {
-      resultsPerPage: 5,
-    },
+  const pk = placekit(process.env.PLACEKIT_API_KEY, {
+    resultsPerPage: 5,
   });
 
   const suggestions = ref([]);

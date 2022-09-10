@@ -45,12 +45,8 @@ const placekit = require('@placekit/placekit-js');
 // ES6 Modules syntax:
 import placekit from '@placekit/placekit-js';
 
-const pk = placekit({
-  appId: '<your-app-id>',
-  apiKey: '<your-api-key>',
-  options: {
-    //...
-  },
+const pk = placekit('<your-api-key>', {
+  //...
 });
 
 pk.search('Paris').then((res) => {
@@ -73,12 +69,8 @@ After importing the library, `placekit` becomes available as a global:
 
 ```html
 <script>
-  const pk = placekit({
-    appId: '<your-app-id>',
-    apiKey: '<your-api-key>',
-    options: {
-      //...
-    },
+  const pk = placekit('<your-api-key>', {
+    //...
   });
 
   pk.search('Paris').then((res) => {
@@ -113,19 +105,14 @@ For the full autocomplete experience, check out our [examples](./examples).
 PlaceKit initialization function returns a PlaceKit client, named `pk` in all examples.
 
 ```js
-const pk = placekit({
-  appId: '<your-app-id>',
-  apiKey: '<your-api-key>',
-  options: {
-    language: 'en',
-    resultsPerPage: 10,
-  },
+const pk = placekit('<your-api-key>', {
+  language: 'en',
+  resultsPerPage: 10,
 });
 ```
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `appId` | `string` | Application ID |
 | `apiKey` | `string` | API key |
 | `options` | `key-value mapping` (optional) | Global parameters (see [options](#clientoptions)) |
 

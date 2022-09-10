@@ -11,7 +11,7 @@ git clone git@github.com:placekit/placekit-js.git
 cd placekit-js/examples/algolia-autocomplete
 ```
 
-Open `index.html` in your editor and replace `<your-app-id>` and `<your-api-key>` with your PlaceKit application credentials.
+Open `index.html` in your editor and replace `<your-api-key>` with your PlaceKit API key.
 
 Then just open `index.html` in your browser or run `npx serve .`.
 

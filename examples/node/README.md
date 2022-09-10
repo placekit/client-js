@@ -17,7 +17,7 @@ npm install
 cp .env.sample .env
 ```
 
-Open the `.env` file and replace `<your-app-id>` and `<your-api-key>` with your PlaceKit application credentials.
+Open the `.env` file and replace `<your-api-key>` with your PlaceKit API key.
 
 Then run, replacing `<yourQuery>` with whatever city or address you want:
 

@@ -1,11 +1,7 @@
 export default PlaceKit;
 export as namespace PlaceKit;
 
-declare function PlaceKit({ appId, apiKey, options }?: {
-  appId: string;
-  apiKey: string;
-  options: PKOptions;
-}): PKClient;
+declare function PlaceKit(apiKey?: string, opts?: PKOptions): PKClient;
 
 export interface PKClient {
   search(query: string, opts?: PKOptions): Promise<PKSearchResponse>;

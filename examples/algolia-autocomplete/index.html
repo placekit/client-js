@@ -15,12 +15,8 @@
   <script src="../../dist/placekit.umd.js"></script>
   <script>
     const { autocomplete } = window['@algolia/autocomplete-js'];
-    const pk = placekit({
-      appId: '<your-app-id>',
-      apiKey: '<your-api-key>',
-      options: {
-        resultsPerPage: 5,
-      },
+    const pk = placekit('<your-api-key>', {
+      resultsPerPage: 5,
     });
 
     autocomplete({

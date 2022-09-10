@@ -26,24 +26,11 @@
  * PlaceKit initialization closure
  * @desc Fetch wrapper over the PlaceKit API to implement a retry strategy and parameters checking.
  * @module PlaceKit
- * @arg {Object} params
- * @arg {string} params.appId PlaceKit application ID
- * @arg {string} params.apiKey PlaceKit API key
- * @arg {Options} params.options PlaceKit global parameters
+ * @arg {string} apiKey PlaceKit API key
+ * @arg {Options} options PlaceKit global parameters
  * @return {client}
  */
-module.exports = ({
-  appId,
-  apiKey,
-  options = {}
-} = {}) => {
-  // Check appId parameter
-  if (!['string', 'undefined'].includes(typeof appId)) {
-    throw Error('PlaceKit initialization: `appId` parameter is invalid, expected a string.');
-  } else if (!appId) {
-    console.warn('PlaceKit initialization: missing or empty `appId` parameter.');
-  }
-
+module.exports = (apiKey, options = {}) => {
   // Check apiKey parameter
   if (!['string', 'undefined'].includes(typeof apiKey)) {
     throw Error('PlaceKit initialization: `apiKey` parameter is invalid, expected a string.');
@@ -114,8 +101,7 @@ module.exports = ({
       signal: controller.signal,
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
-        'x-app-id': appId,
-        'x-api-key': apiKey,
+        'x-placekit-api-key': apiKey,
       },
       body: JSON.stringify(params),
     }).then((res) => {
