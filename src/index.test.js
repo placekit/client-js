@@ -155,7 +155,7 @@ describe('Search', () => {
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenNthCalledWith(
       1,
-      'https://placekitgateway-7j80cxkd.ew.gateway.dev/search',
+      'http://localhost:8080/search',
       expect.anything()
     );
   });
@@ -168,14 +168,14 @@ describe('Search', () => {
     fetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: () => ({ results: [] })
+      json: () => ({ results: [] }),
     });
     const pk = placekit('your-api-key');
     await pk.search('').catch(() => null);
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenNthCalledWith(
       1,
-      'https://placekitgateway-7j80cxkd.ew.gateway.dev/search',
+      'http://localhost:8080/search',
       expect.anything()
     );
   });
@@ -185,6 +185,7 @@ describe('Search', () => {
       ok: false,
       status: 403,
       statusText: '',
+      json: () => ({ message: 'An error occured.', errors: [] }),
     });
     const pk = placekit('your-api-key');
     const err = await pk.search('').catch((err) => err);
@@ -192,6 +193,8 @@ describe('Search', () => {
     expect(err).toMatchObject({
       status: 403,
       statusText: expect.any(String),
+      message: expect.any(String),
+      errors: expect.any(Array),
     });
   });
 });
