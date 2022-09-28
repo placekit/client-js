@@ -16,13 +16,14 @@ const App = () => {
   useEffect(
     () => {
       pk.search(value).then((res) => {
+        console.log(res.results);
         setSuggestions(res.results);
       });
     },
     [value]
   );
 
-  return (
+  return ( 
     <div className="fixed top-16 w-72">
       <Combobox value={value} onChange={setValue}>
         <div className="relative mt-1">

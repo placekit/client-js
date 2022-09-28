@@ -41,7 +41,8 @@ module.exports = (apiKey, options = {}) => {
   // Cascade of hosts, both DSNs and servers, in order of retry priority.
   let currentHost = 0;
   const hosts = [
-    `https://placekitgateway-7j80cxkd.ew.gateway.dev`,
+    // `https://dev.api.placekit.co`,
+    `http://localhost:8080`,
   ];
 
   // Set global params default values
@@ -104,15 +105,17 @@ module.exports = (apiKey, options = {}) => {
         'x-placekit-api-key': apiKey,
       },
       body: JSON.stringify(params),
-    }).then((res) => {
+    }).then(async (res) => {
       clearTimeout(id);
+      const body = await res.json();
       if (!res.ok) {
         throw ({
           status: res.status,
           statusText: res.statusText,
+          ...body,
         });
       }
-      return res.json();
+      return body;
     }).catch((err) => {
       if (err.name === 'AbortError' || (err.status && err.status >= 500)) {
         // change host and retry if timeout or 50x
