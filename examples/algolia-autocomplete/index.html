@@ -22,10 +22,10 @@
     autocomplete({
       container: '#autocomplete',
       placeholder: 'Search for places',
-      getSources({ query }) {
+      getSources() {
         return [
           {
-            sourceId: 'places',
+            sourceId: 'placekit',
             getItems({ query }) {
               return pk.search(query).then((res) => {
                 // getItems expects an array of results, not a response object

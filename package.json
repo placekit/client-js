@@ -16,8 +16,6 @@
   "module": "./dist/placekit.esm.js",
   "main": "./dist/placekit.cjs.js",
   "browser": "./dist/placekit.umd.js",
-  "jsdelivr": "./dist/placekit.umd.js",
-  "unpkg": "./dist/placekit.umd.js",
   "exports": {
     ".": {
       "require": "./dist/placekit.cjs.js",
