@@ -5,30 +5,30 @@ import cleanup from 'rollup-plugin-cleanup';
 import copy from 'rollup-plugin-copy';
 import { terser } from 'rollup-plugin-terser';
 
-import packageJSON from './package.json';
+import pkg from './package.json';
 const banner = [
-  `/*! PlaceKit v${packageJSON.version}`,
+  `/*! ${pkg.name} v${pkg.version}`,
   '© placekit.io',
-  'MIT License',
-  `${packageJSON.homepage} */`,
+  `${pkg.license} license`,
+  `${pkg.homepage} */`,
 ].join(' | ');
 
 export default {
   input: 'src/index.js',
   output: [
     {
-      file: packageJSON.module,
+      file: pkg.module,
       format: 'es',
       banner,
     },
     {
-      file: packageJSON.main,
+      file: pkg.main,
       format: 'cjs',
       exports: 'auto',
       banner,
     },
     {
-      file: packageJSON.browser,
+      file: pkg.browser,
       format: 'umd',
       name: 'placekit',
       plugins: [
@@ -49,8 +49,8 @@ export default {
       targets: [
         {
           src: 'src/index.d.ts',
-          dest: path.dirname(packageJSON.types),
-          rename: path.basename(packageJSON.types),
+          dest: path.dirname(pkg.types),
+          rename: path.basename(pkg.types),
           transform: (content) => [banner, content].join("\n"),
         },
       ]

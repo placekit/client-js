@@ -50,7 +50,7 @@ module.exports = (apiKey, options = {}) => {
     timeout: false,
     language: typeof window !== 'undefined' && navigator.language ?
       navigator.language.slice(0, 2) :
-      'default',
+      undefined,
     resultsPerPage: 10,
     // countries: [],
     // type: '',
