@@ -1,10 +1,10 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import PlaceKit from '../../';
-import type { PKClient, PKOptions, PKSearchResponse } from '../../';
+import PlaceKit from '@placekit/placekit-js';
+import type { PKClient, PKOptions, PKSearchResponse } from '@placekit/placekit-js';
 
-const options: Partial<PKOptions> = {
+const options: PKOptions = {
   maxResults: 5,
 };
 

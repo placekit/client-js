@@ -80,7 +80,7 @@ module.exports = (apiKey, options = {}) => {
     if (opts.countries) {
       opts.countries = Array.isArray(opts.countries) ?
         opts.countries.map((country) => country.slice(0, 2).toLocaleLowerCase()) :
-        undefined
+        undefined;
     }
     if (opts.coordinates) {
       const [lat, lng] = opts.coordinates.split(/\s*,\s*/).map(parseFloat);

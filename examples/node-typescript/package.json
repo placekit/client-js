@@ -1,6 +1,7 @@
 {
   "private": true,
   "dependencies": {
+    "@placekit/placekit-js": "file:../../",
     "dotenv": "^16.0.1"
   },
   "devDependencies": {

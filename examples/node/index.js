@@ -1,5 +1,5 @@
 require('dotenv').config();
-const placekit = require('../../src/index.js');
+const placekit = require('@placekit/placekit-js');
 
 const pk = placekit(process.env.PLACEKIT_API_KEY, {
   maxResults: 5,

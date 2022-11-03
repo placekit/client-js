@@ -1,6 +1,6 @@
 <template>
   <div class="fixed top-16 w-72">
-    <Combobox v-model="value">
+    <Combobox v-model="selected">
       <div class="relative mt-1">
         <div class="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
           <ComboboxInput
@@ -10,7 +10,7 @@
           <ComboboxButton
             class="absolute inset-y-0 right-0 flex items-center pr-2"
           >
-            <SelectorIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+            <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
           </ComboboxButton>
         </div>
         <TransitionRoot
@@ -28,11 +28,11 @@
             </div>
 
             <ComboboxOption
-              as="template"
-              v-slot="{ active, selected }"
               v-for="item in suggestions"
+              as="template"
               :key="item.id"
               :value="[item.name, item.zipcode, item.county].join(' ')"
+              v-slot="{ selected, active }"
             >
               <li
                 class="relative cursor-default select-none py-2 pl-10 pr-4"
@@ -73,7 +73,7 @@
     ComboboxOption,
     TransitionRoot,
   } from '@headlessui/vue';
-  import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid';
+  import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/24/solid';
   import placekit from '../../../';
 
   const pk = placekit(process.env.PLACEKIT_API_KEY, {
@@ -81,10 +81,10 @@
   });
 
   const suggestions = ref([]);
-  const value = ref('');
+  const query = ref('');
 
   function search(query) {
-    value.value = query;
+    query.value = query;
     pk.search(query).then((res) => {
       suggestions.value = res.results;
     });
