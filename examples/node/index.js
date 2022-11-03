@@ -2,7 +2,7 @@ require('dotenv').config();
 const placekit = require('../../src/index.js');
 
 const pk = placekit(process.env.PLACEKIT_API_KEY, {
-  resultsPerPage: 5,
+  maxResults: 5,
 });
 
 const [query] = process.argv.slice(2);

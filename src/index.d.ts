@@ -12,19 +12,12 @@ export interface PKClient {
 }
 
 export type PKOptions = Partial<{
-  retryTimeout: number;
-  language: string;
-  countries: string[];
-  type: string;
-  resultsPerPage: number;
-  postcodeSearch: boolean;
-  aroundLatLng: string;
-  aroundLatLngViaIP: boolean;
-  aroundRadius: number;
-  insideBoundingBox: string;
-  insidePolygon: string;
-  getRankingInfo: string;
-  computeQueryParams: any;
+  timeout: number;
+  language?: string;
+  countries?: string[];
+  type: "all" | "city" | "country" | "address" | "busStop" | "trainStation" | "townhall" | "airport";
+  maxResults: number;
+  coordinates?: string;
 }>;
 
 export type PKSearchResponse = {

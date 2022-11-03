@@ -6,7 +6,7 @@ import placekit from '../../../';
 // Make sure to call `placekit` outside of a component’s render to avoid
 // recreating the `PlaceKit.Client` object on every render.
 const pk = placekit(process.env.PLACEKIT_API_KEY, {
-  resultsPerPage: 5,
+  maxResults: 5,
 });
 
 const App = () => {

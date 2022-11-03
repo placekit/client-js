@@ -107,7 +107,7 @@ PlaceKit initialization function returns a PlaceKit client, named `pk` in all ex
 ```js
 const pk = placekit('<your-api-key>', {
   language: 'en',
-  resultsPerPage: 10,
+  maxResults: 10,
 });
 ```
 
@@ -122,7 +122,7 @@ Performs a search and returns a Promise, which response is a list of results alo
 The options passed as second parameter override the global parameters only for the current query.
 
 ```js
-pk.search('Paris', { resultsPerPage: 5 }).then((res) => {
+pk.search('Paris', { maxResults: 5 }).then((res) => {
   console.log(res.results);
 });
 ```
@@ -138,13 +138,18 @@ Read-only to access global options persistent across all API calls that are set 
 Options passed at query time in `client()` override global parameters only for that specific query.
 
 ```js
-console.log(pk.options); // { "language": "en", "resultsPerPage": 10, ... }
+console.log(pk.options); // { "language": "en", "maxResults": 10, ... }
 ```
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `language` | `string` | `"default"` | Language of the results, two-letter language code ([ISO-639-1](https://www.google.com/search?client=safari&rls=en&q=iso-639-1&ie=UTF-8&oe=UTF-8)) or `default` |
-| `resultsPerPage` | `integer` | `10` | Number of restults per page |
+| `language` | `string\|undefined` | `undefined` | Language of the results, two-letter ISO language code. |
+| `maxResults` | `integer` | `10` | Number of results per page. |
+| `type` | `string` | `all` | Type of results to show. One of `all`, `city`, `country`, `address`, `busStop`, `trainStation`, `townhall`, `airport`. |
+| `countries` | `string[]\|undefined` | `undefined` | Limit results to given countries. Array of two-letter ISO country codes. |
+| `coordinates` | `string\|undefined` | `undefined` | Coordinates to search around. Automatically set when calling [`client.requestGeolocation()`](#clientrequestGeolocation). |
+
+**NOTE:** setting an option with an invalid value won't show an error. Instead it will fall back to its default value.
 
 ### `client.configure()`
 
@@ -153,7 +158,7 @@ Updates global parameters. Returns `void`.
 ```js
 pk.configure({
   language: 'fr',
-  resultsPerPage: 5,
+  maxResults: 5,
 });
 ```
 
@@ -181,7 +186,7 @@ pk.requestGeolocation(Infinity).then((pos) => console.log(pos.coords));
 | --- | --- | --- |
 | `timeout` | `integer` (optional) | `navigator.geolocation.getCurrentPosition` [timeout option](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition) |
 
-The location will be store in the `aroundLatLng` global options, you can still manually override it.
+The location will be store in the `coordinates` global options, you can still manually override it.
 
 ## ⚖️ License
 

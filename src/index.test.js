@@ -60,12 +60,16 @@ describe('Configure', () => {
     pk.configure({
       timeout: -100,
       language: 'FR',
-      resultsPerPage: -100,
+      countries: ['FR'],
+      maxResults: -100,
+      coordinates: '-92,183', // invalid coords
     });
     expect(pk.options).toMatchObject({
-      timeout: 0,
+      timeout: false,
       language: 'fr',
-      resultsPerPage: 0,
+      countries: ['fr'],
+      maxResults: 10,
+      coordinates: undefined,
     });
   });
 });

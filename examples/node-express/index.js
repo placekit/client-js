@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 // Search for addresses
 app.post('/address', async (req, res) => {
   const results = await pk.search(req.body.query, {
-    resultsPerPage: 5,
+    maxResults: 5,
   });
   res.json(results.results);
 });
@@ -24,7 +24,7 @@ app.post('/address', async (req, res) => {
 app.post('/city', async (req, res) => {
   const results = await pk.search(req.body.query, {
     type: 'city',
-    resultsPerPage: 2,
+    maxResults: 2,
   });
   res.json(results.results);
 });

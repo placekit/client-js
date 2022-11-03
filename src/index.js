@@ -3,18 +3,11 @@
 /**
  * @typedef {Object} Options PlaceKit parameters
  * @prop {number} timeout Timeout in ms
- * @prop {string} language Results language (ISO 639-1)
+ * @prop {string} [language] Results language (ISO 639-1)
  * @prop {string[]} countries Countries whitelist (ISO 639-1)
  * @prop {string} type Results type
- * @prop {number} resultsPerPage Results per page
- * @prop {boolean} postcodeSearch Search only postCode
- * @prop {string} aroundLatLng Coordinates search starts around
- * @prop {boolean} aroundLatLngViaIP Geolocalize using IP address
- * @prop {number} aroundRadius Radius around `aroundLatLng`
- * @prop {string} insideBoundingBox Filter inside rectangle area
- * @prop {string} insidePolygon Filter inside polygon
- * @prop {string} getRankingInfo Include ranking info in results
- * @prop {Object} computeQueryParams Override query parameters
+ * @prop {number} maxResults Max results to return
+ * @prop {string} [coordinates] Coordinates search starts around
  */
 
 /**
@@ -51,17 +44,10 @@ module.exports = (apiKey, options = {}) => {
     language: typeof window !== 'undefined' && navigator.language ?
       navigator.language.slice(0, 2) :
       undefined,
-    resultsPerPage: 10,
-    // countries: [],
-    // type: '',
-    // postcodeSearch: '',
-    // aroundLatLng: '',
-    // aroundLatLngViaIP: '',
-    // aroundRadius: '',
-    // insideBoundingBox: '',
-    // insidePolygon: '',
-    // getRankingInfo: '',
-    // computeQueryParams: '',
+    maxResults: 10,
+    type: 'all',
+    countries: undefined,
+    coordinates: undefined,
   };
 
   /**
@@ -70,14 +56,37 @@ module.exports = (apiKey, options = {}) => {
    * @return {Options}
    */
   const checkOptions = (opts = {}) => {
-    if (opts.timeout !== false && Number.isInteger(opts.timeout)) {
-      opts.timeout = Math.max(0, opts.timeout);
+    if (!Number.isInteger(opts.timeout) || opts.timeout <= 0) {
+      opts.timeout = false;
     }
-    if (typeof opts.language === 'string' && opts.language !== 'default') {
-      opts.language = opts.language.slice(0, 2).toLocaleLowerCase();
+    opts.language = typeof opts.language === 'string' ?
+      opts.language.slice(0, 2).toLocaleLowerCase() :
+      undefined;
+    if (!Number.isInteger(opts.maxResults) || opts.maxResults <= 0) {
+      opts.maxResults = 10;
     }
-    if (opts.resultsPerPage && Number.isInteger(opts.resultsPerPage)) {
-      opts.resultsPerPage = Math.max(0, opts.resultsPerPage);
+    if (![
+      'all',
+      'city',
+      'country',
+      'address',
+      'busStop',
+      'trainStation',
+      'townhall',
+      'airport'
+    ].includes(opts.type)) {
+      opts.type = 'all';
+    }
+    if (opts.countries) {
+      opts.countries = Array.isArray(opts.countries) ?
+        opts.countries.map((country) => country.slice(0, 2).toLocaleLowerCase()) :
+        undefined
+    }
+    if (opts.coordinates) {
+      const [lat, lng] = opts.coordinates.split(/\s*,\s*/).map(parseFloat);
+      if (Math.abs(lat) > 90 || Math.abs(lng) > 180) {
+        opts.coordinates = undefined;
+      }
     }
     return opts;
   };
@@ -207,12 +216,12 @@ module.exports = (apiKey, options = {}) => {
         navigator.geolocation.getCurrentPosition(
           (pos) => {
             hasGeolocation = true;
-            globalParams.aroundLatLng = `${pos.coords.latitude}, ${pos.coords.longitude}`;
+            globalParams.coordinates = `${pos.coords.latitude}, ${pos.coords.longitude}`;
             resolve(pos);
           },
           (err) => {
             hasGeolocation = false;
-            globalParams.aroundLatLng = null;
+            globalParams.coordinates = null;
             reject(Error(`PlaceKit.requestGeolocation: (${err.code}) ${err.message}`));
           },
           {

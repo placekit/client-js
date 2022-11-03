@@ -77,7 +77,7 @@
   import placekit from '../../../';
 
   const pk = placekit(process.env.PLACEKIT_API_KEY, {
-    resultsPerPage: 5,
+    maxResults: 5,
   });
 
   const suggestions = ref([]);

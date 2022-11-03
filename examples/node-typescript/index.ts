@@ -5,7 +5,7 @@ import PlaceKit from '../../';
 import type { PKClient, PKOptions, PKSearchResponse } from '../../';
 
 const options: Partial<PKOptions> = {
-  resultsPerPage: 5,
+  maxResults: 5,
 };
 
 const pk: PKClient = PlaceKit(process.env.PLACEKIT_API_KEY, options);
