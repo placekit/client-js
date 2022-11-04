@@ -143,11 +143,11 @@ console.log(pk.options); // { "language": "en", "maxResults": 10, ... }
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `language` | `string\|undefined` | `undefined` | Language of the results, two-letter ISO language code. |
 | `maxResults` | `integer` | `10` | Number of results per page. |
-| `type` | `string` | `all` | Type of results to show. One of `all`, `city`, `country`, `address`, `busStop`, `trainStation`, `townhall`, `airport`. |
-| `countries` | `string[]\|undefined` | `undefined` | Limit results to given countries. Array of two-letter ISO country codes. |
-| `coordinates` | `string\|undefined` | `undefined` | Coordinates to search around. Automatically set when calling [`client.requestGeolocation()`](#clientrequestGeolocation). |
+| `language` | `string?` | `undefined` | Language of the results, two-letter ISO language code. |
+| `type` | `string?` | `undefined` | Type of results to show. One of `city`, `country`, `address`, `busStop`, `trainStation`, `townhall`, `airport`. Unset to return all. |
+| `countries` | `string[]?` | `undefined` | Limit results to given countries. Array of two-letter ISO country codes. |
+| `coordinates` | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`client.requestGeolocation()`](#clientrequestGeolocation). |
 
 **NOTE:** setting an option with an invalid value won't show an error. Instead it will fall back to its default value.
 

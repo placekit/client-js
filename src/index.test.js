@@ -69,7 +69,6 @@ describe('Configure', () => {
       language: 'fr',
       countries: ['fr'],
       maxResults: 10,
-      coordinates: undefined,
     });
   });
 });

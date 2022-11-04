@@ -13,10 +13,10 @@ export interface PKClient {
 
 export type PKOptions = Partial<{
   timeout: number;
-  language?: string;
-  countries?: string[];
-  type: "all" | "city" | "country" | "address" | "busStop" | "trainStation" | "townhall" | "airport";
   maxResults: number;
+  language?: string;
+  type?: "city" | "country" | "address" | "busStop" | "trainStation" | "townhall" | "airport";
+  countries?: string[];
   coordinates?: string;
 }>;
 

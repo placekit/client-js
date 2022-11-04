@@ -3,10 +3,10 @@
 /**
  * @typedef {Object} Options PlaceKit parameters
  * @prop {number} timeout Timeout in ms
- * @prop {string} [language] Results language (ISO 639-1)
- * @prop {string[]} countries Countries whitelist (ISO 639-1)
- * @prop {string} type Results type
  * @prop {number} maxResults Max results to return
+ * @prop {string} [type] Results type
+ * @prop {string} [language] Results language (ISO 639-1)
+ * @prop {string[]} [countries] Countries whitelist (ISO 639-1)
  * @prop {string} [coordinates] Coordinates search starts around
  */
 
@@ -41,14 +41,12 @@ module.exports = (apiKey, options = {}) => {
   // Set global params default values
   const globalParams = {
     timeout: false,
-    language: typeof window !== 'undefined' && navigator.language ?
-      navigator.language.slice(0, 2) :
-      undefined,
     maxResults: 10,
-    type: 'all',
-    countries: undefined,
-    coordinates: undefined,
   };
+
+  if (typeof window !== 'undefined' && navigator.language) {
+    globalParams.language = navigator.language.slice(0, 2);
+  }
 
   /**
    * Sanitize options
@@ -59,14 +57,18 @@ module.exports = (apiKey, options = {}) => {
     if (!Number.isInteger(opts.timeout) || opts.timeout <= 0) {
       opts.timeout = false;
     }
-    opts.language = typeof opts.language === 'string' ?
-      opts.language.slice(0, 2).toLocaleLowerCase() :
-      undefined;
+
     if (!Number.isInteger(opts.maxResults) || opts.maxResults <= 0) {
       opts.maxResults = 10;
     }
+
+    if (typeof opts.language === 'string') {
+      opts.language = opts.language.slice(0, 2).toLocaleLowerCase();
+    } else {
+      delete opts.language;
+    }
+
     if (![
-      'all',
       'city',
       'country',
       'address',
@@ -75,19 +77,26 @@ module.exports = (apiKey, options = {}) => {
       'townhall',
       'airport'
     ].includes(opts.type)) {
-      opts.type = 'all';
+      delete opts.type;
     }
-    if (opts.countries) {
-      opts.countries = Array.isArray(opts.countries) ?
-        opts.countries.map((country) => country.slice(0, 2).toLocaleLowerCase()) :
-        undefined;
+
+    if (Array.isArray(opts.countries)) {
+      opts.countries = opts.countries.map((country) => country.slice(0, 2).toLocaleLowerCase());
+    } else {
+      delete opts.countries;
     }
-    if (opts.coordinates) {
+
+    if (typeof opts.coordinates === 'string') {
       const [lat, lng] = opts.coordinates.split(/\s*,\s*/).map(parseFloat);
-      if (Math.abs(lat) > 90 || Math.abs(lng) > 180) {
-        opts.coordinates = undefined;
+      if (Math.abs(lat) <= 90 && Math.abs(lng) <= 180) {
+        opts.coordinates = [lat, lng].join(',');
+      } else {
+        delete opts.coordinates;
       }
+    } else {
+      delete opts.coordinates;
     }
+
     return opts;
   };
 
