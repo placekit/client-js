@@ -41,64 +41,13 @@ module.exports = (apiKey, options = {}) => {
   // Set global params default values
   const globalParams = {
     timeout: false,
-    maxResults: 10,
+    maxResults: 5,
   };
 
+  // get default language from browser settings
   if (typeof window !== 'undefined' && navigator.language) {
     globalParams.language = navigator.language.slice(0, 2);
   }
-
-  /**
-   * Sanitize options
-   * @arg {Options} opts PlaceKit options
-   * @return {Options}
-   */
-  const checkOptions = (opts = {}) => {
-    if (!Number.isInteger(opts.timeout) || opts.timeout <= 0) {
-      opts.timeout = false;
-    }
-
-    if (!Number.isInteger(opts.maxResults) || opts.maxResults <= 0) {
-      opts.maxResults = 10;
-    }
-
-    if (typeof opts.language === 'string') {
-      opts.language = opts.language.slice(0, 2).toLocaleLowerCase();
-    } else {
-      delete opts.language;
-    }
-
-    if (![
-      'city',
-      'country',
-      'address',
-      'busStop',
-      'trainStation',
-      'townhall',
-      'airport'
-    ].includes(opts.type)) {
-      delete opts.type;
-    }
-
-    if (Array.isArray(opts.countries)) {
-      opts.countries = opts.countries.map((country) => country.slice(0, 2).toLocaleLowerCase());
-    } else {
-      delete opts.countries;
-    }
-
-    if (typeof opts.coordinates === 'string') {
-      const [lat, lng] = opts.coordinates.split(/\s*,\s*/).map(parseFloat);
-      if (Math.abs(lat) <= 90 && Math.abs(lng) <= 180) {
-        opts.coordinates = [lat, lng].join(',');
-      } else {
-        delete opts.coordinates;
-      }
-    } else {
-      delete opts.coordinates;
-    }
-
-    return opts;
-  };
 
   /**
    * Request wrapper
@@ -167,7 +116,7 @@ module.exports = (apiKey, options = {}) => {
     }
     const params = {
       ...globalParams,
-      ...checkOptions(opts),
+      ...opts,
       query,
     };
     return request('POST', 'search', params);
@@ -193,7 +142,7 @@ module.exports = (apiKey, options = {}) => {
       throw Error('PlaceKit.configure: `opts` parameter is invalid, expected an object.');
     }
 
-    Object.assign(globalParams, checkOptions(opts));
+    Object.assign(globalParams, opts);
   };
 
   let hasGeolocation = false;
@@ -210,36 +159,28 @@ module.exports = (apiKey, options = {}) => {
   /**
    * Request the device's location
    * @memberof client
-   * @arg {number} timeout Geolocation request timeout
+   * @arg {Object} opts `navigator.geolocation.getCurrentPosition` options
    * @return {Promise<Position>}
    */
-  client.requestGeolocation = (timeout = 0) => {
-    if (!['number', 'undefined'].includes(typeof opts) || !Number.isInteger(timeout) || timeout < 0) {
-      throw Error('PlaceKit.requestGeolocation: `timeout` parameter is invalid, expected a positive integer.');
+  client.requestGeolocation = (opts) => new Promise((resolve, reject) => {
+    if (typeof window === 'undefined' || !navigator.geolocation) {
+      reject(Error('PlaceKit.requestGeolocation: geolocation is only available in the browser.'));
+    } else {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          hasGeolocation = true;
+          globalParams.coordinates = `${pos.coords.latitude}, ${pos.coords.longitude}`;
+          resolve(pos);
+        },
+        (err) => {
+          hasGeolocation = false;
+          globalParams.coordinates = null;
+          reject(Error(`PlaceKit.requestGeolocation: (${err.code}) ${err.message}`));
+        },
+        opts
+      );
     }
-
-    return new Promise((resolve, reject) => {
-      if (typeof window === 'undefined' || !navigator.geolocation) {
-        reject(Error('PlaceKit.requestGeolocation: geolocation is only available in the browser.'));
-      } else {
-        navigator.geolocation.getCurrentPosition(
-          (pos) => {
-            hasGeolocation = true;
-            globalParams.coordinates = `${pos.coords.latitude}, ${pos.coords.longitude}`;
-            resolve(pos);
-          },
-          (err) => {
-            hasGeolocation = false;
-            globalParams.coordinates = null;
-            reject(Error(`PlaceKit.requestGeolocation: (${err.code}) ${err.message}`));
-          },
-          {
-            timeout,
-          }
-        );
-      }
-    });
-  };
+  });
 
   // Save global parameters and return client
   client.configure(options);

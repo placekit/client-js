@@ -55,32 +55,21 @@ describe('Configure', () => {
     }).toThrow(/opts/i);
   });
 
-  it('updates and sanitizes global options', () => {
+  it('updates global options', () => {
     const pk = placekit('your-api-key');
-    pk.configure({
+    const options = {
       timeout: -100,
       language: 'FR',
       countries: ['FR'],
       maxResults: -100,
-      coordinates: '-92,183', // invalid coords
-    });
-    expect(pk.options).toMatchObject({
-      timeout: false,
-      language: 'fr',
-      countries: ['fr'],
-      maxResults: 10,
-    });
+      coordinates: '48.86,2.29',
+    };
+    pk.configure(options);
+    expect(pk.options).toMatchObject(options);
   });
 });
 
 describe('Request Geolocation', () => {
-  it('throws when args are invalid', () => {
-    expect(() => {
-      const pk = placekit('your-api-key');
-      pk.requestGeolocation('invalid');
-    }).toThrow(/timeout/i);
-  });
-
   it('denies geolocation', async () => {
     mockGeolocation.getCurrentPosition.mockImplementation(
       (_success, error) => Promise.resolve(error({

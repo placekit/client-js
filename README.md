@@ -19,6 +19,8 @@
 
 PlaceKit JavaScript Client abstracts interactions with our API, making your life easier. We **highly recommend** to use it instead of accessing our API directly.
 
+👉 If you're looking for a full Autocomplete experience, have a look at our standalone [PlaceKit Autocomplete JS library](https://github.com/placekit/autocomplete-js), or check out our [examples](./examples) to learn how to integrate with an existing components library.
+
 ## ✨ Features
 
 - **Featherweight**, **zero-dependency** HTTP client
@@ -54,7 +56,7 @@ pk.search('Paris').then((res) => {
 });
 ```
 
-For advanced usages, check out our [examples](./examples).
+👉 For advanced usages, check out our [examples](./examples).
 
 ### CDN
 
@@ -89,16 +91,16 @@ Or if you are using native ES Modules:
 </script>
 ```
 
-For the full autocomplete experience, check out our [examples](./examples).
+👉 For advance usages, check out our [examples](./examples).
 
 ## 🧰 Reference
 
 - [`placekit()`](#placekit)
-- [`client.search()`](#clientsearch)
-- [`client.options`](#clientoptions)
-- [`client.configure()`](#clientconfigure)
-- [`client.hasGeolocation`](#clienthasGeolocation)
-- [`client.requestGeolocation()`](#clientrequestGeolocation)
+- [`pk.search()`](#pksearch)
+- [`pk.options`](#pkoptions)
+- [`pk.configure()`](#pkconfigure)
+- [`pk.requestGeolocation()`](#pkrequestGeolocation)
+- [`pk.hasGeolocation`](#pkhasGeolocation)
 
 ### `placekit()`
 
@@ -114,9 +116,9 @@ const pk = placekit('<your-api-key>', {
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `apiKey` | `string` | API key |
-| `options` | `key-value mapping` (optional) | Global parameters (see [options](#clientoptions)) |
+| `options` | `key-value mapping` (optional) | Global parameters (see [options](#pkoptions)) |
 
-### `client.search()`
+### `pk.search()`
 
 Performs a search and returns a Promise, which response is a list of results alongside some request metadata.
 The options passed as second parameter override the global parameters only for the current query.
@@ -130,12 +132,12 @@ pk.search('Paris', { maxResults: 5 }).then((res) => {
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `query` | `string` | Search terms |
-| `opts` | `key-value mapping` (optional) | Search-specific parameters (see [options](#clientoptions)) |
+| `opts` | `key-value mapping` (optional) | Search-specific parameters (see [options](#pkoptions)) |
 
-### `client.options`
+### `pk.options`
 
-Read-only to access global options persistent across all API calls that are set at initialization and with `client.configure()`.
-Options passed at query time in `client()` override global parameters only for that specific query.
+Read-only to access global options persistent across all API calls that are set at initialization and with `pk.configure()`.
+Options passed at query time in `pk.search()` override global parameters only for that specific query.
 
 ```js
 console.log(pk.options); // { "language": "en", "maxResults": 10, ... }
@@ -143,15 +145,13 @@ console.log(pk.options); // { "language": "en", "maxResults": 10, ... }
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `maxResults` | `integer` | `10` | Number of results per page. |
+| `maxResults` | `integer` | `5` | Number of results per page. |
 | `language` | `string?` | `undefined` | Language of the results, two-letter ISO language code. |
-| `type` | `string?` | `undefined` | Type of results to show. One of `city`, `country`, `address`, `busStop`, `trainStation`, `townhall`, `airport`. Unset to return all. |
+| `type` | `string?` | `undefined` | Type of results to show. Array of accepted values: `street`, `city`, `country`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
 | `countries` | `string[]?` | `undefined` | Limit results to given countries. Array of two-letter ISO country codes. |
-| `coordinates` | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`client.requestGeolocation()`](#clientrequestGeolocation). |
+| `coordinates` | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pk.requestGeolocation()`](#pkrequestGeolocation). |
 
-**NOTE:** setting an option with an invalid value won't show an error. Instead it will fall back to its default value.
-
-### `client.configure()`
+### `pk.configure()`
 
 Updates global parameters. Returns `void`.
 
@@ -164,29 +164,29 @@ pk.configure({
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `opts` | `key-value mapping` (optional) | Global parameters (see [options](#clientoptions)) |
+| `opts` | `key-value mapping` (optional) | Global parameters (see [options](#pkoptions)) |
 
-### `client.hasGeolocation`
+### `pk.requestGeolocation()`
+
+Requests device's geolocation (browser-only). Returns a Promise with a [`GeolocationPosition`](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition) object.
+
+```js
+pk.requestGeolocation({ timeout: 000 }).then((pos) => console.log(pos.coords));
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `opts` | `key-value mapping` (optional) | `navigator.geolocation.getCurrentPosition` [options](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition) |
+
+The location will be store in the `coordinates` global options, you can still manually override it.
+
+### `pk.hasGeolocation`
 
 Reads if device geolocation is activated or not (read-only).
 
 ```js
 console.log(pk.hasGeolocation); // true or false
 ```
-
-### `client.requestGeolocation()`
-
-Requests device's geolocation (browser-only). Returns a Promise with a [`GeolocationPosition`](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition) object.
-
-```js
-pk.requestGeolocation(Infinity).then((pos) => console.log(pos.coords));
-```
-
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `timeout` | `integer` (optional) | `navigator.geolocation.getCurrentPosition` [timeout option](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition) |
-
-The location will be store in the `coordinates` global options, you can still manually override it.
 
 ## ⚖️ License
 

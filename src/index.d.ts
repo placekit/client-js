@@ -8,14 +8,32 @@ export interface PKClient {
   readonly options: PKOptions;
   configure(opts?: PKOptions): void;
   readonly hasGeolocation: boolean;
-  requestGeolocation(timeout?: number): Promise<GeolocationPosition>;
+  requestGeolocation(opts?: any): Promise<GeolocationPosition>;
 }
+
+type PKType = 
+  "street" | 
+  "city" | 
+  "country" | 
+  "airport" | 
+  "bus" | 
+  "train" | 
+  "townhall" | 
+  "tourism" | 
+  "-street" | 
+  "-city" | 
+  "-country" | 
+  "-airport" | 
+  "-bus" | 
+  "-train" | 
+  "-townhall" | 
+  "-tourism";
 
 export type PKOptions = Partial<{
   timeout: number;
   maxResults: number;
   language?: string;
-  type?: "city" | "country" | "address" | "busStop" | "trainStation" | "townhall" | "airport";
+  types?: PKType[];
   countries?: string[];
   coordinates?: string;
 }>;
