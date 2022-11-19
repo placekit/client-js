@@ -38,6 +38,24 @@ export type PKOptions = Partial<{
   coordinates?: string;
 }>;
 
+export type PKResult = {
+  name: string,
+  city: string,
+  county: string,
+  administrative: string,
+  country: string,
+  lat: number,
+  lng: number,
+  type: string,
+  zipcode: string[],
+  population: number,
+  highlight: string;
+};
+
 export type PKSearchResponse = {
-  results: any[];
+  results: PKResult[];
+  resultsCount: number;
+  maxResults: number;
+  query: string;
+  params: string;
 };
