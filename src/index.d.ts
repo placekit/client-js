@@ -8,7 +8,7 @@ export interface PKClient {
   readonly options: PKOptions;
   configure(opts?: PKOptions): void;
   readonly hasGeolocation: boolean;
-  requestGeolocation(opts?: any): Promise<GeolocationPosition>;
+  requestGeolocation(opts?: Object): Promise<GeolocationPosition>;
 }
 
 type PKType = 
@@ -44,6 +44,7 @@ export type PKResult = {
   county: string,
   administrative: string,
   country: string,
+  countrycode: string;
   lat: number,
   lng: number,
   type: string,
