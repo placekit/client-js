@@ -34,8 +34,8 @@ module.exports = (apiKey, options = {}) => {
   // Cascade of hosts, both DSNs and servers, in order of retry priority.
   let currentHost = 0;
   const hosts = [
-    // `https://api.placekit.co`,
-    `https://dev.api.placekit.co`,
+    `https://api.placekit.co`,
+    // `https://dev.api.placekit.co`,
     // `http://localhost:8080`,
   ];
 

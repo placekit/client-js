@@ -147,7 +147,7 @@ describe('Search', () => {
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenNthCalledWith(
       1,
-      'http://localhost:8080/search',
+      'https://api.placekit.co/search',
       expect.anything()
     );
   });
@@ -167,7 +167,7 @@ describe('Search', () => {
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenNthCalledWith(
       1,
-      'http://localhost:8080/search',
+      'https://api.placekit.co/search',
       expect.anything()
     );
   });
