@@ -34,8 +34,9 @@ module.exports = (apiKey, options = {}) => {
   // Cascade of hosts, both DSNs and servers, in order of retry priority.
   let currentHost = 0;
   const hosts = [
-    // `https://dev.api.placekit.co`,
-    `http://localhost:8080`,
+    // `https://api.placekit.co`,
+    `https://dev.api.placekit.co`,
+    // `http://localhost:8080`,
   ];
 
   // Set global params default values
@@ -129,7 +130,7 @@ module.exports = (apiKey, options = {}) => {
    * @readonly
    */
   Object.defineProperty(client, 'options', {
-    get: () => globalParams,
+    value: globalParams,
   });
 
   /**
@@ -153,7 +154,7 @@ module.exports = (apiKey, options = {}) => {
    * @readonly
    */
   Object.defineProperty(client, 'hasGeolocation', {
-    get: () => hasGeolocation,
+    value: hasGeolocation,
   });
 
   /**
@@ -162,7 +163,7 @@ module.exports = (apiKey, options = {}) => {
    * @arg {Object} opts `navigator.geolocation.getCurrentPosition` options
    * @return {Promise<Position>}
    */
-  client.requestGeolocation = (opts) => new Promise((resolve, reject) => {
+  client.requestGeolocation = (opts = {}) => new Promise((resolve, reject) => {
     if (typeof window === 'undefined' || !navigator.geolocation) {
       reject(Error('PlaceKit.requestGeolocation: geolocation is only available in the browser.'));
     } else {
