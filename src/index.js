@@ -61,7 +61,6 @@ module.exports = (apiKey, options = {}) => {
 
   // Set global params default values
   const globalParams = {
-    timeout: false,
     maxResults: 5,
   };
 
@@ -80,7 +79,7 @@ module.exports = (apiKey, options = {}) => {
   const request = (method = 'POST', resource = '', opts = {}) => {
     const { timeout, ...params } = opts;
     const controller = new AbortController();
-    const id = timeout !== false ? setTimeout(() => controller.abort(), timeout) : undefined;
+    const id = typeof timeout !== 'undefined' ? setTimeout(() => controller.abort(), timeout) : undefined;
     const url = [
       hosts[currentHost],
       resource.trim().replace(/^\/+/, '')
