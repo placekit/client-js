@@ -2,17 +2,37 @@
 
 /**
  * @typedef {Object} Options PlaceKit parameters
- * @prop {number} timeout Timeout in ms
- * @prop {number} maxResults Max results to return
- * @prop {string} [type] Results type
+ * @prop {number} [timeout] Timeout in ms
+ * @prop {number} [maxResults] Max results to return
+ * @prop {string[]} [types] Results type
  * @prop {string} [language] Results language (ISO 639-1)
  * @prop {string[]} [countries] Countries whitelist (ISO 639-1)
  * @prop {string} [coordinates] Coordinates search starts around
  */
 
 /**
+ * @typedef {Object} Result PlaceKit result
+ * @prop {string} name
+ * @prop {string} city
+ * @prop {string} county
+ * @prop {string} administrative
+ * @prop {string} country
+ * @prop {string} countrycode
+ * @prop {number} lat
+ * @prop {number} lng
+ * @prop {string} type
+ * @prop {string[]} zipcode
+ * @prop {number} population
+ * @prop {string} highlight
+ */
+
+/**
  * @typedef {Object} SearchResponse PlaceKit response
- * @prop {Object[]} results Results
+ * @prop {Result[]} results Results
+ * @prop {number} resultsCount Actual number of results
+ * @prop {number} maxResults Max number of results
+ * @prop {string} query Search query
+ * @prop {string} params Search parameters (query string)
  */
 
 /**
@@ -20,7 +40,7 @@
  * @desc Fetch wrapper over the PlaceKit API to implement a retry strategy and parameters checking.
  * @module PlaceKit
  * @arg {string} apiKey PlaceKit API key
- * @arg {Options} options PlaceKit global parameters
+ * @arg {Options} [options] PlaceKit global parameters
  * @return {client}
  */
 module.exports = (apiKey, options = {}) => {
@@ -105,7 +125,7 @@ module.exports = (apiKey, options = {}) => {
    * PlaceKit search
    * @memberof client
    * @param {string} query Query
-   * @param {Options} opts Override global parameters
+   * @param {Options} [opts] Override global parameters
    * @return {Promise<SearchResponse>}
    */
   client.search = (query, opts = {}) => {
@@ -136,7 +156,7 @@ module.exports = (apiKey, options = {}) => {
   /**
    * Set global parameters
    * @memberof client
-   * @arg {Options} opts PlaceKit global parameters
+   * @arg {Options} [opts] PlaceKit global parameters
    */
   client.configure = (opts = {}) => {
     if (!['object', 'undefined'].includes(typeof opts) || Array.isArray(opts) || opts === null) {
@@ -160,7 +180,7 @@ module.exports = (apiKey, options = {}) => {
   /**
    * Request the device's location
    * @memberof client
-   * @arg {Object} opts `navigator.geolocation.getCurrentPosition` options
+   * @arg {Object} [opts] `navigator.geolocation.getCurrentPosition` options
    * @return {Promise<Position>}
    */
   client.requestGeolocation = (opts = {}) => new Promise((resolve, reject) => {

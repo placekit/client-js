@@ -30,8 +30,8 @@ type PKType =
   "-tourism";
 
 export type PKOptions = Partial<{
-  timeout: number;
-  maxResults: number;
+  timeout?: number;
+  maxResults?: number;
   language?: string;
   types?: PKType[];
   countries?: string[];
