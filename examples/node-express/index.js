@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const placekit = require('@placekit/placekit-js');
+const placekit = require('@placekit/client-js');
 
 const pk = placekit(process.env.PLACEKIT_API_KEY);
 

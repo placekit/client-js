@@ -1,7 +1,7 @@
 {
   "private": true,
   "dependencies": {
-    "@placekit/placekit-js": "file:../../",
+    "@placekit/client-js": "file:../../",
     "dotenv": "^16.0.1"
   }
 }

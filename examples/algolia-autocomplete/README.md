@@ -7,8 +7,8 @@ This example shows how to connect it with PlaceKit to suggest addresses in real 
 ## Run
 
 ```sh
-git clone git@github.com:placekit/placekit-js.git
-cd placekit-js/examples/algolia-autocomplete
+git clone git@github.com:placekit/client-js.git
+cd client-js/examples/algolia-autocomplete
 ```
 
 Open `index.html` in your editor and replace `<your-api-key>` with your PlaceKit API key.

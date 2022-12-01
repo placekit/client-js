@@ -35,17 +35,17 @@ PlaceKit JavaScript Client abstracts interactions with our API, making your life
 First, install PlaceKit JavaScript Client using [npm](https://docs.npmjs.com/getting-started) package manager:
 
 ```sh
-npm install --save @placekit/placekit-js
+npm install --save @placekit/client-js
 ```
 
 Then import the package and perform your first address search:
 
 ```js
 // CommonJS syntax:
-const placekit = require('@placekit/placekit-js');
+const placekit = require('@placekit/client-js');
 
 // ES6 Modules syntax:
-import placekit from '@placekit/placekit-js';
+import placekit from '@placekit/client-js';
 
 const pk = placekit('<your-api-key>', {
   //...
@@ -63,7 +63,7 @@ pk.search('Paris').then((res) => {
 First, add this line before the closing `</body>` tag in your HTML to import PlaceKit JavaScript Client:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/placekit-js@1.0.0/dist/placekit.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@placekit/client-js@1.0.0/dist/placekit.umd.js"></script>
 ```
 
 Then it works the same as the node example above.
@@ -85,7 +85,7 @@ Or if you are using native ES Modules:
 
 ```html
 <script type="module">
-  import placekit from 'https://cdn.jsdelivr.net/npm/placekit-js@1.0.0/dist/placekit.esm.js';
+  import placekit from 'https://cdn.jsdelivr.net/npm/@placekit/client-js@1.0.0/dist/placekit.esm.js';
   const pk = placekit(/* ... */);
   // ...
 </script>

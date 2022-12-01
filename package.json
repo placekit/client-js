@@ -1,16 +1,16 @@
 {
-  "name": "@placekit/placekit-js",
+  "name": "@placekit/client-js",
   "version": "0.0.1",
-  "author": "Nicolas Torres <nico@placekit.io>",
+  "author": "Nicolas Torres <nicolas@placekit.io>",
   "description": "PlaceKit JavaScript client",
   "license": "MIT",
-  "homepage": "https://github.com/placekit/placekit-js#readme",
+  "homepage": "https://github.com/placekit/client-js#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/placekit/placekit-js.git"
+    "url": "git+https://github.com/placekit/client-js.git"
   },
   "bugs": {
-    "url": "https://github.com/placekit/placekit-js/issues"
+    "url": "https://github.com/placekit/client-js/issues"
   },
   "types": "./dist/placekit.d.ts",
   "module": "./dist/placekit.esm.js",

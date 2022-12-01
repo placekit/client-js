@@ -7,8 +7,8 @@ It also uses [dotenv](https://www.npmjs.com/package/dotenv) package to safely se
 
 ```sh
 # clone project and access this example
-git clone git@github.com:placekit/placekit-js.git
-cd placekit-js/examples/node
+git clone git@github.com:placekit/client-js.git
+cd client-js/examples/node
 
 # install dependencies
 npm install

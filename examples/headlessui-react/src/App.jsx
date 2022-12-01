@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react';
 import { Combobox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/24/solid';
-import placekit from '@placekit/placekit-js';
+import placekit from '@placekit/client-js';
 
 // Make sure to call `placekit` outside of a component’s render to avoid
 // recreating the `PlaceKit.Client` object on every render.

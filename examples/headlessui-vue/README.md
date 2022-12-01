@@ -9,8 +9,8 @@ It uses [Parcel](https://parceljs.org) as a bundler, and [Tailwind CSS](http://t
 
 ```sh
 # clone project and access this example
-git clone git@github.com:placekit/placekit-js.git
-cd placekit-js/examples/headlessui-vue
+git clone git@github.com:placekit/client-js.git
+cd client-js/examples/headlessui-vue
 
 # install dependencies
 npm install

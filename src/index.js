@@ -130,7 +130,7 @@ module.exports = (apiKey, options = {}) => {
    * @readonly
    */
   Object.defineProperty(client, 'options', {
-    value: globalParams,
+    get: () => globalParams,
   });
 
   /**
@@ -154,7 +154,7 @@ module.exports = (apiKey, options = {}) => {
    * @readonly
    */
   Object.defineProperty(client, 'hasGeolocation', {
-    value: hasGeolocation,
+    get: () => hasGeolocation,
   });
 
   /**
