@@ -91,7 +91,7 @@ Or if you are using native ES Modules:
 </script>
 ```
 
-👉 For advance usages, check out our [examples](./examples).
+👉 For advanced usages, check out our [examples](./examples).
 
 ## 🧰 Reference
 
