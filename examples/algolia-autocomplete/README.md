@@ -4,6 +4,9 @@
 
 This example shows how to connect it with PlaceKit to suggest addresses in real time as the user type.
 
+**NOTE**: It is meant as an custom implementation example for advanced development needs.
+For a full autocomplete experience, we recommend using [PlaceKit Autocomplete](https://github.com/placekit/autocomplete-js).
+
 ## Run
 
 ```sh

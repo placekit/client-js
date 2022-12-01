@@ -5,6 +5,9 @@
 This example shows how to connect the Combobox React component with PlaceKit to create a beautiful autocomplete experience.
 It uses [Parcel](https://parceljs.org) as a bundler, and [Tailwind CSS](http://tailwindcss.com) as CSS framework with [heroicons](https://github.com/tailwindlabs/heroicons).
 
+**NOTE**: It is meant as an custom implementation example for advanced development needs.
+For a full autocomplete experience, we recommend using [PlaceKit Autocomplete](https://github.com/placekit/autocomplete-js).
+
 ## Run
 
 ```sh
