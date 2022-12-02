@@ -171,7 +171,7 @@ pk.configure({
 Requests device's geolocation (browser-only). Returns a Promise with a [`GeolocationPosition`](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition) object.
 
 ```js
-pk.requestGeolocation({ timeout: 000 }).then((pos) => console.log(pos.coords));
+pk.requestGeolocation({ timeout: 10000 }).then((pos) => console.log(pos.coords));
 ```
 
 | Parameter | Type | Description |
