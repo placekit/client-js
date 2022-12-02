@@ -146,9 +146,9 @@ console.log(pk.options); // { "language": "en", "maxResults": 10, ... }
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
 | `maxResults` | `integer?` | `5` | Number of results per page. |
-| `language` | `string?` | `undefined` | Language of the results, two-letter ISO language code. |
+| `language` | `string?` | `undefined` | Language of the results, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. |
 | `types` | `string[]?` | `undefined` | Type of results to show. Array of accepted values: `street`, `city`, `country`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
-| `countries` | `string[]?` | `undefined` | Limit results to given countries. Array of two-letter ISO country codes. |
+| `countries` | `string[]?` | `undefined` | Limit results to given countries. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. |
 | `coordinates` | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pk.requestGeolocation()`](#pkrequestGeolocation). |
 
 ### `pk.configure()`
