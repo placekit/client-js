@@ -6,6 +6,13 @@
   <b>Location data, search and autocomplete for your apps</b>
 </p>
 
+<div align="center">
+
+  [![NPM](https://img.shields.io/npm/v/@placekit/client-js?style=flat-square)](https://www.npmjs.com/package/@placekit/client-js?activeTab=readme)
+  [![LICENSE](https://img.shields.io/github/license/placekit/client-js?style=flat-square)](./LICENSE)
+  
+</div>
+
 <p align="center">
   <a href="#-features">Features</a> • 
   <a href="#-quick-start">Quick start</a> • 
