@@ -3,6 +3,7 @@
 # misc
 .DS_Store
 /NOTES.md
+/publish.sh
 
 # dependencies
 node_modules
