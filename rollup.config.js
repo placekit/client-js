@@ -1,7 +1,6 @@
 import path from 'path';
 
 import commonjs from '@rollup/plugin-commonjs';
-// import terser from '@rollup/plugin-terser';
 import cleanup from 'rollup-plugin-cleanup';
 import copy from 'rollup-plugin-copy';
 

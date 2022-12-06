@@ -1,7 +1,7 @@
 {
   "name": "@placekit/client-js",
   "version": "1.0.0-alpha.0",
-  "author": "Nicolas Torres <nicolas@placekit.io>",
+  "author": "PlaceKit <support@placekit.io>",
   "description": "PlaceKit JavaScript client",
   "license": "MIT",
   "homepage": "https://github.com/placekit/client-js#readme",
@@ -37,7 +37,6 @@
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^22.0.0",
-    "@rollup/plugin-terser": "^0.2.0",
     "eslint": "^8.17.0",
     "eslint-config-google": "^0.14.0",
     "jest": "^28.1.3",
