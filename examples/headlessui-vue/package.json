@@ -11,6 +11,6 @@
   "dependencies": {
     "@headlessui/vue": "^1.7.4",
     "@heroicons/vue": "^2.0.13",
-    "@placekit/client-js": "file:../../"
+    "@placekit/client-js": "^1.0.0-alpha.0"
   }
 }
