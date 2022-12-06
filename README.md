@@ -63,7 +63,7 @@ pk.search('Paris').then((res) => {
 First, add this line before the closing `</body>` tag in your HTML to import PlaceKit JavaScript Client:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@placekit/client-js@1.0.0/dist/placekit.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@placekit/client-js"></script>
 ```
 
 Then it works the same as the node example above.
