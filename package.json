@@ -1,6 +1,6 @@
 {
   "name": "@placekit/client-js",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "author": "PlaceKit <support@placekit.io>",
   "description": "PlaceKit JavaScript client",
   "license": "MIT",
