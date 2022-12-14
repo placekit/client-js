@@ -92,7 +92,7 @@ Or if you are using native ES Modules:
 
 ```html
 <script type="module">
-  import placekit from 'https://cdn.jsdelivr.net/npm/@placekit/client-js@1.0.0/dist/placekit.esm.js';
+  import placekit from 'https://cdn.jsdelivr.net/npm/@placekit/client-js@1.0.0-alpha.2/dist/placekit.esm.js';
   const pk = placekit(/* ... */);
   // ...
 </script>

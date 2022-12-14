@@ -11,7 +11,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.4",
     "@heroicons/react": "^2.0.13",
-    "@placekit/client-js": "^1.0.0-alpha.0",
+    "@placekit/client-js": "^1.0.0-alpha.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }
