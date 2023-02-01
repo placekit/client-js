@@ -16,6 +16,7 @@ app.get('/', (req, res) => {
 app.post('/address', async (req, res) => {
   const results = await pk.search(req.body.query, {
     maxResults: 5,
+    countries: ['fr'],
   });
   res.json(results.results);
 });

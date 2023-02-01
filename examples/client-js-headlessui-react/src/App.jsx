@@ -7,6 +7,7 @@ import placekit from '@placekit/client-js';
 // recreating the `PlaceKit.Client` object on every render.
 const pk = placekit(process.env.PLACEKIT_API_KEY, {
   maxResults: 5,
+  countries: ['fr'],
 });
 
 const App = () => {

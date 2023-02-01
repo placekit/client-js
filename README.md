@@ -79,6 +79,7 @@ After importing the library, `placekit` becomes available as a global:
 ```html
 <script>
   const pk = placekit('<your-api-key>', {
+    countries: ['fr'],
     //...
   });
 
@@ -131,7 +132,10 @@ Performs a search and returns a Promise, which response is a list of results alo
 The options passed as second parameter override the global parameters only for the current query.
 
 ```js
-pk.search('Paris', { maxResults: 5 }).then((res) => {
+pk.search('Paris', {
+  maxResults: 5, 
+  countries: ['fr'],
+}).then((res) => {
   console.log(res.results);
 });
 ```
@@ -158,6 +162,8 @@ console.log(pk.options); // { "language": "en", "maxResults": 10, ... }
 | `countries` | `string[]?` | `undefined` | Limit results to given countries. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. |
 | `coordinates` | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pk.requestGeolocation()`](#pkrequestGeolocation). |
 
+**Important**: the `countries` option is **required** at search time, but we like to keep it optional across all methods so developers remain free on when and how to define it.
+
 ### `pk.configure()`
 
 Updates global parameters. Returns `void`.
@@ -166,6 +172,7 @@ Updates global parameters. Returns `void`.
 pk.configure({
   language: 'fr',
   maxResults: 5,
+  countries: ['fr'],
 });
 ```
 

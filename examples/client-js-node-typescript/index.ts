@@ -6,6 +6,7 @@ import type { PKClient, PKOptions, PKSearchResponse } from '@placekit/client-js'
 
 const options: PKOptions = {
   maxResults: 5,
+  countries: ['fr'],
 };
 
 const pk: PKClient = PlaceKit(process.env.PLACEKIT_API_KEY, options);

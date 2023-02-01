@@ -17,6 +17,7 @@
     const { autocomplete } = window['@algolia/autocomplete-js'];
     const pk = placekit('<your-api-key>', {
       maxResults: 5,
+      countries: ['fr'],
     });
 
     autocomplete({

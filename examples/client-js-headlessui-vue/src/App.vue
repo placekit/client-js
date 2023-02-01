@@ -78,6 +78,7 @@
 
   const pk = placekit(process.env.PLACEKIT_API_KEY, {
     maxResults: 5,
+    countries: ['fr'],
   });
 
   const suggestions = ref([]);
