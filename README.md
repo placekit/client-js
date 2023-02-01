@@ -162,7 +162,7 @@ console.log(pk.options); // { "language": "en", "maxResults": 10, ... }
 | `countries` | `string[]?` | `undefined` | Limit results to given countries. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. |
 | `coordinates` | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pk.requestGeolocation()`](#pkrequestGeolocation). |
 
-**Important**: the `countries` option is **required** at search time, but we like to keep it optional across all methods so developers remain free on when and how to define it.
+**Important**: the `countries` option is **required** at search time, but we like to keep it optional across all methods so developers remain free on when and how to define it. If you don't know ahead of time which country your users will search addresses in, consider using our package [Time Zones Countries](https://github.com/placekit/tzc).
 
 ### `pk.configure()`
 
