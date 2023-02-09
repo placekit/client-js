@@ -166,7 +166,7 @@ console.log(pk.options); // { "language": "en", "maxResults": 10, ... }
 
 #### ⚠️ Important notes about countries
 
-- The `countries` option is **required** at search time, but we like to keep it optional across all methods so developers remain free on when and how to define it (either when instanciating with `placekit()`, with `pk.configure()`, or at search time with `pk.search()`).
+- The `countries` option is **required** at search time, but we like to keep it optional across all methods so developers remain free on when and how to define it (either when instanciating with `placekit()`, with `pk.configure()`, or at search time with `pk.search()`). If `countries` is invalid, you'll get a `422` error.
 - For use-cases where you don't know which country users will search in beforehands, set `countryByIP` to `true`.
 - If `countryByIP` is set to `true`, the option `countries` will be used as a fallback if the user's country is not supported.
 - Careful that it the search is made server-side, the IP will be the one of the server. Use `overrideIP` option to forward user's IP to PlaceKit API.
