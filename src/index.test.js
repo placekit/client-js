@@ -275,4 +275,31 @@ describe('Reverse', () => {
     );
     expect(res.results).toHaveLength(0);
   });
+
+  it('overrides previously set coordinates', async () => {
+    fetch.mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: () => ({ results: [] })
+    });
+    const pk = placekit('your-api-key', {
+      coordinates: '1,1',
+    });
+    const res = await pk.reverse('0,0', {
+      coordinates: '2,2',
+    });
+    expect(fetch).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        method: 'POST',
+        signal: expect.anything(),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-placekit-api-key': 'your-api-key',
+        },
+        body: expect.stringMatching("\"coordinates\":\"0,0\""),
+      })
+    );
+    expect(res.results).toHaveLength(0);
+  });
 });

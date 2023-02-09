@@ -195,7 +195,7 @@ console.log(pk.options); // { "language": "en", "maxResults": 10, ... }
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
 | `maxResults` | `integer?` | `5` | Number of results per page. |
-| `language` | `string?` | `undefined` | Language of the results, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. Supported languages are `en` and `fr`. Defaults to the country's language. |
+| `language` | `string?` | `undefined` | Language of the results, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. Supported languages are `en` and `fr`. Defaults to the country's language if available. |
 | `types` | `string[]?` | `undefined` | Type of results to show. Array of accepted values: `street`, `city`, `country`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
 | `countries` | `string[]?` | `undefined` | Countries to search in, or fallback to if `countryByIP` is `true`. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes in the supported list of countries. |
 | `countryByIP` | `boolean?` | `undefined` | Use IP to find user's country (turned of). |
