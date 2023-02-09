@@ -240,3 +240,39 @@ describe('Search', () => {
     });
   });
 });
+
+describe('Reverse', () => {
+  it('throws when args are invalid', () => {
+    expect(() => {
+      const pk = placekit('your-api-key');
+      pk.reverse(null);
+    }).toThrow(/coordinates/i);
+
+    expect(() => {
+      const pk = placekit('your-api-key');
+      pk.reverse('', null);
+    }).toThrow(/opts/i);
+  });
+
+  it('sends proper request', async () => {
+    fetch.mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: () => ({ results: [] })
+    });
+    const pk = placekit('your-api-key');
+    const res = await pk.reverse('0,0');
+    expect(fetch).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        method: 'POST',
+        signal: expect.anything(),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-placekit-api-key': 'your-api-key',
+        },
+      })
+    );
+    expect(res.results).toHaveLength(0);
+  });
+});
