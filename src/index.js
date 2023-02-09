@@ -7,7 +7,7 @@
  * @prop {string[]} [types] Results type
  * @prop {string} [language] Results language (ISO 639-1)
  * @prop {boolean} [countryByIP] Get country from IP
- * @prop {boolean} [overrideIP] Set `x-forwarded-for` header to override IP when `countryByIP` is `true`.
+ * @prop {boolean} [forwardIP] Set `x-forwarded-for` header to override IP when `countryByIP` is `true`.
  * @prop {string[]} [countries] Countries to search in, or fallback to if `countryByIP` is true (ISO 639-1)
  * @prop {string} [coordinates] Coordinates search starts around
  */
@@ -76,7 +76,7 @@ module.exports = (apiKey, options = {}) => {
    * @return {Promise<SearchResponse>}
    */
   const request = (method = 'POST', resource = '', opts = {}) => {
-    const { timeout, overrideIP, ...params } = opts;
+    const { timeout, forwardIP, ...params } = opts;
     const controller = new AbortController();
     const id = typeof timeout !== 'undefined' ? setTimeout(() => controller.abort(), timeout) : undefined;
     const url = [
@@ -87,8 +87,8 @@ module.exports = (apiKey, options = {}) => {
       'Content-Type': 'application/json; charset=UTF-8',
       'x-placekit-api-key': apiKey,
     };
-    if (params.countryByIP && overrideIP) {
-      headers['x-forwarded-for'] = overrideIP;
+    if (params.countryByIP && forwardIP) {
+      headers['x-forwarded-for'] = forwardIP;
     }
     return fetch(url, {
       method,

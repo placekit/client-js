@@ -39,7 +39,7 @@ export type PKOptions = Partial<{
   types?: PKType[];
   countries?: PKCountry[];
   countryByIP?: boolean;
-  overrideIP?: string;
+  forwardIP?: string;
   coordinates?: string;
 }>;
 

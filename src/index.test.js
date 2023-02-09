@@ -135,7 +135,7 @@ describe('Search', () => {
     expect(res.results).toHaveLength(0);
   });
 
-  it('ignores overrideIP if countryByIP is off', async () => {
+  it('ignores forwardIP if countryByIP is off', async () => {
     fetch.mockResolvedValue({
       ok: true,
       status: 200,
@@ -143,7 +143,7 @@ describe('Search', () => {
     });
     const pk = placekit('your-api-key');
     const res = await pk.search('', {
-      overrideIP: '0.0.0.0',
+      forwardIP: '0.0.0.0',
     });
     expect(fetch).toHaveBeenCalledWith(
       expect.any(String),
@@ -159,7 +159,7 @@ describe('Search', () => {
     expect(res.results).toHaveLength(0);
   });
 
-  it('sets `x-forwarded-for` header if overrideIP is set', async () => {
+  it('sets `x-forwarded-for` header if forwardIP is set', async () => {
     fetch.mockResolvedValue({
       ok: true,
       status: 200,
@@ -167,7 +167,7 @@ describe('Search', () => {
     });
     const pk = placekit('your-api-key');
     const res = await pk.search('', {
-      overrideIP: '0.0.0.0',
+      forwardIP: '0.0.0.0',
       countryByIP: true,
     });
     expect(fetch).toHaveBeenCalledWith(
