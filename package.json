@@ -1,6 +1,6 @@
 {
   "name": "@placekit/client-js",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "author": "PlaceKit <support@placekit.io>",
   "description": "PlaceKit JavaScript client",
   "license": "MIT",
@@ -13,13 +13,13 @@
     "url": "https://github.com/placekit/client-js/issues"
   },
   "types": "./dist/placekit.d.ts",
-  "module": "./dist/placekit.esm.js",
+  "module": "./dist/placekit.esm.mjs",
   "main": "./dist/placekit.cjs.js",
   "browser": "./dist/placekit.umd.js",
   "exports": {
     ".": {
       "require": "./dist/placekit.cjs.js",
-      "import": "./dist/placekit.esm.js"
+      "import": "./dist/placekit.esm.mjs"
     }
   },
   "files": [
