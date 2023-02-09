@@ -5,7 +5,7 @@ declare function PlaceKit(apiKey?: string, opts?: PKOptions): PKClient;
 
 export interface PKClient {
   search(query: string, opts?: PKOptions): Promise<PKSearchResponse>;
-  reverse(coordinates: string, opts?: PKOptions): Promise<PKSearchResponse>;
+  reverse(opts?: PKOptions): Promise<PKSearchResponse>;
   readonly options: PKOptions;
   configure(opts?: PKOptions): void;
   readonly hasGeolocation: boolean;

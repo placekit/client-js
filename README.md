@@ -150,11 +150,12 @@ pk.search('Paris', {
 ### `pk.reverse()`
 
 Performs a reverse geocoding search and returns a Promise, which response is a list of results alongside some request metadata.
-The options passed as second parameter override the global parameters only for the current query.
+The options passed as first parameter override the global parameters only for the current query.
 Any `coordinates` previously set as option would be overriden by the coordinates passed as first argument.
 
 ```js
-pk.reverse('48.871086,2.3036339', {
+pk.reverse({
+  coordinates: '48.871086,2.3036339',
   countries: ['fr'],
   maxResults: 5,
 }).then((res) => {
@@ -164,22 +165,23 @@ pk.reverse('48.871086,2.3036339', {
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `coordinates` | `string` | `"lat,lng"` formatted coordinates. |
 | `opts` | `key-value mapping` (optional) | Search-specific parameters (see [options](#pkoptions)) |
 
-**Note:** when calling `pk.reverse()`, the API automatically sets `countryByIP` to `true`. Explicitely set it to `false` to turn it off.
-
-So calling `pk.reverse()` is the same as calling `pk.search` with an empty query, coordinates and `countryByIP: true`:
+**Notes:**
+- If you omit `options.coordinates`, it'll use `coordinates` from global parameters set when instanciating with `placekit()` or with `pk.configure()`.
+- If no coordinates are found when calling `pk.reverse()`, then it'll use the user's IP approximate coordinates but relevance will be less accurate.
+- When calling `pk.reverse()`, the API automatically sets `countryByIP` to `true`. Explicitely set it to `false` to turn it off.
+- Calling `pk.reverse()` is the same as calling `pk.search` with an empty query and `countryByIP: true`:
 
 ```js
-// same output as `pk.reverse()`
+pk.reverse({
+  countries: ['fr'],
+});
+
+// is the same as:
 pk.search('', {
-  coordinates: '48.871086,2.3036339',
   countryByIP: true,
   countries: ['fr'],
-  maxResults: 5,
-}).then((res) => {
-  console.log(res.results);
 });
 ```
 

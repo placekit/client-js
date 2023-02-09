@@ -135,31 +135,7 @@ describe('Search', () => {
     expect(res.results).toHaveLength(0);
   });
 
-  it('ignores forwardIP if countryByIP is off', async () => {
-    fetch.mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => ({ results: [] })
-    });
-    const pk = placekit('your-api-key');
-    const res = await pk.search('', {
-      forwardIP: '0.0.0.0',
-    });
-    expect(fetch).toHaveBeenCalledWith(
-      expect.any(String),
-      expect.objectContaining({
-        method: 'POST',
-        signal: expect.anything(),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-placekit-api-key': 'your-api-key',
-        },
-      })
-    );
-    expect(res.results).toHaveLength(0);
-  });
-
-  it('sets `x-forwarded-for` header if forwardIP is set', async () => {
+  it('sets `x-forwarded-for` header from forwardIP option', async () => {
     fetch.mockResolvedValue({
       ok: true,
       status: 200,
@@ -246,11 +222,6 @@ describe('Reverse', () => {
     expect(() => {
       const pk = placekit('your-api-key');
       pk.reverse(null);
-    }).toThrow(/coordinates/i);
-
-    expect(() => {
-      const pk = placekit('your-api-key');
-      pk.reverse('', null);
     }).toThrow(/opts/i);
   });
 
@@ -261,7 +232,9 @@ describe('Reverse', () => {
       json: () => ({ results: [] })
     });
     const pk = placekit('your-api-key');
-    const res = await pk.reverse('0,0');
+    const res = await pk.reverse({
+      coordinates: '0,0',
+    });
     expect(fetch).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
@@ -285,7 +258,7 @@ describe('Reverse', () => {
     const pk = placekit('your-api-key', {
       coordinates: '1,1',
     });
-    const res = await pk.reverse('0,0', {
+    const res = await pk.reverse({
       coordinates: '2,2',
     });
     expect(fetch).toHaveBeenCalledWith(
@@ -297,7 +270,7 @@ describe('Reverse', () => {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-placekit-api-key': 'your-api-key',
         },
-        body: expect.stringMatching("\"coordinates\":\"0,0\""),
+        body: expect.stringMatching("\"coordinates\":\"2,2\""),
       })
     );
     expect(res.results).toHaveLength(0);
