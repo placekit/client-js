@@ -34,7 +34,6 @@
  * @prop {number} resultsCount Actual number of results
  * @prop {number} maxResults Max number of results
  * @prop {string} query Search query
- * @prop {string} params Search parameters (query string)
  */
 
 /**
@@ -144,6 +143,28 @@ module.exports = (apiKey, options = {}) => {
       query,
     };
     return request('POST', 'search', params);
+  };
+
+  /**
+   * PlaceKit reverse geocoding
+   * @memberof client
+   * @param {string} coordinates Coordinates "lat,lng"
+   * @param {Options} [opts] Override global parameters
+   * @return {Promise<SearchResponse>}
+   */
+  client.reverse = (coordinates, opts = {}) => {
+    if (!['string', 'undefined'].includes(typeof coordinates)) {
+      throw Error('PlaceKit: `coordinates` parameter is invalid, expected a string.');
+    }
+    if (!['object', 'undefined'].includes(typeof opts) || Array.isArray(opts) || opts === null) {
+      throw Error('PlaceKit: `opts` parameter is invalid, expected an object.');
+    }
+    const params = {
+      ...globalParams,
+      ...opts,
+      coordinates,
+    };
+    return request('POST', 'reverse', params);
   };
 
   /**

@@ -105,6 +105,7 @@ Or if you are using native ES Modules:
 
 - [`placekit()`](#placekit)
 - [`pk.search()`](#pksearch)
+- [`pk.reverse()`](#pkreverse)
 - [`pk.options`](#pkoptions)
 - [`pk.configure()`](#pkconfigure)
 - [`pk.requestGeolocation()`](#pkrequestGeolocation)
@@ -116,6 +117,7 @@ PlaceKit initialization function returns a PlaceKit client, named `pk` in all ex
 
 ```js
 const pk = placekit('<your-api-key>', {
+  countries: ['fr'],
   language: 'en',
   maxResults: 10,
 });
@@ -133,8 +135,8 @@ The options passed as second parameter override the global parameters only for t
 
 ```js
 pk.search('Paris', {
-  maxResults: 5, 
   countries: ['fr'],
+  maxResults: 5, 
 }).then((res) => {
   console.log(res.results);
 });
@@ -144,6 +146,42 @@ pk.search('Paris', {
 | --- | --- | --- |
 | `query` | `string` | Search terms |
 | `opts` | `key-value mapping` (optional) | Search-specific parameters (see [options](#pkoptions)) |
+
+### `pk.reverse()`
+
+Performs a reverse geocoding search and returns a Promise, which response is a list of results alongside some request metadata.
+The options passed as second parameter override the global parameters only for the current query.
+Any `coordinates` previously set as option would be overriden by the coordinates passed as first argument.
+
+```js
+pk.reverse('48.871086,2.3036339', {
+  countries: ['fr'],
+  maxResults: 5,
+}).then((res) => {
+  console.log(res.results);
+});
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `coordinates` | `string` | `"lat,lng"` formatted coordinates. |
+| `opts` | `key-value mapping` (optional) | Search-specific parameters (see [options](#pkoptions)) |
+
+**Note:** when calling `pk.reverse()`, the API automatically sets `countryByIP` to `true`. Explicitely set it to `false` to turn it off.
+
+So calling `pk.reverse()` is the same as calling `pk.search` with an empty query, coordinates and `countryByIP: true`:
+
+```js
+// same output as `pk.reverse()`
+pk.search('', {
+  coordinates: '48.871086,2.3036339',
+  countryByIP: true,
+  countries: ['fr'],
+  maxResults: 5,
+}).then((res) => {
+  console.log(res.results);
+});
+```
 
 ### `pk.options`
 
@@ -157,7 +195,7 @@ console.log(pk.options); // { "language": "en", "maxResults": 10, ... }
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
 | `maxResults` | `integer?` | `5` | Number of results per page. |
-| `language` | `string?` | `undefined` | Language of the results, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. |
+| `language` | `string?` | `undefined` | Language of the results, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. Supported languages are `en` and `fr`. Defaults to the country's language. |
 | `types` | `string[]?` | `undefined` | Type of results to show. Array of accepted values: `street`, `city`, `country`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
 | `countries` | `string[]?` | `undefined` | Countries to search in, or fallback to if `countryByIP` is `true`. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes in the supported list of countries. |
 | `countryByIP` | `boolean?` | `undefined` | Use IP to find user's country (turned of). |
@@ -167,6 +205,7 @@ console.log(pk.options); // { "language": "en", "maxResults": 10, ... }
 #### ⚠️ Important notes about countries
 
 - The `countries` option is **required** at search time, but we like to keep it optional across all methods so developers remain free on when and how to define it (either when instanciating with `placekit()`, with `pk.configure()`, or at search time with `pk.search()`). If `countries` is invalid, you'll get a `422` error.
+- Supported countries are `be`, `ca`, `ch`, `de`, `es`, `fr`, `gb`, `it`, `nl`, `pt`, `us`.
 - For use-cases where you don't know which country users will search in beforehands, set `countryByIP` to `true`.
 - If `countryByIP` is set to `true`, the option `countries` will be used as a fallback if the user's country is not supported.
 - Careful that it the search is made server-side, the IP will be the one of the server. Use `overrideIP` option to forward user's IP to PlaceKit API.

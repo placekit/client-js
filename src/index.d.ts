@@ -5,6 +5,7 @@ declare function PlaceKit(apiKey?: string, opts?: PKOptions): PKClient;
 
 export interface PKClient {
   search(query: string, opts?: PKOptions): Promise<PKSearchResponse>;
+  reverse(coordinates: string, opts?: PKOptions): Promise<PKSearchResponse>;
   readonly options: PKOptions;
   configure(opts?: PKOptions): void;
   readonly hasGeolocation: boolean;
@@ -34,7 +35,7 @@ type PKCountry = "be" | "ca" | "ch" | "de" | "es" | "fr" | "gb" | "it" | "nl" | 
 export type PKOptions = Partial<{
   timeout?: number;
   maxResults?: number;
-  language?: string;
+  language?: "fr" | "en";
   types?: PKType[];
   countries?: PKCountry[];
   countryByIP?: boolean;
@@ -62,5 +63,4 @@ export type PKSearchResponse = {
   resultsCount: number;
   maxResults: number;
   query: string;
-  params: string;
 };
