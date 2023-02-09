@@ -55,6 +55,7 @@ const placekit = require('@placekit/client-js');
 import placekit from '@placekit/client-js';
 
 const pk = placekit('<your-api-key>', {
+  countries: ['fr'],
   //...
 });
 
