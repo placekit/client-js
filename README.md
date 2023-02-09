@@ -202,9 +202,14 @@ console.log(pk.options); // { "language": "en", "maxResults": 10, ... }
 | `forwardIP` | `string?` | `undefined` | Set `x-forwarded-for` header to forward the provided IP for back-end usages (otherwise it'll use the server IP). |
 | `coordinates` | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pk.requestGeolocation()`](#pkrequestGeolocation). |
 
-#### ⚠️ Important notes about countries
+#### ⚠️ `countries` option is required
 
-The `countries` option is **required** at search time, but we like to keep it optional across all methods so developers remain free on when and how to define it (either when instanciating with `placekit()`, with `pk.configure()`, or at search time with `pk.search()`). If `countries` is invalid, you'll get a `422` error.
+The `countries` option is **required** at search time, but we like to keep it optional across all methods so developers remain free on when and how to define it: 
+- either when instanciating with `placekit()`,
+- with `pk.configure()`,
+- or at search time with `pk.search()`.
+
+If `countries` is invalid, you'll get a `422` error.
 
 #### Supported countries
 
