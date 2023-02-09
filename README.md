@@ -198,7 +198,7 @@ console.log(pk.options); // { "language": "en", "maxResults": 10, ... }
 | `language` | `string?` | `undefined` | Language of the results, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. Supported languages are `en` and `fr`. Defaults to the country's language if available. |
 | `types` | `string[]?` | `undefined` | Type of results to show. Array of accepted values: `street`, `city`, `country`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
 | `countries` | `string[]?` | `undefined` | Countries to search in, or fallback to if `countryByIP` is `true`. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes in the supported list of countries. |
-| `countryByIP` | `boolean?` | `undefined` | Use IP to find user's country (turned of). |
+| `countryByIP` | `boolean?` | `undefined` | Use IP to find user's country (turned off). |
 | `overrideIP` | `string?` | `undefined` | Set `x-forwarded-for` header to override IP when `countryByIP` is `true`. |
 | `coordinates` | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pk.requestGeolocation()`](#pkrequestGeolocation). |
 
@@ -208,7 +208,7 @@ console.log(pk.options); // { "language": "en", "maxResults": 10, ... }
 - Supported countries are `be`, `ca`, `ch`, `de`, `es`, `fr`, `gb`, `it`, `nl`, `pt`, `us`.
 - For use-cases where you don't know which country users will search in beforehands, set `countryByIP` to `true`.
 - If `countryByIP` is set to `true`, the option `countries` will be used as a fallback if the user's country is not supported.
-- Careful that it the search is made server-side, the IP will be the one of the server. Use `overrideIP` option to forward user's IP to PlaceKit API.
+- Careful that if the search is made server-side, the IP will be the one of the server. Use `overrideIP` option to forward user's IP to PlaceKit API.
 
 ### `pk.configure()`
 
