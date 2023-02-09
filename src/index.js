@@ -87,7 +87,7 @@ module.exports = (apiKey, options = {}) => {
       'Content-Type': 'application/json; charset=UTF-8',
       'x-placekit-api-key': apiKey,
     };
-    if (params.countryByIP && forwardIP) {
+    if (forwardIP) {
       headers['x-forwarded-for'] = forwardIP;
     }
     return fetch(url, {

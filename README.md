@@ -197,17 +197,29 @@ console.log(pk.options); // { "language": "en", "maxResults": 10, ... }
 | `maxResults` | `integer?` | `5` | Number of results per page. |
 | `language` | `string?` | `undefined` | Language of the results, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. Supported languages are `en` and `fr`. Defaults to the country's language if available. |
 | `types` | `string[]?` | `undefined` | Type of results to show. Array of accepted values: `street`, `city`, `country`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
-| `countries` | `string[]?` | `undefined` | Countries to search in, or fallback to if `countryByIP` is `true`. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes in the supported list of countries. |
-| `countryByIP` | `boolean?` | `undefined` | Use IP to find user's country (turned off). |
-| `forwardIP` | `string?` | `undefined` | Set `x-forwarded-for` header to forward IP for back-end usage (otherwise it'll use the server's IP). |
+| `countries` | `string[]?` | `undefined` | Countries to search in, or fallback to if `countryByIP` is `true`. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes in the [supported list of countries](#supported-countries). |
+| [`countryByIP`](#countryByIP-option) | `boolean?` | `undefined` | Use IP to find user's country (turned off). |
+| `forwardIP` | `string?` | `undefined` | Set `x-forwarded-for` header to forward the provided IP for back-end usages (otherwise it'll use the server IP). |
 | `coordinates` | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pk.requestGeolocation()`](#pkrequestGeolocation). |
 
 #### ⚠️ Important notes about countries
 
-- The `countries` option is **required** at search time, but we like to keep it optional across all methods so developers remain free on when and how to define it (either when instanciating with `placekit()`, with `pk.configure()`, or at search time with `pk.search()`). If `countries` is invalid, you'll get a `422` error.
-- Supported countries are `be`, `ca`, `ch`, `de`, `es`, `fr`, `gb`, `it`, `nl`, `pt`, `us`.
-- For use-cases where you don't know which country users will search in beforehands, set `countryByIP` to `true`.
-- If `countryByIP` is set to `true`, the option `countries` will be used as a fallback if the user's country is not supported.
+The `countries` option is **required** at search time, but we like to keep it optional across all methods so developers remain free on when and how to define it (either when instanciating with `placekit()`, with `pk.configure()`, or at search time with `pk.search()`). If `countries` is invalid, you'll get a `422` error.
+
+#### Supported countries
+
+Supported countries are `be`, `ca`, `ch`, `de`, `es`, `fr`, `gb`, `it`, `nl`, `pt`, `us`.
+
+#### `countryByIP` option
+
+Set `countryByIP` to `true` when you don't know which country users will search addresses in. In that case, the option `countries` will be used as a fallback if the user's country is not supported:
+
+```js
+pk.search('123 ave', {
+  countryByIP: true, // use user's country, based on their IP
+  countries: ['fr', 'be'], // returning results from France and Belgium if user's country is not supported
+});
+```
 
 ### `pk.configure()`
 
