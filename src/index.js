@@ -6,7 +6,9 @@
  * @prop {number} [maxResults] Max results to return
  * @prop {string[]} [types] Results type
  * @prop {string} [language] Results language (ISO 639-1)
- * @prop {string[]} [countries] Countries whitelist (ISO 639-1)
+ * @prop {boolean} [countryByIP] Get country from IP
+ * @prop {boolean} [overrideIP] Set `x-forwarded-for` header to override IP when `countryByIP` is `true`.
+ * @prop {string[]} [countries] Countries to search in, or fallback to if `countryByIP` is true (ISO 639-1)
  * @prop {string} [coordinates] Coordinates search starts around
  */
 
@@ -75,20 +77,24 @@ module.exports = (apiKey, options = {}) => {
    * @return {Promise<SearchResponse>}
    */
   const request = (method = 'POST', resource = '', opts = {}) => {
-    const { timeout, ...params } = opts;
+    const { timeout, overrideIP, ...params } = opts;
     const controller = new AbortController();
     const id = typeof timeout !== 'undefined' ? setTimeout(() => controller.abort(), timeout) : undefined;
     const url = [
       hosts[currentHost],
       resource.trim().replace(/^\/+/, '')
     ].filter((s) => s).join('/');
+    const headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'x-placekit-api-key': apiKey,
+    };
+    if (params.countryByIP && overrideIP) {
+      headers['x-forwarded-for'] = overrideIP;
+    }
     return fetch(url, {
       method,
+      headers,
       signal: controller.signal,
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-placekit-api-key': apiKey,
-      },
       body: JSON.stringify(params),
     }).then(async (res) => {
       clearTimeout(id);

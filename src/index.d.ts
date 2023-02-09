@@ -29,12 +29,16 @@ type PKType =
   "-townhall" | 
   "-tourism";
 
+type PKCountry = "be" | "ca" | "ch" | "de" | "es" | "fr" | "gb" | "it" | "nl" | "pt" | "us";
+
 export type PKOptions = Partial<{
   timeout?: number;
   maxResults?: number;
   language?: string;
   types?: PKType[];
-  countries?: string[];
+  countries?: PKCountry[];
+  countryByIP?: boolean;
+  overrideIP?: string;
   coordinates?: string;
 }>;
 
