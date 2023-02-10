@@ -135,6 +135,32 @@ describe('Search', () => {
     expect(res.results).toHaveLength(0);
   });
 
+  it('sets `x-forwarded-for` header from forwardIP option', async () => {
+    fetch.mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: () => ({ results: [] })
+    });
+    const pk = placekit('your-api-key');
+    const res = await pk.search('', {
+      forwardIP: '0.0.0.0',
+      countryByIP: true,
+    });
+    expect(fetch).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        method: 'POST',
+        signal: expect.anything(),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-placekit-api-key': 'your-api-key',
+          'x-forwarded-for': '0.0.0.0',
+        },
+      })
+    );
+    expect(res.results).toHaveLength(0);
+  });
+
   it('retries with next host on timeout', async () => {
     fetch.mockResolvedValue({
       ok: true,
@@ -188,5 +214,65 @@ describe('Search', () => {
       message: expect.any(String),
       errors: expect.any(Array),
     });
+  });
+});
+
+describe('Reverse', () => {
+  it('throws when args are invalid', () => {
+    expect(() => {
+      const pk = placekit('your-api-key');
+      pk.reverse(null);
+    }).toThrow(/opts/i);
+  });
+
+  it('sends proper request', async () => {
+    fetch.mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: () => ({ results: [] })
+    });
+    const pk = placekit('your-api-key');
+    const res = await pk.reverse({
+      coordinates: '0,0',
+    });
+    expect(fetch).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        method: 'POST',
+        signal: expect.anything(),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-placekit-api-key': 'your-api-key',
+        },
+      })
+    );
+    expect(res.results).toHaveLength(0);
+  });
+
+  it('overrides previously set coordinates', async () => {
+    fetch.mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: () => ({ results: [] })
+    });
+    const pk = placekit('your-api-key', {
+      coordinates: '1,1',
+    });
+    const res = await pk.reverse({
+      coordinates: '2,2',
+    });
+    expect(fetch).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        method: 'POST',
+        signal: expect.anything(),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-placekit-api-key': 'your-api-key',
+        },
+        body: expect.stringMatching("\"coordinates\":\"2,2\""),
+      })
+    );
+    expect(res.results).toHaveLength(0);
   });
 });

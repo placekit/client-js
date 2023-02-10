@@ -18,7 +18,6 @@
   <a href="#-quick-start">Quick start</a> • 
   <a href="#-reference">Reference</a> • 
   <a href="./examples">Examples</a> • 
-  <a href="https://placekit.io/developers">Documentation</a> • 
   <a href="#%EF%B8%8F-license">License</a>
 </p>
 
@@ -55,6 +54,7 @@ const placekit = require('@placekit/client-js');
 import placekit from '@placekit/client-js';
 
 const pk = placekit('<your-api-key>', {
+  countries: ['fr'],
   //...
 });
 
@@ -105,6 +105,7 @@ Or if you are using native ES Modules:
 
 - [`placekit()`](#placekit)
 - [`pk.search()`](#pksearch)
+- [`pk.reverse()`](#pkreverse)
 - [`pk.options`](#pkoptions)
 - [`pk.configure()`](#pkconfigure)
 - [`pk.requestGeolocation()`](#pkrequestGeolocation)
@@ -116,6 +117,7 @@ PlaceKit initialization function returns a PlaceKit client, named `pk` in all ex
 
 ```js
 const pk = placekit('<your-api-key>', {
+  countries: ['fr'],
   language: 'en',
   maxResults: 10,
 });
@@ -133,8 +135,8 @@ The options passed as second parameter override the global parameters only for t
 
 ```js
 pk.search('Paris', {
-  maxResults: 5, 
   countries: ['fr'],
+  maxResults: 5, 
 }).then((res) => {
   console.log(res.results);
 });
@@ -144,6 +146,44 @@ pk.search('Paris', {
 | --- | --- | --- |
 | `query` | `string` | Search terms |
 | `opts` | `key-value mapping` (optional) | Search-specific parameters (see [options](#pkoptions)) |
+
+### `pk.reverse()`
+
+Performs a reverse geocoding search and returns a Promise, which response is a list of results alongside some request metadata.
+The options passed as first parameter override the global parameters only for the current query.
+Any `coordinates` previously set as option would be overriden by the coordinates passed as first argument.
+
+```js
+pk.reverse({
+  coordinates: '48.871086,2.3036339',
+  countries: ['fr'],
+  maxResults: 5,
+}).then((res) => {
+  console.log(res.results);
+});
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `opts` | `key-value mapping` (optional) | Search-specific parameters (see [options](#pkoptions)) |
+
+**Notes:**
+- If you omit `options.coordinates`, it'll use `coordinates` from global parameters set when instanciating with `placekit()` or with `pk.configure()`.
+- If no coordinates are found when calling `pk.reverse()`, then it'll use the user's IP approximate coordinates but relevance will be less accurate.
+- When calling `pk.reverse()`, the API automatically sets `countryByIP` to `true`. Explicitely set it to `false` to turn it off.
+- Calling `pk.reverse()` is the same as calling `pk.search` with an empty query and `countryByIP: true`:
+
+```js
+pk.reverse({
+  countries: ['fr'],
+});
+
+// is the same as:
+pk.search('', {
+  countryByIP: true,
+  countries: ['fr'],
+});
+```
 
 ### `pk.options`
 
@@ -157,12 +197,36 @@ console.log(pk.options); // { "language": "en", "maxResults": 10, ... }
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
 | `maxResults` | `integer?` | `5` | Number of results per page. |
-| `language` | `string?` | `undefined` | Language of the results, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. |
+| `language` | `string?` | `undefined` | Language of the results, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. Supported languages are `en` and `fr`. Defaults to the country's language if available. |
 | `types` | `string[]?` | `undefined` | Type of results to show. Array of accepted values: `street`, `city`, `country`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
-| `countries` | `string[]?` | `undefined` | Limit results to given countries. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. |
+| [`countries`](#%EF%B8%8F-countries-option-is-required) | `string[]?` | `undefined` | Countries to search in, or fallback to if `countryByIP` is `true`. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes in the [supported list of countries](#supported-countries). |
+| [`countryByIP`](#countryByIP-option) | `boolean?` | `undefined` | Use IP to find user's country (turned off). |
+| `forwardIP` | `string?` | `undefined` | Set `x-forwarded-for` header to forward the provided IP for back-end usages (otherwise it'll use the server IP). |
 | `coordinates` | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pk.requestGeolocation()`](#pkrequestGeolocation). |
 
-**Important**: the `countries` option is **required** at search time, but we like to keep it optional across all methods so developers remain free on when and how to define it.
+#### ⚠️ `countries` option is required
+
+The `countries` option is **required** at search time, but we like to keep it optional across all methods so developers remain free on when and how to define it: 
+- either when instanciating with `placekit()`,
+- with `pk.configure()`,
+- or at search time with `pk.search()`.
+
+If `countries` is missing or invalid, you'll get a `422` error.
+
+#### Supported countries
+
+Supported countries are `be`, `ca`, `ch`, `de`, `es`, `fr`, `gb`, `it`, `nl`, `pt`, `us`.
+
+#### `countryByIP` option
+
+Set `countryByIP` to `true` when you don't know which country users will search addresses in. In that case, the option `countries` will be used as a fallback if the user's country is not supported:
+
+```js
+pk.search('123 ave', {
+  countryByIP: true, // use user's country, based on their IP
+  countries: ['fr', 'be'], // returning results from France and Belgium if user's country is not supported
+});
+```
 
 ### `pk.configure()`
 

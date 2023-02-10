@@ -6,7 +6,9 @@
  * @prop {number} [maxResults] Max results to return
  * @prop {string[]} [types] Results type
  * @prop {string} [language] Results language (ISO 639-1)
- * @prop {string[]} [countries] Countries whitelist (ISO 639-1)
+ * @prop {boolean} [countryByIP] Get country from IP
+ * @prop {boolean} [forwardIP] Set `x-forwarded-for` header to override IP when `countryByIP` is `true`.
+ * @prop {string[]} [countries] Countries to search in, or fallback to if `countryByIP` is true (ISO 639-1)
  * @prop {string} [coordinates] Coordinates search starts around
  */
 
@@ -32,7 +34,6 @@
  * @prop {number} resultsCount Actual number of results
  * @prop {number} maxResults Max number of results
  * @prop {string} query Search query
- * @prop {string} params Search parameters (query string)
  */
 
 /**
@@ -75,20 +76,24 @@ module.exports = (apiKey, options = {}) => {
    * @return {Promise<SearchResponse>}
    */
   const request = (method = 'POST', resource = '', opts = {}) => {
-    const { timeout, ...params } = opts;
+    const { timeout, forwardIP, ...params } = opts;
     const controller = new AbortController();
     const id = typeof timeout !== 'undefined' ? setTimeout(() => controller.abort(), timeout) : undefined;
     const url = [
       hosts[currentHost],
       resource.trim().replace(/^\/+/, '')
     ].filter((s) => s).join('/');
+    const headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'x-placekit-api-key': apiKey,
+    };
+    if (forwardIP) {
+      headers['x-forwarded-for'] = forwardIP;
+    }
     return fetch(url, {
       method,
+      headers,
       signal: controller.signal,
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-placekit-api-key': apiKey,
-      },
       body: JSON.stringify(params),
     }).then(async (res) => {
       clearTimeout(id);
@@ -138,6 +143,23 @@ module.exports = (apiKey, options = {}) => {
       query,
     };
     return request('POST', 'search', params);
+  };
+
+  /**
+   * PlaceKit reverse geocoding
+   * @memberof client
+   * @param {Options} [opts] Override global parameters
+   * @return {Promise<SearchResponse>}
+   */
+  client.reverse = (opts = {}) => {
+    if (!['object', 'undefined'].includes(typeof opts) || Array.isArray(opts) || opts === null) {
+      throw Error('PlaceKit: `opts` parameter is invalid, expected an object.');
+    }
+    const params = {
+      ...globalParams,
+      ...opts,
+    };
+    return request('POST', 'reverse', params);
   };
 
   /**
