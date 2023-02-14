@@ -10,7 +10,7 @@ The purpose of this example is simply to showcase the available types, even thou
 ```sh
 # clone project and access this example
 git clone git@github.com:placekit/client-js.git
-cd client-js/examples/node
+cd client-js/examples/client-js-typescript
 
 # install dependencies
 npm install

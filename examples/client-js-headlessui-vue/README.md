@@ -13,7 +13,7 @@ For a full autocomplete experience, we recommend using [PlaceKit Autocomplete](h
 ```sh
 # clone project and access this example
 git clone git@github.com:placekit/client-js.git
-cd client-js/examples/headlessui-vue
+cd client-js/examples/client-js-headlessui-vue
 
 # install dependencies
 npm install

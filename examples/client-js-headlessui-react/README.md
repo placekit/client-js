@@ -13,7 +13,7 @@ For a full autocomplete experience, we recommend using [PlaceKit Autocomplete](h
 ```sh
 # clone project and access this example
 git clone git@github.com:placekit/client-js.git
-cd client-js/examples/headlessui-react
+cd client-js/examples/client-js-headlessui-react
 
 # install dependencies
 npm install

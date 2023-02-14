@@ -8,7 +8,7 @@ It uses [dotenv](https://www.npmjs.com/package/dotenv) package to safely set cre
 ```sh
 # clone project and access this example
 git clone git@github.com:placekit/client-js.git
-cd client-js/examples/node
+cd client-js/examples/client-js-node
 
 # install dependencies
 npm install

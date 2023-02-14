@@ -8,7 +8,7 @@ It also uses [dotenv](https://www.npmjs.com/package/dotenv) package to safely se
 ```sh
 # clone project and access this example
 git clone git@github.com:placekit/client-js.git
-cd client-js/examples/node
+cd client-js/examples/client-js-node-express
 
 # install dependencies
 npm install

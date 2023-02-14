@@ -11,7 +11,7 @@ For a full autocomplete experience, we recommend using [PlaceKit Autocomplete JS
 
 ```sh
 git clone git@github.com:placekit/client-js.git
-cd client-js/examples/algolia-autocomplete
+cd client-js/examples/client-js-algolia-autocomplete
 ```
 
 Open `index.html` in your editor and replace `<your-api-key>` with your PlaceKit API key.
