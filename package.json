@@ -1,6 +1,6 @@
 {
   "name": "@placekit/client-js",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0",
   "author": "PlaceKit <support@placekit.io>",
   "description": "PlaceKit JavaScript client",
   "license": "MIT",
@@ -37,14 +37,14 @@
     "test:ci": "jest --runInBand --detectOpenHandles --forceExit --roots ./src --ci"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^23.0.4",
-    "eslint": "^8.29.0",
+    "@rollup/plugin-commonjs": "^24.0.1",
+    "eslint": "^8.36.0",
     "eslint-config-google": "^0.14.0",
-    "jest": "^29.3.1",
-    "jest-environment-jsdom": "^29.3.1",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
     "jest-fetch-mock": "^3.0.3",
-    "rimraf": "^3.0.2",
-    "rollup": "^3.7.4",
+    "rimraf": "^4.4.0",
+    "rollup": "^3.20.0",
     "rollup-plugin-cleanup": "^3.2.1",
     "rollup-plugin-copy": "^3.4.0"
   }
