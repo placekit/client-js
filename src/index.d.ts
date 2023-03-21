@@ -30,14 +30,12 @@ type PKType =
   "-townhall" | 
   "-tourism";
 
-type PKCountry = "be" | "ca" | "ch" | "de" | "es" | "fr" | "gb" | "it" | "nl" | "pt" | "us";
-
 export type PKOptions = Partial<{
   timeout?: number;
   maxResults?: number;
   language?: "fr" | "en";
   types?: PKType[];
-  countries?: PKCountry[];
+  countries?: string[];
   countryByIP?: boolean;
   forwardIP?: string;
   coordinates?: string;
