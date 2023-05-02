@@ -17,18 +17,18 @@
           leave="transition ease-in duration-100"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
-          @after-leave="query = ''"
+          @after-leave="state.query = ''"
         >
           <ComboboxOptions class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
             <div
-              v-if="suggestions.length === 0 && value !== ''"
+              v-if="state.suggestions.length === 0 && value !== ''"
               class="relative cursor-default select-none py-2 px-4 text-gray-700"
             >
               Nothing found.
             </div>
 
             <ComboboxOption
-              v-for="item in suggestions"
+              v-for="item in state.suggestions"
               as="template"
               :key="item.id"
               :value="[item.name, item.zipcode, item.county].join(' ')"
@@ -48,11 +48,11 @@
                   {{ [item.name, item.zipcode, item.county].join(' ') }}
                 </span>
                 <span
-                  v-if="selected"
                   class="absolute inset-y-0 left-0 flex items-center pl-3"
-                  :class="{ 'text-white': active, 'text-teal-600': !active }"
+                  :class="{ 'text-white': active, 'text-gray-300': !active }"
                 >
-                  <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                  <CheckIcon v-if="selected" class="h-5 w-5" aria-hidden="true" />
+                  <MapPinIcon v-else class="h-5 w-5" aria-hidden="true" />
                 </span>
               </li>
             </ComboboxOption>
@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue';
+  import { reactive } from 'vue';
   import {
     Combobox,
     ComboboxInput,
@@ -73,21 +73,22 @@
     ComboboxOption,
     TransitionRoot,
   } from '@headlessui/vue';
-  import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/24/solid';
-  import placekit from '../../../';
+  import { CheckIcon, ChevronUpDownIcon, MapPinIcon } from '@heroicons/vue/24/solid';
+  import placekit from '@placekit/client-js';
 
-  const pk = placekit(process.env.PLACEKIT_API_KEY, {
-    maxResults: 5,
+  const pk = placekit(import.meta.env.VITE_PLACEKIT_API_KEY, {
     countries: ['fr'],
   });
 
-  const suggestions = ref([]);
-  const query = ref('');
+  const state = reactive({
+    query: '',
+    suggestions: [],
+  });
 
   function search(query) {
-    query.value = query;
+    state.query = query;
     pk.search(query).then((res) => {
-      suggestions.value = res.results;
+      state.suggestions = res.results;
     });
   }
 </script>
