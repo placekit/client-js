@@ -34,7 +34,8 @@
     "format": "eslint ./src --fix",
     "test": "jest --runInBand --detectOpenHandles --forceExit --roots ./src",
     "test:watch": "jest --runInBand --detectOpenHandles --forceExit --roots ./src --onlyFailures --watch",
-    "test:ci": "jest --runInBand --detectOpenHandles --forceExit --roots ./src --ci"
+    "test:ci": "jest --runInBand --detectOpenHandles --forceExit --roots ./src --ci",
+    "install:examples": "find examples -maxdepth 2 -name package.json -not -path \"*/node_modules/*\" -execdir npm i \\;"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^24.0.1",
