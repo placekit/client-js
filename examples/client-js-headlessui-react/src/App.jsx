@@ -1,12 +1,11 @@
 import { Fragment, useEffect, useState } from 'react';
 import { Combobox, Transition } from '@headlessui/react';
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/24/solid';
+import { CheckIcon, ChevronUpDownIcon, MapPinIcon } from '@heroicons/react/24/solid';
 import placekit from '@placekit/client-js';
 
 // Make sure to call `placekit` outside of a component’s render to avoid
 // recreating the `PlaceKit.Client` object on every render.
-const pk = placekit(process.env.PLACEKIT_API_KEY, {
-  maxResults: 5,
+const pk = placekit(import.meta.env.VITE_PLACEKIT_API_KEY, {
   countries: ['fr'],
 });
 
@@ -76,15 +75,17 @@ const App = () => {
                         >
                           {val}
                         </span>
-                        {selected ? (
-                          <span
-                            className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                              active ? 'text-white' : 'text-teal-600'
-                            }`}
-                          >
+                        <span
+                          className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                            active ? 'text-white' : 'text-gray-300'
+                          }`}
+                        >
+                          {selected ? (
                             <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                          </span>
-                        ) : null}
+                          ) : (
+                            <MapPinIcon className="h-5 w-5" aria-hidden="true" />
+                          )}
+                        </span>
                       </>
                     )}
                   </Combobox.Option>

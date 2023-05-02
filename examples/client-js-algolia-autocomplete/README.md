@@ -1,6 +1,6 @@
 # PlaceKit Client JS x Algolia Autocomplete
 
-[![Open in CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-blue?style=flat-square&logo=codesandbox)](https://githubbox.com/placekit/autocomplete-js/tree/main/examples/autocomplete-js-basic)
+[![Open in CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-blue?style=flat-square&logo=codesandbox)](https://githubbox.com/placekit/client-js/tree/main/examples/client-js-algolia-autocomplete)
 
 [Algolia Autocomplete](https://github.com/algolia/autocomplete) is an open source, production-ready JavaScript library for building autocomplete experiences.
 
@@ -15,8 +15,8 @@ Only using [TailwindCSS](https://tailwindcss.com) as a convenience for the basic
 
 ```sh
 # clone project and access this example
-git clone git@github.com:placekit/autocomplete-js.git
-cd autocomplete-js/examples/autocomplete-js-basic
+git clone git@github.com:placekit/client-js.git
+cd client-js/examples/client-js-algolia-autocomplete
 
 # install dependencies
 npm install

@@ -15,6 +15,6 @@
   "dependencies": {
     "@algolia/autocomplete-js": "^1.9.2",
     "@algolia/autocomplete-theme-classic": "^1.9.2",
-    "@placekit/autocomplete-js": "^1.1.1"
+    "@placekit/client-js": "^1.0.0"
   }
 }
