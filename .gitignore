@@ -3,7 +3,8 @@
 # misc
 .DS_Store
 /NOTES.md
-/publish.sh
+/demo
+/*.sh
 
 # dependencies
 node_modules

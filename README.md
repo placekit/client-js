@@ -109,6 +109,7 @@ Or if you are using native ES Modules:
 - [`pk.options`](#pkoptions)
 - [`pk.configure()`](#pkconfigure)
 - [`pk.requestGeolocation()`](#pkrequestGeolocation)
+- [`pk.clearGeolocation()`](#pkclearGeolocation)
 - [`pk.hasGeolocation`](#pkhasGeolocation)
 
 ### `placekit()`
@@ -255,6 +256,16 @@ pk.requestGeolocation({ timeout: 10000 }).then((pos) => console.log(pos.coords))
 | `opts` | `key-value mapping` (optional) | `navigator.geolocation.getCurrentPosition` [options](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition) |
 
 The location will be store in the `coordinates` global options, you can still manually override it.
+
+### `pk.clearGeolocation()`
+
+Clear device's geolocation stored with [`pk.requestGeolocation`](#pkrequestGeolocation).
+
+```js
+pk.clearGeolocation();
+```
+
+The global option `coordinates` will be deleted and `pk.hasGeolocation` will be set to `false`.
 
 ### `pk.hasGeolocation`
 
