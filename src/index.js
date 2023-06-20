@@ -214,13 +214,22 @@ module.exports = (apiKey, options = {}) => {
         },
         (err) => {
           hasGeolocation = false;
-          globalParams.coordinates = null;
+          delete globalParams.coordinates;
           reject(Error(`PlaceKit.requestGeolocation: (${err.code}) ${err.message}`));
         },
         opts
       );
     }
   });
+
+  /**
+   * Clear device's location
+   * @memberof client
+   */
+  client.clearGeolocation = () => {
+    hasGeolocation = false;
+    delete globalParams.coordinates;
+  };
 
   // Save global parameters and return client
   client.configure(options);
