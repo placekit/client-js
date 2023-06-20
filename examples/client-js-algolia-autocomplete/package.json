@@ -13,8 +13,8 @@
     "vite": "^4.3.9"
   },
   "dependencies": {
-    "@algolia/autocomplete-js": "^1.9.2",
-    "@algolia/autocomplete-theme-classic": "^1.9.2",
-    "@placekit/client-js": "^1.0.0"
+    "@algolia/autocomplete-js": "^1.9.4",
+    "@algolia/autocomplete-theme-classic": "^1.9.4",
+    "@placekit/client-js": "^1.1.0"
   }
 }

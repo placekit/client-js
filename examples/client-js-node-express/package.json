@@ -1,8 +1,8 @@
 {
   "private": true,
   "dependencies": {
-    "@placekit/client-js": "^1.0.0",
-    "dotenv": "^16.1.4",
+    "@placekit/client-js": "^1.1.0",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2"
   }
 }
