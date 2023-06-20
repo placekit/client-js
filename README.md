@@ -259,7 +259,7 @@ The location will be store in the `coordinates` global options, you can still ma
 
 ### `pk.clearGeolocation()`
 
-Clear device's geolocation stores with [`pk.requestGeolocation`](#pkrequestGeolocation).
+Clear device's geolocation stored with [`pk.requestGeolocation`](#pkrequestGeolocation).
 
 ```js
 pk.clearGeolocation();
