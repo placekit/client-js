@@ -98,6 +98,25 @@ describe('Request Geolocation', () => {
     expect(res).toMatchObject({ coords });
     expect(pk.hasGeolocation).toBeTruthy();
   });
+
+  it('clears geolocation', async () => {
+    const coords = {
+      latitude: 48.86,
+      longitude: 2.29,
+    };
+    mockGeolocation.getCurrentPosition.mockImplementation(
+      (success) => Promise.resolve(success({ coords }))
+    );
+    const pk = placekit('your-api-key');
+    const res = await pk.requestGeolocation().catch((err) => err);
+    expect(mockGeolocation.getCurrentPosition).toHaveBeenCalled();
+    expect(res).toMatchObject({ coords });
+    expect(pk.options.coordinates).toEqual('48.86,2.29');
+    expect(pk.hasGeolocation).toBeTruthy();
+    pk.clearGeolocation();
+    expect(pk.options.coordinates).toBeFalsy();
+    expect(pk.hasGeolocation).toBeFalsy();
+  });
 });
 
 describe('Search', () => {
