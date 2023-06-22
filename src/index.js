@@ -8,7 +8,7 @@
  * @prop {string} [language] Results language (ISO 639-1)
  * @prop {boolean} [countryByIP] Get country from IP
  * @prop {boolean} [forwardIP] Set `x-forwarded-for` header to override IP when `countryByIP` is `true`.
- * @prop {string[]} [countries] Countries to search in, or fallback to if `countryByIP` is true (ISO 639-1)
+ * @prop {string[]} [countries] Countries to search in, or fallback to if `countryByIP` is true (ISO_3166-1_alpha-2)
  * @prop {string} [coordinates] Coordinates search starts around
  */
 
@@ -20,8 +20,9 @@
  * @prop {string} administrative
  * @prop {string} country
  * @prop {string} countrycode
- * @prop {number} lat
- * @prop {number} lng
+ * @prop {string} coordinates // "lat,lng"
+ * @prop {number} [lat] // deprecated
+ * @prop {number} [lng] // deprecated
  * @prop {string} type
  * @prop {string[]} zipcode
  * @prop {number} population
@@ -63,7 +64,7 @@ module.exports = (apiKey, options = {}) => {
     maxResults: 5,
   };
 
-  // get default language from browser settings
+  // Set default language from browser settings
   if (typeof window !== 'undefined' && navigator.language) {
     globalParams.language = navigator.language.slice(0, 2);
   }
@@ -209,7 +210,7 @@ module.exports = (apiKey, options = {}) => {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           hasGeolocation = true;
-          globalParams.coordinates = `${pos.coords.latitude}, ${pos.coords.longitude}`;
+          globalParams.coordinates = `${pos.coords.latitude},${pos.coords.longitude}`;
           resolve(pos);
         },
         (err) => {

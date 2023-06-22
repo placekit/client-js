@@ -13,27 +13,27 @@ export interface PKClient {
 }
 
 type PKType = 
-  "street" | 
-  "city" | 
-  "country" | 
-  "airport" | 
-  "bus" | 
-  "train" | 
-  "townhall" | 
-  "tourism" | 
-  "-street" | 
-  "-city" | 
-  "-country" | 
-  "-airport" | 
-  "-bus" | 
-  "-train" | 
-  "-townhall" | 
-  "-tourism";
+  "airport" |
+  "bus" |
+  "city" |
+  "country" |
+  "street" |
+  "tourism" |
+  "townhall" |
+  "train" |
+  "-airport" |
+  "-bus" |
+  "-city" |
+  "-country" |
+  "-street" |
+  "-tourism" |
+  "-townhall" |
+  "-train";
 
 export type PKOptions = Partial<{
   timeout?: number;
   maxResults?: number;
-  language?: "fr" | "en";
+  language?: string;
   types?: PKType[];
   countries?: string[];
   countryByIP?: boolean;
@@ -42,17 +42,18 @@ export type PKOptions = Partial<{
 }>;
 
 export type PKResult = {
-  name: string,
-  city: string,
-  county: string,
-  administrative: string,
-  country: string,
+  name: string;
+  city: string;
+  county: string;
+  administrative: string;
+  country: string;
   countrycode: string;
-  lat: number,
-  lng: number,
-  type: string,
-  zipcode: string[],
-  population: number,
+  coordinates: string; // "lat,lng"
+  lat?: number; // deprecated
+  lng?: number; // deprecated
+  type: string;
+  zipcode: string[];
+  population: number;
   highlight: string;
 };
 
