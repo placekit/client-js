@@ -20,7 +20,7 @@
  * @prop {string} administrative
  * @prop {string} country
  * @prop {string} countrycode
- * @prop {string} coordinates
+ * @prop {string} coordinates // "lat,lng"
  * @prop {number} [lat] // deprecated
  * @prop {number} [lng] // deprecated
  * @prop {string} type

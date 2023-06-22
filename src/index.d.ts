@@ -48,7 +48,7 @@ export type PKResult = {
   administrative: string;
   country: string;
   countrycode: string;
-  coordinates: string;
+  coordinates: string; // "lat,lng"
   lat?: number; // deprecated
   lng?: number; // deprecated
   type: string;
