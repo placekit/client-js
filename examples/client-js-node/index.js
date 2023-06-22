@@ -9,6 +9,10 @@ const pk = placekit(process.env.PLACEKIT_API_KEY, {
 const [query] = process.argv.slice(2);
 
 (async () => {
-  const res = await pk.search(query || '').catch(console.error);
-  console.log(res);
+  try {
+    const res = await pk.search(query || '');
+    console.log(res);
+  } catch (err) {
+    console.error(err);
+  }
 })();

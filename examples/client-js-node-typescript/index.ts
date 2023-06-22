@@ -14,6 +14,10 @@ const pk: PKClient = PlaceKit(process.env.PLACEKIT_API_KEY, options);
 const [query] = process.argv.slice(2);
 
 (async () => {
-  const res: PKSearchResponse = await pk.search(query || '');
-  console.log(res);
+  try {
+    const res: PKSearchResponse = await pk.search(query || '');
+    console.log(res);
+  } catch (err) {
+    console.error(err);
+  }
 })();
