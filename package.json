@@ -1,6 +1,6 @@
 {
   "name": "@placekit/client-js",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "author": "PlaceKit <support@placekit.io>",
   "description": "PlaceKit JavaScript client",
   "license": "MIT",
@@ -45,7 +45,7 @@
     "jest-environment-jsdom": "^29.5.0",
     "jest-fetch-mock": "^3.0.3",
     "rimraf": "^5.0.1",
-    "rollup": "^3.25.1",
+    "rollup": "^3.25.2",
     "rollup-plugin-cleanup": "^3.2.1",
     "rollup-plugin-copy": "^3.4.0"
   }
