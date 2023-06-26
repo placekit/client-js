@@ -42,6 +42,11 @@ export type PKOptions = Partial<{
 }>;
 
 export type PKResult = {
+  street?: {
+    number: string;
+    suffix: string;
+    name: string;
+  };
   name: string;
   city: string;
   county: string;
