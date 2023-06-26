@@ -213,17 +213,9 @@ module.exports = (apiKey, options = {}) => {
      * @return {Promise<PatchSearchResponse>}
      */
     search(query, params = {}) {
-      if (!['string', 'undefined'].includes(typeof query)) {
-        throw Error('PlaceKit `client.patch.search`: `query` argument is invalid, expected a string.');
-      }
-      if (!['object', 'undefined'].includes(typeof params) || Array.isArray(params) || params === null) {
-        throw Error('PlaceKit `client.patch.search`: `params` argument is invalid, expected an object.');
-      }
       return request('POST', `patch/search`, {
-        params: {
-          ...params,
-          query,
-        }
+        ...params,
+        query,
       });
     },
     /**
@@ -235,7 +227,8 @@ module.exports = (apiKey, options = {}) => {
      * @arg {string} [opts.language] Patch language option (ISO 639-1)
      * @return {Promise<PatchResult>}
      */
-    create(address, origin, { status, language } = {}) {
+    create(address, ...args) {
+      const [origin, opts] = args.length < 2 ? [, args[0]] : args;
       const method = typeof origin === 'undefined' ? 'POST' : 'PUT';
       const data = typeof origin === 'undefined' ? { record: address } : {
         origin: origin,
@@ -243,8 +236,8 @@ module.exports = (apiKey, options = {}) => {
       };
       return request(method, 'patch', {
         ...data,
-        status,
-        language,
+        status: opts?.status,
+        language: opts?.language,
       });
     },
     /**
@@ -261,7 +254,7 @@ module.exports = (apiKey, options = {}) => {
     /**
      * PlaceKit update patch by ID
      * @arg {string} id Patch ID
-     * @arg {PatchUpdate} address Patch address fields to update //TODO:
+     * @arg {PatchUpdate} address Patch address fields to update
      * @arg {Object} [opts] Patch update options
      * @arg {'pending' | 'approved'} [opts.status] Patch status option
      * @arg {string} [opts.language] Patch language option (ISO 639-1)

@@ -14,13 +14,17 @@ export interface PKClient {
     search(query?: string, opts: PKPatchSearchOptions): PKPatchSearchResponse;
     create(
       address: PKPatchUpdate,
-      origin?: PKResult,
+      opts?: { status?: PKPatchStatus; language?: string }
+    ): PKPatchResult;
+    create(
+      address: Partial<PKPatchUpdate>,
+      origin: PKResult,
       opts?: { status?: PKPatchStatus; language?: string }
     ): PKPatchResult;
     get(id: string): PKPatchResult;
     update(
       id: string,
-      address: PKPatchUpdate,
+      address: Partial<PKPatchUpdate>,
       opts?: { status?: PKPatchStatus; language?: string }
     ): PKPatchResult;
     delete(id: string): void;
