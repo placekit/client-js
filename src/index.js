@@ -52,9 +52,9 @@
 module.exports = (apiKey, options = {}) => {
   // Check apiKey parameter
   if (!['string', 'undefined'].includes(typeof apiKey)) {
-    throw Error('PlaceKit initialization: `apiKey` parameter is invalid, expected a string.');
+    throw Error('PlaceKit constructor: `apiKey` parameter is invalid, expected a string.');
   } else if (!apiKey) {
-    console.warn('PlaceKit initialization: missing or empty `apiKey` parameter.');
+    console.warn('PlaceKit constructor: missing or empty `apiKey` parameter.');
   }
 
   // Cascade of hosts, both DSNs and servers, in order of retry priority.
@@ -137,10 +137,10 @@ module.exports = (apiKey, options = {}) => {
    */
   client.search = (query, opts = {}) => {
     if (!['string', 'undefined'].includes(typeof query)) {
-      throw Error('PlaceKit: `query` parameter is invalid, expected a string.');
+      throw Error('PlaceKit `client.search`: `query` argument is invalid, expected a string.');
     }
     if (!['object', 'undefined'].includes(typeof opts) || Array.isArray(opts) || opts === null) {
-      throw Error('PlaceKit: `opts` parameter is invalid, expected an object.');
+      throw Error('PlaceKit `client.search`: `opts` argument is invalid, expected an object.');
     }
     const params = {
       ...globalParams,
@@ -158,13 +158,120 @@ module.exports = (apiKey, options = {}) => {
    */
   client.reverse = (opts = {}) => {
     if (!['object', 'undefined'].includes(typeof opts) || Array.isArray(opts) || opts === null) {
-      throw Error('PlaceKit: `opts` parameter is invalid, expected an object.');
+      throw Error('PlaceKit `client.reverse`: `opts` argument is invalid, expected an object.');
     }
     const params = {
       ...globalParams,
       ...opts,
     };
     return request('POST', 'reverse', params);
+  };
+
+  /**
+   * PlaceKit patch
+   * @memberof client
+   */
+  client.patch = {
+    /**
+     * PlaceKit list/search patches
+     * @arg {string} [query] Search query
+     * @arg {Object} [params]
+     * @arg {'pending' | 'approved'} [params.status] Filter patches on status
+     * @arg {string[]} [params.countries] Filter patches by country (ISO_3166-1_alpha-2)
+     * @arg {number} [params.maxResults] Number of patches to retrieve
+     * @arg {number} [params.offset] Offset search by N results
+     * @return {Promise<PatchRecord[]>} //TODO:
+     */
+    search(query, params = {}) {
+      if (!['string', 'undefined'].includes(typeof query)) {
+        throw Error('PlaceKit `client.patch.search`: `query` argument is invalid, expected a string.');
+      }
+      if (!['object', 'undefined'].includes(typeof params) || Array.isArray(params) || params === null) {
+        throw Error('PlaceKit `client.patch.search`: `params` argument is invalid, expected an object.');
+      }
+      return request('POST', `patch/search`, {
+        params: {
+          ...params,
+          query,
+        }
+      });
+    },
+    /**
+     * PlaceKit create patch
+     * @arg {PatchUpdate} address Patch address fields to update //TODO:
+     * @arg {Object} [opts] Patch update options
+     * @arg {'pending' | 'approved'} [opts.status] Patch status option
+     * @arg {string} [opts.language] Patch language option (ISO 639-1)
+     * @arg {Record} [original] Original record to patch (Add mode if omited, Fix mode if specified)
+     * @return {Promise<PatchRecord>} //TODO:
+     */
+    add(address = {}, { status, language } = {}, original) {
+      if (!['object', 'undefined'].includes(typeof address) || Array.isArray(address) || address === null) {
+        throw Error('PlaceKit `client.patch.update`: `address` argument is invalid, expected an object.');
+      }
+      if (!['object', 'undefined'].includes(typeof original) || Array.isArray(original) || original === null) {
+        throw Error('PlaceKit `client.patch.update`: `original` argument is invalid, expected an object.');
+      }
+      const method = typeof original === 'undefined' ? 'POST' : 'PUT';
+      const data = typeof original === 'undefined' ? { record: address } : {
+        origin: original,
+        update: address,
+      };
+      return request(method, `patch/${id}`, {
+        ...data,
+        status,
+        language,
+      });
+    },
+    /**
+     * PlaceKit get patch by ID
+     * @arg {string} id Patch ID
+     * @return {Promise<PatchRecord>} //TODO:
+     */
+    get(id) {
+      if (typeof id !== 'string' || !id) {
+        throw Error('PlaceKit `client.patch.get`: `id` argument is invalid, expected a string.');
+      }
+      return request('GET', `patch/${id}`);
+    },
+    /**
+     * PlaceKit update patch by ID
+     * @arg {string} id Patch ID
+     * @arg {PatchUpdate} address Patch address fields to update //TODO:
+     * @arg {Object} [opts] Patch update options
+     * @arg {'pending' | 'approved'} [opts.status] Patch status option
+     * @arg {string} [opts.language] Patch language option (ISO 639-1)
+     * @return {Promise<PatchRecord>} //TODO:
+     */
+    update(id, address = {}, { status, language } = {}) {
+      if (typeof id !== 'string' || !id) {
+        throw Error('PlaceKit `client.patch.update`: `id` argument is invalid, expected a string.');
+      }
+      if (typeof address !== 'object' || Array.isArray(address) || address === null) {
+        throw Error('PlaceKit `client.patch.update`: `address` argument is invalid, expected an object.');
+      }
+      return request('PATCH', `patch/${id}`, {
+        update: address,
+        status,
+        language,
+      });
+    },
+    /**
+     * PlaceKit delete patch or patch translation by ID
+     * @arg {string} id Patch ID
+     * @arg {string} [language] Patch language (ISO 639-1)
+     * @return {Promise<any>} //TODO:
+     */
+    delete(id, language) {
+      if (typeof id !== 'string' || !id) {
+        throw Error('PlaceKit `client.patch.delete`: `id` argument is invalid, expected a string.');
+      }
+      if (!['string', 'undefined'].includes(typeof language)) {
+        throw Error('PlaceKit `client.patch.delete`: `language` argument is invalid, expected a string.');
+      }
+      const resource = !!language ? `patch/${id}/language/${language}` : `patch/${id}`;
+      return request('DELETE', resource);
+    },
   };
 
   /**
