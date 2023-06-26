@@ -34,10 +34,40 @@
  */
 
 /**
+ * @typedef {Object} PatchResult PlaceKit Patch result
+ * @extends Result
+ * @prop {string} id
+ * @prop {'pendint' | 'approved'} status
+ */
+
+/**
+ * @typedef {Object} PatchUpdate PlaceKit Patch update fields
+ * @prop {string} name
+ * @prop {string} city
+ * @prop {string} county
+ * @prop {string} administrative
+ * @prop {string} country
+ * @prop {string} countrycode
+ * @prop {string} coordinates // "lat,lng"
+ * @prop {string} type
+ * @prop {string[]} zipcode
+ * @prop {number} [population]
+ */
+
+/**
+ * @typedef {Object} PatchSearchResponse PlaceKit response
+ * @prop {PatchResult[]} results Results
+ * @prop {number} resultsCount Number of items results found
+ * @prop {number} maxResults Maximum number of results items returned
+ * @prop {number} offset Offset used for this paginated response
+ * @prop {number} totalResults The total number of available items
+ */
+
+/**
  * @typedef {Object} SearchResponse PlaceKit response
  * @prop {Result[]} results Results
- * @prop {number} resultsCount Actual number of results
- * @prop {number} maxResults Max number of results
+ * @prop {number} resultsCount Number of items results found
+ * @prop {number} maxResults Maximum number of results items returned
  * @prop {string} query Search query
  */
 
@@ -180,7 +210,7 @@ module.exports = (apiKey, options = {}) => {
      * @arg {string[]} [params.countries] Filter patches by country (ISO_3166-1_alpha-2)
      * @arg {number} [params.maxResults] Number of patches to retrieve
      * @arg {number} [params.offset] Offset search by N results
-     * @return {Promise<PatchRecord[]>} //TODO:
+     * @return {Promise<PatchSearchResponse>} //TODO:
      */
     search(query, params = {}) {
       if (!['string', 'undefined'].includes(typeof query)) {
@@ -202,19 +232,19 @@ module.exports = (apiKey, options = {}) => {
      * @arg {Object} [opts] Patch update options
      * @arg {'pending' | 'approved'} [opts.status] Patch status option
      * @arg {string} [opts.language] Patch language option (ISO 639-1)
-     * @arg {Record} [original] Original record to patch (Add mode if omited, Fix mode if specified)
-     * @return {Promise<PatchRecord>} //TODO:
+     * @arg {Result} [origin] origin record to patch (Add mode if omited, Fix mode if specified)
+     * @return {Promise<PatchResult>}
      */
-    add(address = {}, { status, language } = {}, original) {
+    add(address = {}, { status, language } = {}, origin) {
       if (!['object', 'undefined'].includes(typeof address) || Array.isArray(address) || address === null) {
         throw Error('PlaceKit `client.patch.update`: `address` argument is invalid, expected an object.');
       }
-      if (!['object', 'undefined'].includes(typeof original) || Array.isArray(original) || original === null) {
-        throw Error('PlaceKit `client.patch.update`: `original` argument is invalid, expected an object.');
+      if (!['object', 'undefined'].includes(typeof origin) || Array.isArray(origin) || origin === null) {
+        throw Error('PlaceKit `client.patch.update`: `origin` argument is invalid, expected an object.');
       }
-      const method = typeof original === 'undefined' ? 'POST' : 'PUT';
-      const data = typeof original === 'undefined' ? { record: address } : {
-        origin: original,
+      const method = typeof origin === 'undefined' ? 'POST' : 'PUT';
+      const data = typeof origin === 'undefined' ? { record: address } : {
+        origin: origin,
         update: address,
       };
       return request(method, `patch/${id}`, {
@@ -226,7 +256,7 @@ module.exports = (apiKey, options = {}) => {
     /**
      * PlaceKit get patch by ID
      * @arg {string} id Patch ID
-     * @return {Promise<PatchRecord>} //TODO:
+     * @return {Promise<PatchResult>}
      */
     get(id) {
       if (typeof id !== 'string' || !id) {
@@ -241,7 +271,7 @@ module.exports = (apiKey, options = {}) => {
      * @arg {Object} [opts] Patch update options
      * @arg {'pending' | 'approved'} [opts.status] Patch status option
      * @arg {string} [opts.language] Patch language option (ISO 639-1)
-     * @return {Promise<PatchRecord>} //TODO:
+     * @return {Promise<PatchResult>}
      */
     update(id, address = {}, { status, language } = {}) {
       if (typeof id !== 'string' || !id) {
@@ -260,7 +290,7 @@ module.exports = (apiKey, options = {}) => {
      * PlaceKit delete patch or patch translation by ID
      * @arg {string} id Patch ID
      * @arg {string} [language] Patch language (ISO 639-1)
-     * @return {Promise<any>} //TODO:
+     * @return {Promise<void>}
      */
     delete(id, language) {
       if (typeof id !== 'string' || !id) {

@@ -10,6 +10,26 @@ export interface PKClient {
   configure(opts?: PKOptions): void;
   readonly hasGeolocation: boolean;
   requestGeolocation(opts?: Object): Promise<GeolocationPosition>;
+  patch: {
+    search(query?: string, opts: PKPatchSearchOptions): PKPatchSearchResponse;
+    add(
+      address: PKPatchUpdate,
+      opts?: { status?: PKPatchStatus; language?: string }
+    ): PKPatchResult;
+    add(
+      address: Partial<PKPatchUpdate>,
+      opts?: { status?: PKPatchStatus; language?: string },
+      origin: PKResult
+    ): PKPatchResult;
+    get(id: string): PKPatchResult;
+    update(
+      id: string,
+      address: PKPatchUpdate,
+      opts?: { status?: PKPatchStatus; language?: string }
+    ): PKPatchResult;
+    delete(id: string): void;
+    delete(id: string, language: string): void;
+  };
 }
 
 type PKType = 
@@ -41,6 +61,13 @@ export type PKOptions = Partial<{
   coordinates?: string;
 }>;
 
+export type PKPatchSearchOptions = Partial<{
+  maxResults?: number;
+  language?: string;
+  countries?: string[];
+  status?: PKPatchStatus;
+}>;
+
 export type PKResult = {
   street?: {
     number: string;
@@ -62,9 +89,37 @@ export type PKResult = {
   highlight: string;
 };
 
+type PKPatchStatus = 'pending' | 'approved';
+
+export type PKPatchResult = PKResult & {
+  id: string;
+  status: PKPatchStatus;
+};
+
+export type PKPatchUpdate = {
+  type: "airport" | "bus" | "city" | "street" | "tourism" | "townhall" | "train";
+  name: string;
+  city: string;
+  county: string;
+  administrative: string;
+  country: string;
+  countrycode: string;
+  coordinates: string; // "lat,lng"
+  zipcode: string[];
+  population?: number;
+};
+
 export type PKSearchResponse = {
   results: PKResult[];
   resultsCount: number;
   maxResults: number;
   query: string;
+};
+
+export type PKPatchSearchResponse = {
+  results: PKPatchResult[];
+  resultsCount: number;
+  maxResults: number;
+  offset: number;
+  totalResults: number;
 };
