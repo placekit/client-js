@@ -12,14 +12,10 @@ export interface PKClient {
   requestGeolocation(opts?: Object): Promise<GeolocationPosition>;
   patch: {
     search(query?: string, opts: PKPatchSearchOptions): PKPatchSearchResponse;
-    add(
+    create(
       address: PKPatchUpdate,
+      origin?: PKResult,
       opts?: { status?: PKPatchStatus; language?: string }
-    ): PKPatchResult;
-    add(
-      address: Partial<PKPatchUpdate>,
-      opts?: { status?: PKPatchStatus; language?: string },
-      origin: PKResult
     ): PKPatchResult;
     get(id: string): PKPatchResult;
     update(

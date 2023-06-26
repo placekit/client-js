@@ -210,7 +210,7 @@ module.exports = (apiKey, options = {}) => {
      * @arg {string[]} [params.countries] Filter patches by country (ISO_3166-1_alpha-2)
      * @arg {number} [params.maxResults] Number of patches to retrieve
      * @arg {number} [params.offset] Offset search by N results
-     * @return {Promise<PatchSearchResponse>} //TODO:
+     * @return {Promise<PatchSearchResponse>}
      */
     search(query, params = {}) {
       if (!['string', 'undefined'].includes(typeof query)) {
@@ -228,26 +228,20 @@ module.exports = (apiKey, options = {}) => {
     },
     /**
      * PlaceKit create patch
-     * @arg {PatchUpdate} address Patch address fields to update //TODO:
+     * @arg {PatchUpdate} address Patch address fields to update
+     * @arg {Result} [origin] Original record to patch (Add mode if omited, Fix mode if specified)
      * @arg {Object} [opts] Patch update options
      * @arg {'pending' | 'approved'} [opts.status] Patch status option
      * @arg {string} [opts.language] Patch language option (ISO 639-1)
-     * @arg {Result} [origin] origin record to patch (Add mode if omited, Fix mode if specified)
      * @return {Promise<PatchResult>}
      */
-    add(address = {}, { status, language } = {}, origin) {
-      if (!['object', 'undefined'].includes(typeof address) || Array.isArray(address) || address === null) {
-        throw Error('PlaceKit `client.patch.update`: `address` argument is invalid, expected an object.');
-      }
-      if (!['object', 'undefined'].includes(typeof origin) || Array.isArray(origin) || origin === null) {
-        throw Error('PlaceKit `client.patch.update`: `origin` argument is invalid, expected an object.');
-      }
+    create(address, origin, { status, language } = {}) {
       const method = typeof origin === 'undefined' ? 'POST' : 'PUT';
       const data = typeof origin === 'undefined' ? { record: address } : {
         origin: origin,
         update: address,
       };
-      return request(method, `patch/${id}`, {
+      return request(method, 'patch', {
         ...data,
         status,
         language,
@@ -273,12 +267,9 @@ module.exports = (apiKey, options = {}) => {
      * @arg {string} [opts.language] Patch language option (ISO 639-1)
      * @return {Promise<PatchResult>}
      */
-    update(id, address = {}, { status, language } = {}) {
+    update(id, address, { status, language } = {}) {
       if (typeof id !== 'string' || !id) {
         throw Error('PlaceKit `client.patch.update`: `id` argument is invalid, expected a string.');
-      }
-      if (typeof address !== 'object' || Array.isArray(address) || address === null) {
-        throw Error('PlaceKit `client.patch.update`: `address` argument is invalid, expected an object.');
       }
       return request('PATCH', `patch/${id}`, {
         update: address,

@@ -111,6 +111,11 @@ Or if you are using native ES Modules:
 - [`pk.requestGeolocation()`](#pkrequestGeolocation)
 - [`pk.clearGeolocation()`](#pkclearGeolocation)
 - [`pk.hasGeolocation`](#pkhasGeolocation)
+- [`pk.patch.search()`](#pkpatchsearch)
+- [`pk.patch.create()`](#pkpatchcreate)
+- [`pk.patch.get()`](#pkpatchget)
+- [`pk.patch.update()`](#pkpatchupdate)
+- [`pk.patch.delete()`](#pkpatchdelete)
 
 ### `placekit()`
 
