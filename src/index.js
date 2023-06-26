@@ -14,6 +14,10 @@
 
 /**
  * @typedef {Object} Result PlaceKit result
+ * @prop {Object} [street]
+ * @prop {string} street.number
+ * @prop {string} street.suffix
+ * @prop {string} street.name
  * @prop {string} name
  * @prop {string} city
  * @prop {string} county
