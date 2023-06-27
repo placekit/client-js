@@ -116,6 +116,7 @@ Or if you are using native ES Modules:
 - [`pk.patch.get()`](#pkpatchget)
 - [`pk.patch.update()`](#pkpatchupdate)
 - [`pk.patch.delete()`](#pkpatchdelete)
+- [`pk.patch.deleteLang()`](#pkpatchdeleteLang)
 
 ### `placekit()`
 
@@ -443,21 +444,33 @@ pk.patch.update(
 
 ### `pk.patch.delete()`
 
-Delete a patch record or a patch translation.
+Delete a patch record.
 ⚠️ Restricted to **private** API keys, **do not expose it to the browser**.
 
 ```js
-// delete patch language
-pk.patch.delete('<patch-id>', 'fr');
-
-// delete whole patch
 pk.patch.delete('<patch-id>');
 ```
 
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `id` | `string` | Record ID. |
-| `language` | `string?` | Language to unset, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. |
+
+NOTES:
+- Deleting a translation will return a `409` error if there is no default language and no other translation available.
+
+### `pk.patch.deleteLang()`
+
+Delete a patch translation.
+⚠️ Restricted to **private** API keys, **do not expose it to the browser**.
+
+```js
+pk.patch.deleteLang('<patch-id>', 'fr');
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `id` | `string` | Record ID. |
+| `language` | `string` | Language to unset, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. |
 
 NOTES:
 - Deleting a translation will return a `409` error if there is no default language and no other translation available.
