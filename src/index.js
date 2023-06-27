@@ -59,7 +59,7 @@
  * @prop {string} coordinates // "lat,lng"
  * @prop {string} type
  * @prop {string[]} zipcode
- * @prop {number} [population]
+ * @prop {number} population
  */
 
 /**
@@ -221,7 +221,7 @@ module.exports = (apiKey, options = {}) => {
      * @arg {PatchUpdate} update Patch record fields to update
      * @arg {Result} [origin] Original record to patch (Add mode if omited, Fix mode if specified)
      * @arg {Object} [opts] Patch update options
-     * @arg {'all' | 'pending' | 'approved'} [opts.status] Patch status
+     * @arg {'pending' | 'approved'} [opts.status] Patch status
      * @arg {string} [opts.language] Patch language (ISO 639-1)
      * @return {Promise<PatchResult>}
      */
@@ -277,20 +277,30 @@ module.exports = (apiKey, options = {}) => {
       });
     },
     /**
-     * PlaceKit delete patch or patch translation by ID
+     * PlaceKit delete patch
      * @arg {string} id Patch ID
-     * @arg {string} [language] Patch language (ISO 639-1)
      * @return {Promise<void>}
      */
-    delete(id, language) {
+    delete(id) {
       if (typeof id !== 'string' || !id) {
         throw Error('PlaceKit.patch.delete: `id` argument is invalid, expected a string.');
       }
-      if (!['string', 'undefined'].includes(typeof language)) {
-        throw Error('PlaceKit.patch.delete: `language` argument is invalid, expected a string.');
+      return request('DELETE', `patch/${id}`);
+    },
+    /**
+     * PlaceKit delete patch translation
+     * @arg {string} id Patch ID
+     * @arg {string} language Patch language (ISO 639-1)
+     * @return {Promise<void>}
+     */
+    deleteLang(id, language) {
+      if (typeof id !== 'string' || !id) {
+        throw Error('PlaceKit.patch.deleteLang: `id` argument is invalid, expected a string.');
       }
-      const resource = !!language ? `patch/${id}/language/${language}` : `patch/${id}`;
-      return request('DELETE', resource);
+      if (typeof language !== 'string' || !language) {
+        throw Error('PlaceKit.patch.deleteLang: `language` argument is invalid, expected a string.');
+      }
+      return request('DELETE', `patch/${id}/language/${language}`);
     },
   };
 

@@ -21,14 +21,14 @@ export interface PKClient {
       origin: PKResult,
       opts?: PKPatchUpdateOptions
     ): PKPatchResult;
-    get(id: string): PKPatchResult;
+    get(id: string, language?: string): PKPatchResult;
     update(
       id: string,
       update: Partial<PKPatchUpdate>,
       opts?: PKPatchUpdateOptions
     ): PKPatchResult;
     delete(id: string): void;
-    delete(id: string, language: string): void;
+    deleteLang(id: string, language: string): void;
   };
 }
 
@@ -108,7 +108,7 @@ export type PKPatchUpdate = {
   countrycode: string;
   coordinates: string; // "lat,lng"
   zipcode: string[];
-  population?: number;
+  population: number;
 };
 
 type PKPatchUpdateOptions = {

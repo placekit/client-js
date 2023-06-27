@@ -297,6 +297,7 @@ pk.patch.list({
   countries: ['us'],
   types: ['street'],
   status: 'approved',
+  language: 'fr',
   maxResults: 10,
   offset: 0,
 }).then((res) => {
@@ -308,7 +309,7 @@ pk.patch.list({
 | --- | --- | --- |
 | `query` | `string?` | Search query terms. |
 | `opts` | `key-value mapping` (optional) | Search options. |
-| `opts.status` | `('pending' | 'approved')?` | Publication status. |
+| `opts.status` | `('pending' \| 'approved')?` | Publication status. |
 | `opts.countries` | `string[]?` | Countries filter, array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. |
 | `opts.types` | `string[]?` | Types filter, array of accepted values: `street`, `city`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
 | `opts.language` | `string?` | `undefined` | Preferred language for the results, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. |
@@ -324,15 +325,15 @@ Add a missing record or fix an existing one.
 // Adding a missing record
 const record = {
   type: 'street',
-  name: 'Example street',
+  name: 'New street',
   city: 'Los Angeles',
   county: 'Los Angeles',
   administrative: 'California',
   country: 'United States of America',
   countrycode: 'us',
   coordinates: '33.9955095,-118.472482',
-  zipcode: [90291],
-  population: 3849000, // optional
+  zipcode: ['90291'],
+  population: 3849000,
 };
 pk.patch.create(record, { status: 'approved' }).then((record) => {
   console.log(record);
@@ -360,10 +361,10 @@ pk.patch.create(
 | `update.countrycode` | `string` | Record [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code. |
 | `update.coordinates` | `string` | Record coordinates in format `lat,lng`. |
 | `update.zipcode` | `string[]` | Record postal/zip code(s). |
-| `update.population` | `number?` | Record population of its city. |
+| `update.population` | `number` | Record population of its city. |
 | `origin` | `key-value mapping` (optional) | Original (and complete) record to fix, from `pk.search()` or `pk.reverse()`. |
 | `opts` | `key-value mapping` (optional) | Patch options. |
-| `opts.status` | `('pending' | 'approved')?` | Publication status. |
+| `opts.status` | `('pending' \| 'approved')?` | Publication status. |
 | `opts.language` | `string?` | Target language, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. |
 
 ### `pk.patch.get()`
@@ -406,7 +407,7 @@ pk.patch.update(
 // update translation
 pk.patch.update(
   '<patch-id>',
-  { name: 'Rue exemple' }, 
+  { name: 'Rue Nouvelle' }, 
   { language: 'fr' }
 ).then((record) => {
   console.log(record);
@@ -416,7 +417,7 @@ pk.patch.update(
 pk.patch.update(
   '<patch-id>',
   undefined,
-  { status: "pending" }
+  { status: 'pending' }
 ).then((record) => {
   console.log(record);
 });
@@ -435,9 +436,9 @@ pk.patch.update(
 | `update.countrycode` | `string` | Record [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code. |
 | `update.coordinates` | `string` | Record coordinates in format `lat,lng`. |
 | `update.zipcode` | `string[]` | Record postal/zip code(s). |
-| `update.population` | `number?` | Record population of its city. |
+| `update.population` | `number` | Record population of its city. |
 | `opts` | `key-value mapping` (optional) | Patch options. |
-| `opts.status` | `('pending' | 'approved')?` | Publication status. |
+| `opts.status` | `('pending' \| 'approved')?` | Publication status. |
 | `opts.language` | `string?` | Target language, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. |
 
 ### `pk.patch.delete()`
