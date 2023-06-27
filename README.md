@@ -113,7 +113,7 @@ Or if you are using native ES Modules:
 - [`pk.hasGeolocation`](#pkhasGeolocation)
 - [`pk.patch.search()`](#pkpatchsearch)
 - [`pk.patch.create()`](#pkpatchcreate)
-- [`pk.patch.get()`](#pkpatchget)
+- [`pk.patch.retrieve()`](#pkpatchretrieve)
 - [`pk.patch.update()`](#pkpatchupdate)
 - [`pk.patch.delete()`](#pkpatchdelete)
 
@@ -283,6 +283,7 @@ console.log(pk.hasGeolocation); // true or false
 ### `pk.patch.search()`
 
 List, filter and paginate patches.
+⚠️ Restricted to **private** API keys, **do not expose it to the browser**.
 
 ```js
 // get all patches, paginated
@@ -315,6 +316,7 @@ pk.patch.search('angeles', {
 ### `pk.patch.create()`
 
 Add a missing record or fix an existing one.
+⚠️ Restricted to **private** API keys, **do not expose it to the browser**.
 
 ```js
 // Adding a missing record
@@ -362,12 +364,13 @@ pk.patch.create(
 | `opts.status` | `('pending' | 'approved')?` | Publication status. |
 | `opts.language` | `string?` | Target language, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. |
 
-### `pk.patch.get()`
+### `pk.patch.retrieve()`
 
 Retrieve a patch record by ID.
+⚠️ Restricted to **private** API keys, **do not expose it to the browser**.
 
 ```js
-pk.patch.get('<patch-id>').then((record) => {
+pk.patch.retrieve('<patch-id>').then((record) => {
   console.log(record);
 });
 ```
@@ -379,6 +382,7 @@ pk.patch.get('<patch-id>').then((record) => {
 ### `pk.patch.update()`
 
 Update a patch record.
+⚠️ Restricted to **private** API keys, **do not expose it to the browser**.
 
 ```js
 // update and publish
@@ -430,6 +434,7 @@ pk.patch.update(
 ### `pk.patch.delete()`
 
 Delete a patch record or a patch translation.
+⚠️ Restricted to **private** API keys, **do not expose it to the browser**.
 
 ```js
 // delete patch translation

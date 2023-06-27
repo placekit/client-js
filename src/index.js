@@ -241,11 +241,11 @@ module.exports = (apiKey, options = {}) => {
       });
     },
     /**
-     * PlaceKit get patch by ID
+     * PlaceKit retrieve patch by ID
      * @arg {string} id Patch ID
      * @return {Promise<PatchResult>}
      */
-    get(id) {
+    retrieve(id) {
       if (typeof id !== 'string' || !id) {
         throw Error('PlaceKit.patch.get: `id` argument is invalid, expected a string.');
       }

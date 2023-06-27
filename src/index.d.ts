@@ -21,7 +21,7 @@ export interface PKClient {
       origin: PKResult,
       opts?: { status?: PKPatchStatus; language?: string }
     ): PKPatchResult;
-    get(id: string): PKPatchResult;
+    retrieve(id: string): PKPatchResult;
     update(
       id: string,
       update: Partial<PKPatchUpdate>,
