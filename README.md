@@ -113,7 +113,7 @@ Or if you are using native ES Modules:
 - [`pk.hasGeolocation`](#pkhasGeolocation)
 - [`pk.patch.list()`](#pkpatchlist)
 - [`pk.patch.create()`](#pkpatchcreate)
-- [`pk.patch.retrieve()`](#pkpatchretrieve)
+- [`pk.patch.get()`](#pkpatchget)
 - [`pk.patch.update()`](#pkpatchupdate)
 - [`pk.patch.delete()`](#pkpatchdelete)
 
@@ -365,13 +365,13 @@ pk.patch.create(
 | `opts.status` | `('pending' | 'approved')?` | Publication status. |
 | `opts.language` | `string?` | Target language, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. |
 
-### `pk.patch.retrieve()`
+### `pk.patch.get()`
 
 Retrieve a patch record by ID.
 ⚠️ Restricted to **private** API keys, **do not expose it to the browser**.
 
 ```js
-pk.patch.retrieve('<patch-id>').then((record) => {
+pk.patch.get('<patch-id>').then((record) => {
   console.log(record);
 });
 ```
