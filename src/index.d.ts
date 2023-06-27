@@ -11,7 +11,7 @@ export interface PKClient {
   readonly hasGeolocation: boolean;
   requestGeolocation(opts?: Object): Promise<GeolocationPosition>;
   patch: {
-    list(opts?: PKPatchSearchOptions): PKPatchSearchResponse;
+    list(opts?: PKPatchListOptions): PKPatchListResponse;
     create(
       update: PKPatchUpdate,
       opts?: PKPatchUpdateOptions
@@ -116,16 +116,16 @@ type PKPatchUpdateOptions = {
   language?: string;
 };
 
-export type PKPatchSearchOptions = {
+export type PKPatchListOptions = {
   query?: string;
   maxResults?: number;
   language?: string;
   countries?: string[];
   types?: Exclude<PKType, "country" | "-country">[];
-  status?: 'all' | PKPatchStatus;
+  status?: PKPatchStatus;
 };
 
-export type PKPatchSearchResponse = {
+export type PKPatchListResponse = {
   results: PKPatchResult[];
   resultsCount: number;
   maxResults: number;

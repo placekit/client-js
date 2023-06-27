@@ -308,9 +308,10 @@ pk.patch.list({
 | --- | --- | --- |
 | `query` | `string?` | Search query terms. |
 | `opts` | `key-value mapping` (optional) | Search options. |
-| `opts.status` | `('all' | 'pending' | 'approved')?` | Publication status. |
+| `opts.status` | `('pending' | 'approved')?` | Publication status. |
 | `opts.countries` | `string[]?` | Countries filter, array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. |
 | `opts.types` | `string[]?` | Types filter, array of accepted values: `street`, `city`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
+| `opts.language` | `string?` | `undefined` | Preferred language for the results, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. |
 | `opts.maxResults` | `number?` | Maximum number of results to return. |
 | `opts.offset` | `number?` | Paginate results starting from the offset. |
 
@@ -371,7 +372,13 @@ Retrieve a patch record by ID.
 ⚠️ Restricted to **private** API keys, **do not expose it to the browser**.
 
 ```js
+// get record default language
 pk.patch.get('<patch-id>').then((record) => {
+  console.log(record);
+});
+
+// get record FR translation
+pk.patch.get('<patch-id>', 'fr').then((record) => {
   console.log(record);
 });
 ```
@@ -379,6 +386,7 @@ pk.patch.get('<patch-id>').then((record) => {
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `id` | `string` | Record ID. |
+| `language` | `string?` | Language to get, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. |
 
 ### `pk.patch.update()`
 
@@ -438,17 +446,20 @@ Delete a patch record or a patch translation.
 ⚠️ Restricted to **private** API keys, **do not expose it to the browser**.
 
 ```js
-// delete patch translation
-await pk.patch.delete('<patch-id>', 'fr');
+// delete patch language
+pk.patch.delete('<patch-id>', 'fr');
 
 // delete whole patch
-await pk.patch.delete('<patch-id>');
+pk.patch.delete('<patch-id>');
 ```
 
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `id` | `string` | Record ID. |
 | `language` | `string?` | Language to unset, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. |
+
+NOTES:
+- Deleting a translation will return a `409` error if there is no default language and no other translation available.
 
 ## ⚖️ License
 

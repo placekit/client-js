@@ -63,7 +63,7 @@
  */
 
 /**
- * @typedef {Object} PatchSearchResponse PlaceKit response
+ * @typedef {Object} PatchListResponse PlaceKit response
  * @prop {PatchResult[]} results Results
  * @prop {number} resultsCount Number of items results found
  * @prop {number} maxResults Maximum number of results items returned
@@ -208,9 +208,10 @@ module.exports = (apiKey, options = {}) => {
      * @arg {string} [opts.query] Search query
      * @arg {'pending' | 'approved'} [opts.status] Filter patches on status
      * @arg {string[]} [opts.countries] Filter patches by country (ISO_3166-1_alpha-2)
+     * @arg {string} [opts.language] Results language (ISO 639-1)
      * @arg {number} [opts.maxResults] Number of patches to retrieve
      * @arg {number} [opts.offset] Offset search by N results
-     * @return {Promise<PatchSearchResponse>}
+     * @return {Promise<PatchListResponse>}
      */
     list(opts = {}) {
       return request('POST', `patch/search`, opts);
@@ -220,8 +221,8 @@ module.exports = (apiKey, options = {}) => {
      * @arg {PatchUpdate} update Patch record fields to update
      * @arg {Result} [origin] Original record to patch (Add mode if omited, Fix mode if specified)
      * @arg {Object} [opts] Patch update options
-     * @arg {'all' | 'pending' | 'approved'} [opts.status] Patch status option
-     * @arg {string} [opts.language] Patch language option (ISO 639-1)
+     * @arg {'all' | 'pending' | 'approved'} [opts.status] Patch status
+     * @arg {string} [opts.language] Patch language (ISO 639-1)
      * @return {Promise<PatchResult>}
      */
     create(update, ...args) {
@@ -240,21 +241,29 @@ module.exports = (apiKey, options = {}) => {
     /**
      * PlaceKit retrieve patch by ID
      * @arg {string} id Patch ID
+     * @arg {string} [language] Patch language (ISO 639-1)
      * @return {Promise<PatchResult>}
      */
-    get(id) {
+    get(id, language) {
       if (typeof id !== 'string' || !id) {
         throw Error('PlaceKit.patch.get: `id` argument is invalid, expected a string.');
       }
-      return request('GET', `patch/${id}`);
+      if (!['string', 'undefined'].includes(typeof language)) {
+        throw Error('PlaceKit.patch.get: `language` argument is invalid, expected a string.');
+      }
+      return request('GET', `patch/${id}`, {
+        params: {
+          language,
+        },
+      });
     },
     /**
-     * PlaceKit update patch by ID
-     * @arg {string} id Patch ID
+     * PlaceKit update patch record by ID
+     * @arg {string} id Patch record ID
      * @arg {PatchUpdate} update Patch record fields to update
      * @arg {Object} [opts] Patch update options
-     * @arg {'pending' | 'approved'} [opts.status] Patch status option
-     * @arg {string} [opts.language] Patch language option (ISO 639-1)
+     * @arg {'pending' | 'approved'} [opts.status] Patch status
+     * @arg {string} [opts.language] Patch language (ISO 639-1)
      * @return {Promise<PatchResult>}
      */
     update(id, update, { status, language } = {}) {
