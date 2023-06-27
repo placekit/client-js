@@ -1,7 +1,5 @@
 import assert from 'node:assert';
-import { describe, it } from 'node:test';
-
-import placekit from './placekit.js';
+import { mock, describe, it, afterEach } from 'node:test';
 
 if (typeof window !== 'object') {
   global.window = global;
@@ -12,15 +10,26 @@ if (typeof window !== 'object') {
   };
 }
 
+const warnMock = mock.method(console, 'warn');
+const geolocationMock = mock.method(global.window.navigator.geolocation, 'getCurrentPosition');
+const fetchMock = mock.method(global, 'fetch', () => {});
+
+import placekit from './placekit.js';
+
+afterEach(() => {
+  warnMock.mock.resetCalls();
+  geolocationMock.mock.resetCalls();
+  fetchMock.mock.resetCalls();
+});
+
 describe('Initialize', () => {
-  it('warns when apiKey is missing or empty', (t) => {
-    t.mock.method(console, 'warn');
+  it('warns when apiKey is missing or empty', () => {
     placekit();
-    assert.equal(console.warn.mock.calls.length, 1);
-    assert.match(console.warn.mock.calls[0].arguments[0], /apiKey/i);
+    assert.equal(warnMock.mock.calls.length, 1);
+    assert.match(warnMock.mock.calls[0].arguments[0], /apiKey/i);
     placekit('');
-    assert.equal(console.warn.mock.calls.length, 2);
-    assert.match(console.warn.mock.calls[1].arguments[0], /apiKey/i);
+    assert.equal(warnMock.mock.calls.length, 2);
+    assert.match(warnMock.mock.calls[1].arguments[0], /apiKey/i);
   });
 
   it('throws when apiKey is invalid', () => {
@@ -29,8 +38,7 @@ describe('Initialize', () => {
     }, /apiKey/i);
   });
 
-  it('returns client when parameters are valid', (t) => {
-    t.mock.method(console, 'warn');
+  it('returns client when parameters are valid', () => {
     const pk = placekit('your-api-key');
     assert.equal(typeof pk.search, 'function');
     assert.equal(typeof pk.reverse, 'function');
@@ -45,7 +53,7 @@ describe('Initialize', () => {
     });
     assert.equal(typeof pk.options, 'object');
     assert.equal(pk.hasGeolocation, false);
-    assert.equal(console.warn.mock.calls.length, 0);
+    assert.equal(warnMock.mock.calls.length, 0);
   });
 });
 
@@ -72,9 +80,8 @@ describe('Configure', () => {
 });
 
 describe('Request Geolocation', () => {
-  it('denies geolocation', async (t) => {
-    const spy = t.mock.method(global.window.navigator.geolocation, 'getCurrentPosition');
-    spy.mock.mockImplementationOnce((_success, error) => Promise.resolve(error({
+  it('denies geolocation', async () => {
+    geolocationMock.mock.mockImplementationOnce((_success, error) => Promise.resolve(error({
       code: 1,
       message: '',
     })));
@@ -82,34 +89,32 @@ describe('Request Geolocation', () => {
     assert.rejects(async () => {
       await pk.requestGeolocation();
     });
-    assert.equal(spy.mock.calls.length, 1)
+    assert.equal(geolocationMock.mock.calls.length, 1)
     assert.equal(pk.hasGeolocation, false);
   });
 
-  it('provides geolocation', async (t) => {
+  it('provides geolocation', async () => {
     const coords = {
       latitude: 48.86,
       longitude: 2.29,
     };
-    const spy = t.mock.method(global.window.navigator.geolocation, 'getCurrentPosition');
-    spy.mock.mockImplementationOnce((success) => Promise.resolve(success({ coords })));
+    geolocationMock.mock.mockImplementationOnce((success) => Promise.resolve(success({ coords })));
     const pk = placekit('your-api-key');
     const res = await pk.requestGeolocation();
-    assert.equal(spy.mock.calls.length, 1);
+    assert.equal(geolocationMock.mock.calls.length, 1);
     assert.deepEqual(res, { coords });
     assert.ok(pk.hasGeolocation);
   });
 
-  it('clears geolocation', async (t) => {
+  it('clears geolocation', async () => {
     const coords = {
       latitude: 48.86,
       longitude: 2.29,
     };
-    const spy = t.mock.method(global.window.navigator.geolocation, 'getCurrentPosition');
-    spy.mock.mockImplementationOnce((success) => Promise.resolve(success({ coords })));
+    geolocationMock.mock.mockImplementationOnce((success) => Promise.resolve(success({ coords })));
     const pk = placekit('your-api-key');
     const res = await pk.requestGeolocation();
-    assert.equal(spy.mock.calls.length, 1);
+    assert.equal(geolocationMock.mock.calls.length, 1);
     assert.deepEqual(res, { coords });
     assert.ok(pk.hasGeolocation);
     assert.equal(pk.options.coordinates, '48.86,2.29');
@@ -119,179 +124,168 @@ describe('Request Geolocation', () => {
   });
 });
 
-// describe('Search', () => {
-//   it('throws when args are invalid', () => {
-//     expect(() => {
-//       const pk = placekit('your-api-key');
-//       pk.search(null);
-//     }).toThrow(/query/i);
+describe('Search', () => {
+  it('throws when args are invalid', () => {
+    assert.throws(() => {
+      const pk = placekit('your-api-key');
+      pk.search(null);
+    }, /query/i);
 
-//     expect(() => {
-//       const pk = placekit('your-api-key');
-//       pk.search('', null);
-//     }).toThrow(/opts/i);
-//   });
+    assert.throws(() => {
+      const pk = placekit('your-api-key');
+      pk.search('', null);
+    }, /opts/i);
+  });
 
-//   it('sends proper request', async () => {
-//     fetch.mockResolvedValue({
-//       ok: true,
-//       status: 200,
-//       json: () => ({ results: [] })
-//     });
-//     const pk = placekit('your-api-key');
-//     const res = await pk.search('');
-//     expect(fetch).toHaveBeenCalledWith(
-//       expect.any(String),
-//       expect.objectContaining({
-//         method: 'POST',
-//         signal: expect.anything(),
-//         headers: {
-//           'Content-Type': 'application/json; charset=UTF-8',
-//           'x-placekit-api-key': 'your-api-key',
-//         },
-//       })
-//     );
-//     expect(res.results).toHaveLength(0);
-//   });
+  it('sends proper request', async () => {
+    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
+      ok: true,
+      status: 200,
+      json: () => ({ results: [] }),
+    }));
+    const pk = placekit('your-api-key');
+    const res = await pk.search('');
+    const calls = fetchMock.mock.calls;
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].arguments[0]?.pathname, '/search');
+    assert.equal(calls[0].arguments[1]?.method, 'POST');
+    assert.notEqual(typeof calls[0].arguments[1]?.signal, 'undefined');
+    assert.deepEqual(calls[0].arguments[1]?.headers, {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'x-placekit-api-key': 'your-api-key',
+    });
+    assert.equal(res.results.length, 0);
+  });
 
-//   it('sets `x-forwarded-for` header from forwardIP option', async () => {
-//     fetch.mockResolvedValue({
-//       ok: true,
-//       status: 200,
-//       json: () => ({ results: [] })
-//     });
-//     const pk = placekit('your-api-key');
-//     const res = await pk.search('', {
-//       forwardIP: '0.0.0.0',
-//       countryByIP: true,
-//     });
-//     expect(fetch).toHaveBeenCalledWith(
-//       expect.any(String),
-//       expect.objectContaining({
-//         method: 'POST',
-//         signal: expect.anything(),
-//         headers: {
-//           'Content-Type': 'application/json; charset=UTF-8',
-//           'x-placekit-api-key': 'your-api-key',
-//           'x-forwarded-for': '0.0.0.0',
-//         },
-//       })
-//     );
-//     expect(res.results).toHaveLength(0);
-//   });
+  it('sets `x-forwarded-for` header from forwardIP option', async () => {
+    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
+      ok: true,
+      status: 200,
+      json: () => ({ results: [] }),
+    }));
+    const pk = placekit('your-api-key');
+    const res = await pk.search('', {
+      forwardIP: '0.0.0.0',
+      countryByIP: true,
+    });
+    const calls = fetchMock.mock.calls;
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].arguments[0]?.pathname, '/search');
+    assert.equal(calls[0].arguments[1]?.method, 'POST');
+    assert.notEqual(typeof calls[0].arguments[1]?.signal, 'undefined');
+    assert.deepEqual(calls[0].arguments[1]?.headers, {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'x-placekit-api-key': 'your-api-key',
+      'x-forwarded-for': '0.0.0.0',
+    });
+    assert.equal(res.results.length, 0);
+  });
 
-//   it('retries with next host on timeout', async () => {
-//     fetch.mockResolvedValue({
-//       ok: true,
-//       status: 200,
-//       json: () => ({ results: [] })
-//     });
-//     fetch.mockRejectedValueOnce({ name: 'AbortError' });
-//     const pk = placekit('your-api-key');
-//     await pk.search('').catch(() => null);
-//     expect(fetch).toHaveBeenCalledTimes(1);
-//     expect(fetch).toHaveBeenNthCalledWith(
-//       1,
-//       'https://api.placekit.co/search',
-//       expect.anything()
-//     );
-//   });
+  it('retries with next host on timeout', () => {
+    fetchMock.mock.mockImplementation(() => Promise.resolve({
+      ok: true,
+      status: 200,
+      json: () => ({ results: [] }),
+    }));
+    fetchMock.mock.mockImplementationOnce(() => Promise.reject({ name: 'AbortError' }));
+    const pk = placekit('your-api-key');
+    assert.rejects(async () => {
+      await pk.search('');
+    }, { name: 'AbortError' });
+    const calls = fetchMock.mock.calls;
+    assert.equal(calls.length, 1);
+  });
 
-//   it('retries with next host on 500', async () => {
-//     fetch.mockResolvedValueOnce({
-//       ok: false,
-//       status: 500,
-//     });
-//     fetch.mockResolvedValueOnce({
-//       ok: true,
-//       status: 200,
-//       json: () => ({ results: [] }),
-//     });
-//     const pk = placekit('your-api-key');
-//     await pk.search('').catch(() => null);
-//     expect(fetch).toHaveBeenCalledTimes(1);
-//     expect(fetch).toHaveBeenNthCalledWith(
-//       1,
-//       'https://api.placekit.co/search',
-//       expect.anything()
-//     );
-//   });
+  it('retries with next host on 500', async () => {
+    fetchMock.mock.mockImplementation(() => Promise.resolve({
+      ok: true,
+      status: 200,
+      json: () => ({ results: [] }),
+    }));
+    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
+      ok: false,
+      status: 500,
+      statusText: '',
+      json: () => ({ message: 'An error occured.', errors: [] }),
+    }));
+    const pk = placekit('your-api-key');
+    assert.rejects(async () => {
+      await pk.search('');
+    }, {
+      status: 500,
+      statusText: '',
+      message: 'An error occured.',
+      errors: []
+    });
+    const calls = fetchMock.mock.calls;
+    assert.equal(calls.length, 1);
+  });
 
-//   it('rejects on 40x', async () => {
-//     fetch.mockResolvedValue({
-//       ok: false,
-//       status: 403,
-//       statusText: '',
-//       json: () => ({ message: 'An error occured.', errors: [] }),
-//     });
-//     const pk = placekit('your-api-key');
-//     const err = await pk.search('').catch((err) => err);
-//     expect(fetch).toHaveBeenCalled();
-//     expect(err).toMatchObject({
-//       status: 403,
-//       statusText: expect.any(String),
-//       message: expect.any(String),
-//       errors: expect.any(Array),
-//     });
-//   });
-// });
+  it('rejects on 40x', async () => {
+    fetchMock.mock.mockImplementation(() => Promise.resolve({
+      ok: false,
+      status: 403,
+      statusText: '',
+      json: () => ({ message: 'An error occured.', errors: [] }),
+    }));
+    const pk = placekit('your-api-key');
+    assert.rejects(async () => {
+      await pk.search('');
+    }, {
+      status: 403,
+      statusText: '',
+      message: 'An error occured.',
+      errors: []
+    });
+    const calls = fetchMock.mock.calls;
+    assert.equal(calls.length, 1);
+  });
+});
 
-// describe('Reverse', () => {
-//   it('throws when args are invalid', () => {
-//     expect(() => {
-//       const pk = placekit('your-api-key');
-//       pk.reverse(null);
-//     }).toThrow(/opts/i);
-//   });
+describe('Reverse', () => {
+  it('throws when args are invalid', () => {
+    assert.throws(() => {
+      const pk = placekit('your-api-key');
+      pk.search('', null);
+    }, /opts/i);
+  });
 
-//   it('sends proper request', async () => {
-//     fetch.mockResolvedValue({
-//       ok: true,
-//       status: 200,
-//       json: () => ({ results: [] })
-//     });
-//     const pk = placekit('your-api-key');
-//     const res = await pk.reverse({
-//       coordinates: '0,0',
-//     });
-//     expect(fetch).toHaveBeenCalledWith(
-//       expect.any(String),
-//       expect.objectContaining({
-//         method: 'POST',
-//         signal: expect.anything(),
-//         headers: {
-//           'Content-Type': 'application/json; charset=UTF-8',
-//           'x-placekit-api-key': 'your-api-key',
-//         },
-//       })
-//     );
-//     expect(res.results).toHaveLength(0);
-//   });
+  it('sends proper request', async () => {
+    fetchMock.mock.mockImplementation(() => Promise.resolve({
+      ok: true,
+      status: 200,
+      json: () => ({ results: [] }),
+    }));
+    const pk = placekit('your-api-key');
+    const res = await pk.reverse({
+      coordinates: '0,0',
+    });
+    const calls = fetchMock.mock.calls;
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].arguments[0].pathname, '/reverse');
+    assert.notEqual(typeof calls[0].arguments[1]?.signal, 'undefined');
+    assert.deepEqual(calls[0].arguments[1]?.headers, {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'x-placekit-api-key': 'your-api-key',
+    });
+    assert.equal(res.results.length, 0);
+  });
 
-//   it('overrides previously set coordinates', async () => {
-//     fetch.mockResolvedValue({
-//       ok: true,
-//       status: 200,
-//       json: () => ({ results: [] })
-//     });
-//     const pk = placekit('your-api-key', {
-//       coordinates: '1,1',
-//     });
-//     const res = await pk.reverse({
-//       coordinates: '2,2',
-//     });
-//     expect(fetch).toHaveBeenCalledWith(
-//       expect.any(String),
-//       expect.objectContaining({
-//         method: 'POST',
-//         signal: expect.anything(),
-//         headers: {
-//           'Content-Type': 'application/json; charset=UTF-8',
-//           'x-placekit-api-key': 'your-api-key',
-//         },
-//         body: expect.stringMatching("\"coordinates\":\"2,2\""),
-//       })
-//     );
-//     expect(res.results).toHaveLength(0);
-//   });
-// });
+  it('overrides previously set coordinates', async () => {
+    fetchMock.mock.mockImplementation(() => Promise.resolve({
+      ok: true,
+      status: 200,
+      json: () => ({ results: [] }),
+    }));
+    const pk = placekit('your-api-key', {
+      coordinates: '1,1',
+    });
+    const res = await pk.reverse({
+      coordinates: '2,2',
+    });
+    const calls = fetchMock.mock.calls;
+    assert.equal(calls.length, 1);
+    assert.equal(JSON.parse(calls[0].arguments[1].body)?.coordinates, '2,2');
+    assert.equal(res.results.length, 0);
+  });
+});
