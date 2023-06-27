@@ -9,6 +9,9 @@
   "ignorePatterns": [
     "*.test.js"
   ],
+  "parserOptions": {
+    "sourceType": "module"
+  },
   "rules": {
     "comma-dangle": [
       "error",

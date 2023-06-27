@@ -1,10 +1,10 @@
-const path = require('path');
+import path from 'node:path';
 
-const commonjs = require('@rollup/plugin-commonjs');
-const cleanup = require('rollup-plugin-cleanup');
-const copy = require('rollup-plugin-copy');
+import commonjs from '@rollup/plugin-commonjs';
+import cleanup from 'rollup-plugin-cleanup';
+import copy from 'rollup-plugin-copy';
 
-const pkg = require('./package.json');
+import pkg from './package.json' assert { type: 'json' };
 const banner = [
   `/*! ${pkg.name} v${pkg.version}`,
   '© placekit.io',
@@ -12,8 +12,8 @@ const banner = [
   `${pkg.homepage} */`,
 ].join(' | ');
 
-module.exports = {
-  input: 'src/index.js',
+export default {
+  input: 'src/placekit.js',
   output: [
     {
       file: pkg.module,
@@ -33,14 +33,13 @@ module.exports = {
       banner,
     },
   ],
-  external: [/node_modules/],
   plugins: [
     commonjs(),
     cleanup(),
     copy({
       targets: [
         {
-          src: 'src/index.d.ts',
+          src: 'src/placekit.d.ts',
           dest: path.dirname(pkg.types),
           rename: path.basename(pkg.types),
           transform: (content) => [banner, content].join("\n"),

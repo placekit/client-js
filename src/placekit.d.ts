@@ -10,6 +10,7 @@ export interface PKClient {
   configure(opts?: PKOptions): void;
   readonly hasGeolocation: boolean;
   requestGeolocation(opts?: Object): Promise<GeolocationPosition>;
+  clearGeolocation(): void;
   patch: {
     list(opts?: PKPatchListOptions): Promise<PKPatchListResponse>;
     create(
@@ -32,29 +33,17 @@ export interface PKClient {
   };
 }
 
-type PKType = 
-  "airport" |
-  "bus" |
-  "city" |
-  "country" |
-  "street" |
-  "tourism" |
-  "townhall" |
-  "train" |
-  "-airport" |
-  "-bus" |
-  "-city" |
-  "-country" |
-  "-street" |
-  "-tourism" |
-  "-townhall" |
-  "-train";
+type PKType = "airport" | "bus" | "city" | "country" | "street" | "tourism" | "townhall" | "train";
+type PKTypeFilter = PKType | "-airport" | "-bus" | "-city" | "-country" | "-street" | "-tourism" | "-townhall" | "-train";
+type PKPatchType = Exclude<PKType, "country">;
+type PKPatchTypeFilter = Exclude<PKTypeFilter, "country" | "-country">;
+type PKPatchStatus = 'pending' | 'approved';
 
 export type PKOptions = {
   timeout?: number;
   maxResults?: number;
   language?: string;
-  types?: PKType[];
+  types?: PKTypeFilter[];
   countries?: string[];
   countryByIP?: boolean;
   forwardIP?: string;
@@ -76,7 +65,7 @@ export type PKResult = {
   coordinates: string; // "lat,lng"
   lat?: number; // deprecated
   lng?: number; // deprecated
-  type: string;
+  type: PKType;
   zipcode: string[];
   population: number;
   highlight: string;
@@ -89,14 +78,11 @@ export type PKSearchResponse = {
   query: string;
 };
 
-type PKPatchStatus = 'pending' | 'approved';
-
-export type PKPatchResult = PKResult & {
+export type PKPatchResult = Omit<PKResult, "type"> & {
   id: string;
   status: PKPatchStatus;
+  type: PKPatchType;
 };
-
-type PKPatchType = "airport" | "bus" | "city" | "street" | "tourism" | "townhall" | "train";
 
 export type PKPatchUpdate = {
   type: PKPatchType;
@@ -121,7 +107,7 @@ export type PKPatchListOptions = {
   maxResults?: number;
   language?: string;
   countries?: string[];
-  types?: Exclude<PKType, "country" | "-country">[];
+  types?: PKPatchTypeFilter[];
   status?: PKPatchStatus;
 };
 
