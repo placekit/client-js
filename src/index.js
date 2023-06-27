@@ -220,19 +220,19 @@ module.exports = (apiKey, options = {}) => {
     },
     /**
      * PlaceKit create patch
-     * @arg {PatchUpdate} address Patch address fields to update
+     * @arg {PatchUpdate} update Patch record fields to update
      * @arg {Result} [origin] Original record to patch (Add mode if omited, Fix mode if specified)
      * @arg {Object} [opts] Patch update options
-     * @arg {'pending' | 'approved'} [opts.status] Patch status option
+     * @arg {'all' | 'pending' | 'approved'} [opts.status] Patch status option
      * @arg {string} [opts.language] Patch language option (ISO 639-1)
      * @return {Promise<PatchResult>}
      */
-    create(address, ...args) {
+    create(update, ...args) {
       const [origin, opts] = args.length < 2 ? [, args[0]] : args;
       const method = typeof origin === 'undefined' ? 'POST' : 'PUT';
-      const data = typeof origin === 'undefined' ? { record: address } : {
+      const data = typeof origin === 'undefined' ? { record: update } : {
         origin: origin,
-        update: address,
+        update,
       };
       return request(method, 'patch', {
         ...data,
@@ -254,18 +254,18 @@ module.exports = (apiKey, options = {}) => {
     /**
      * PlaceKit update patch by ID
      * @arg {string} id Patch ID
-     * @arg {PatchUpdate} address Patch address fields to update
+     * @arg {PatchUpdate} update Patch record fields to update
      * @arg {Object} [opts] Patch update options
      * @arg {'pending' | 'approved'} [opts.status] Patch status option
      * @arg {string} [opts.language] Patch language option (ISO 639-1)
      * @return {Promise<PatchResult>}
      */
-    update(id, address, { status, language } = {}) {
+    update(id, update, { status, language } = {}) {
       if (typeof id !== 'string' || !id) {
         throw Error('PlaceKit.patch.update: `id` argument is invalid, expected a string.');
       }
       return request('PATCH', `patch/${id}`, {
-        update: address,
+        update,
         status,
         language,
       });

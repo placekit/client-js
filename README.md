@@ -280,6 +280,170 @@ Reads if device geolocation is activated or not (read-only).
 console.log(pk.hasGeolocation); // true or false
 ```
 
+### `pk.patch.search()`
+
+List, filter and paginate patches.
+
+```js
+// get all patches, paginated
+pk.patch.search().then((res) => {
+  console.log(res.results);
+});
+
+// filter and paginate patches
+pk.patch.search('angeles', {
+  countries: ['us'],
+  types: ['street'],
+  status: 'approved',
+  maxResults: 10,
+  offset: 0,
+}).then((res) => {
+  console.log(res.results);
+});
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `query` | `string?` | Search query terms. |
+| `opts` | `key-value mapping` (optional) | Search options. |
+| `opts.status` | `('all' | 'pending' | 'approved')?` | Publication status. |
+| `opts.countries` | `string[]?` | Countries filter, array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. |
+| `opts.types` | `string[]?` | Types filter, array of accepted values: `street`, `city`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
+| `opts.maxResults` | `number?` | Maximum number of results to return. |
+| `opts.offset` | `number?` | Paginate results starting from the offset. |
+
+### `pk.patch.create()`
+
+Add a missing record or fix an existing one.
+
+```js
+// Adding a missing record
+const record = {
+  type: 'street',
+  name: 'Example street',
+  city: 'Los Angeles',
+  county: 'Los Angeles',
+  administrative: 'California',
+  country: 'United States of America',
+  countrycode: 'us',
+  coordinates: '33.9955095,-118.472482',
+  zipcode: [90291],
+  population: 3849000, // optional
+};
+pk.patch.create(record, { status: 'approved' }).then((record) => {
+  console.log(record);
+});
+
+// Fixing an existing record
+pk.patch.create(
+  { population: 3849000 },
+  originalRecord, // original record from `pk.search` or `pk.reverse`
+  { status: 'approved' }
+).then((record) => {
+  console.log(record);
+});
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `update` | `key-value mapping` | Full record if adding, only updated fields if fixing. |
+| `update.type` | `string` | One of `airport`, `bus`, `city`, `street`, `tourism`, `townhall`, `train`. |
+| `update.name` | `string` | Record display name (street name, city name, station name...). |
+| `update.city` | `string` | Record city name. |
+| `update.county` | `string` | Record county/province/department. |
+| `update.administrative` | `string` | Record administrative/region/state. |
+| `update.country` | `string` | Record country name. |
+| `update.countrycode` | `string` | Record [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code. |
+| `update.coordinates` | `string` | Record coordinates in format `lat,lng`. |
+| `update.zipcode` | `string[]` | Record postal/zip code(s). |
+| `update.population` | `number?` | Record population of its city. |
+| `origin` | `key-value mapping` (optional) | Original (and complete) record to fix, from `pk.search()` or `pk.reverse()`. |
+| `opts` | `key-value mapping` (optional) | Patch options. |
+| `opts.status` | `('pending' | 'approved')?` | Publication status. |
+| `opts.language` | `string?` | Target language, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. |
+
+### `pk.patch.get()`
+
+Retrieve a patch record by ID.
+
+```js
+pk.patch.get('<patch-id>').then((record) => {
+  console.log(record);
+});
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `id` | `string` | Record ID. |
+
+### `pk.patch.update()`
+
+Update a patch record.
+
+```js
+// update and publish
+pk.patch.update(
+  '<patch-id>',
+  { coordinates: '33.9955095,-118.472482' },
+  { status: 'approved' }
+).then((record) => {
+  console.log(record);
+});
+
+// update translation
+pk.patch.update(
+  '<patch-id>',
+  { name: 'Rue exemple' }, 
+  { language: 'fr' }
+).then((record) => {
+  console.log(record);
+});
+
+// unpublish
+pk.patch.update(
+  '<patch-id>',
+  undefined,
+  { status: "pending" }
+).then((record) => {
+  console.log(record);
+});
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `id` | `string` | Record ID. |
+| `update` | `key-value mapping` (optional) | Updated fields. |
+| `update.type` | `string` | One of `airport`, `bus`, `city`, `street`, `tourism`, `townhall`, `train`. |
+| `update.name` | `string` | Record display name (street name, city name, station name...). |
+| `update.city` | `string` | Record city name. |
+| `update.county` | `string` | Record county/province/department. |
+| `update.administrative` | `string` | Record administrative/region/state. |
+| `update.country` | `string` | Record country name. |
+| `update.countrycode` | `string` | Record [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code. |
+| `update.coordinates` | `string` | Record coordinates in format `lat,lng`. |
+| `update.zipcode` | `string[]` | Record postal/zip code(s). |
+| `update.population` | `number?` | Record population of its city. |
+| `opts` | `key-value mapping` (optional) | Patch options. |
+| `opts.status` | `('pending' | 'approved')?` | Publication status. |
+| `opts.language` | `string?` | Target language, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. |
+
+### `pk.patch.delete()`
+
+Delete a patch record or a patch translation.
+
+```js
+// delete patch translation
+await pk.patch.delete('<patch-id>', 'fr');
+
+// delete whole patch
+await pk.patch.delete('<patch-id>');
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `id` | `string` | Record ID. |
+| `language` | `string?` | Language to unset, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. |
+
 ## ⚖️ License
 
 PlaceKit JavaScript Client is an open-sourced software licensed under the [MIT license](./LICENSE).

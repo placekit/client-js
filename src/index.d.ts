@@ -13,18 +13,18 @@ export interface PKClient {
   patch: {
     search(query?: string, opts: PKPatchSearchOptions): PKPatchSearchResponse;
     create(
-      address: PKPatchUpdate,
+      update: PKPatchUpdate,
       opts?: { status?: PKPatchStatus; language?: string }
     ): PKPatchResult;
     create(
-      address: Partial<PKPatchUpdate>,
+      update: Partial<PKPatchUpdate>,
       origin: PKResult,
       opts?: { status?: PKPatchStatus; language?: string }
     ): PKPatchResult;
     get(id: string): PKPatchResult;
     update(
       id: string,
-      address: Partial<PKPatchUpdate>,
+      update: Partial<PKPatchUpdate>,
       opts?: { status?: PKPatchStatus; language?: string }
     ): PKPatchResult;
     delete(id: string): void;
@@ -96,15 +96,10 @@ export type PKPatchResult = PKResult & {
   status: PKPatchStatus;
 };
 
-export type PKPatchSearchOptions = Partial<{
-  maxResults?: number;
-  language?: string;
-  countries?: string[];
-  status?: PKPatchStatus;
-}>;
+type PKPatchType = "airport" | "bus" | "city" | "street" | "tourism" | "townhall" | "train";
 
 export type PKPatchUpdate = {
-  type: "airport" | "bus" | "city" | "street" | "tourism" | "townhall" | "train";
+  type: PKPatchType;
   name: string;
   city: string;
   county: string;
@@ -115,6 +110,14 @@ export type PKPatchUpdate = {
   zipcode: string[];
   population?: number;
 };
+
+export type PKPatchSearchOptions = Partial<{
+  maxResults?: number;
+  language?: string;
+  countries?: string[];
+  types?: Exclude<PKType, "country" | "-country">[];
+  status?: 'all' | PKPatchStatus;
+}>;
 
 export type PKPatchSearchResponse = {
   results: PKPatchResult[];
