@@ -204,19 +204,16 @@ module.exports = (apiKey, options = {}) => {
   client.patch = {
     /**
      * PlaceKit list/search patches
-     * @arg {string} [query] Search query
-     * @arg {Object} [params]
-     * @arg {'pending' | 'approved'} [params.status] Filter patches on status
-     * @arg {string[]} [params.countries] Filter patches by country (ISO_3166-1_alpha-2)
-     * @arg {number} [params.maxResults] Number of patches to retrieve
-     * @arg {number} [params.offset] Offset search by N results
+     * @arg {Object} [opts] List options
+     * @arg {string} [opts.query] Search query
+     * @arg {'pending' | 'approved'} [opts.status] Filter patches on status
+     * @arg {string[]} [opts.countries] Filter patches by country (ISO_3166-1_alpha-2)
+     * @arg {number} [opts.maxResults] Number of patches to retrieve
+     * @arg {number} [opts.offset] Offset search by N results
      * @return {Promise<PatchSearchResponse>}
      */
-    search(query, params = {}) {
-      return request('POST', `patch/search`, {
-        ...params,
-        query,
-      });
+    list(opts = {}) {
+      return request('POST', `patch/search`, opts);
     },
     /**
      * PlaceKit create patch

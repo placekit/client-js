@@ -111,7 +111,7 @@ Or if you are using native ES Modules:
 - [`pk.requestGeolocation()`](#pkrequestGeolocation)
 - [`pk.clearGeolocation()`](#pkclearGeolocation)
 - [`pk.hasGeolocation`](#pkhasGeolocation)
-- [`pk.patch.search()`](#pkpatchsearch)
+- [`pk.patch.list()`](#pkpatchlist)
 - [`pk.patch.create()`](#pkpatchcreate)
 - [`pk.patch.retrieve()`](#pkpatchretrieve)
 - [`pk.patch.update()`](#pkpatchupdate)
@@ -280,19 +280,20 @@ Reads if device geolocation is activated or not (read-only).
 console.log(pk.hasGeolocation); // true or false
 ```
 
-### `pk.patch.search()`
+### `pk.patch.list()`
 
 List, filter and paginate patches.
 ⚠️ Restricted to **private** API keys, **do not expose it to the browser**.
 
 ```js
 // get all patches, paginated
-pk.patch.search().then((res) => {
+pk.patch.list().then((res) => {
   console.log(res.results);
 });
 
 // filter and paginate patches
-pk.patch.search('angeles', {
+pk.patch.list({
+  query: 'angeles',
   countries: ['us'],
   types: ['street'],
   status: 'approved',

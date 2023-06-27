@@ -11,21 +11,21 @@ export interface PKClient {
   readonly hasGeolocation: boolean;
   requestGeolocation(opts?: Object): Promise<GeolocationPosition>;
   patch: {
-    search(query?: string, opts: PKPatchSearchOptions): PKPatchSearchResponse;
+    list(opts?: PKPatchSearchOptions): PKPatchSearchResponse;
     create(
       update: PKPatchUpdate,
-      opts?: { status?: PKPatchStatus; language?: string }
+      opts?: PKPatchUpdateOptions
     ): PKPatchResult;
     create(
       update: Partial<PKPatchUpdate>,
       origin: PKResult,
-      opts?: { status?: PKPatchStatus; language?: string }
+      opts?: PKPatchUpdateOptions
     ): PKPatchResult;
     retrieve(id: string): PKPatchResult;
     update(
       id: string,
       update: Partial<PKPatchUpdate>,
-      opts?: { status?: PKPatchStatus; language?: string }
+      opts?: PKPatchUpdateOptions
     ): PKPatchResult;
     delete(id: string): void;
     delete(id: string, language: string): void;
@@ -50,7 +50,7 @@ type PKType =
   "-townhall" |
   "-train";
 
-export type PKOptions = Partial<{
+export type PKOptions = {
   timeout?: number;
   maxResults?: number;
   language?: string;
@@ -59,7 +59,7 @@ export type PKOptions = Partial<{
   countryByIP?: boolean;
   forwardIP?: string;
   coordinates?: string;
-}>;
+};
 
 export type PKResult = {
   street?: {
@@ -111,13 +111,19 @@ export type PKPatchUpdate = {
   population?: number;
 };
 
-export type PKPatchSearchOptions = Partial<{
+type PKPatchUpdateOptions = {
+  status?: PKPatchStatus;
+  language?: string;
+};
+
+export type PKPatchSearchOptions = {
+  query?: string;
   maxResults?: number;
   language?: string;
   countries?: string[];
   types?: Exclude<PKType, "country" | "-country">[];
   status?: 'all' | PKPatchStatus;
-}>;
+};
 
 export type PKPatchSearchResponse = {
   results: PKPatchResult[];
