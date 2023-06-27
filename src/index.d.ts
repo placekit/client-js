@@ -61,13 +61,6 @@ export type PKOptions = Partial<{
   coordinates?: string;
 }>;
 
-export type PKPatchSearchOptions = Partial<{
-  maxResults?: number;
-  language?: string;
-  countries?: string[];
-  status?: PKPatchStatus;
-}>;
-
 export type PKResult = {
   street?: {
     number: string;
@@ -89,12 +82,26 @@ export type PKResult = {
   highlight: string;
 };
 
+export type PKSearchResponse = {
+  results: PKResult[];
+  resultsCount: number;
+  maxResults: number;
+  query: string;
+};
+
 type PKPatchStatus = 'pending' | 'approved';
 
 export type PKPatchResult = PKResult & {
   id: string;
   status: PKPatchStatus;
 };
+
+export type PKPatchSearchOptions = Partial<{
+  maxResults?: number;
+  language?: string;
+  countries?: string[];
+  status?: PKPatchStatus;
+}>;
 
 export type PKPatchUpdate = {
   type: "airport" | "bus" | "city" | "street" | "tourism" | "townhall" | "train";
@@ -107,13 +114,6 @@ export type PKPatchUpdate = {
   coordinates: string; // "lat,lng"
   zipcode: string[];
   population?: number;
-};
-
-export type PKSearchResponse = {
-  results: PKResult[];
-  resultsCount: number;
-  maxResults: number;
-  query: string;
 };
 
 export type PKPatchSearchResponse = {

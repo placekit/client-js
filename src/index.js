@@ -34,6 +34,14 @@
  */
 
 /**
+ * @typedef {Object} SearchResponse PlaceKit response
+ * @prop {Result[]} results Results
+ * @prop {number} resultsCount Number of items results found
+ * @prop {number} maxResults Maximum number of results items returned
+ * @prop {string} query Search query
+ */
+
+/**
  * @typedef {Object} PatchResult PlaceKit Patch result
  * @extends Result
  * @prop {string} id
@@ -64,14 +72,6 @@
  */
 
 /**
- * @typedef {Object} SearchResponse PlaceKit response
- * @prop {Result[]} results Results
- * @prop {number} resultsCount Number of items results found
- * @prop {number} maxResults Maximum number of results items returned
- * @prop {string} query Search query
- */
-
-/**
  * PlaceKit initialization closure
  * @desc Fetch wrapper over the PlaceKit API to implement a retry strategy and parameters checking.
  * @module PlaceKit
@@ -82,9 +82,9 @@
 module.exports = (apiKey, options = {}) => {
   // Check apiKey parameter
   if (!['string', 'undefined'].includes(typeof apiKey)) {
-    throw Error('PlaceKit constructor: `apiKey` parameter is invalid, expected a string.');
+    throw Error('PlaceKit: `apiKey` parameter is invalid, expected a string.');
   } else if (!apiKey) {
-    console.warn('PlaceKit constructor: missing or empty `apiKey` parameter.');
+    console.warn('PlaceKit: missing or empty `apiKey` parameter.');
   }
 
   // Cascade of hosts, both DSNs and servers, in order of retry priority.
@@ -188,7 +188,7 @@ module.exports = (apiKey, options = {}) => {
    */
   client.reverse = (opts = {}) => {
     if (!['object', 'undefined'].includes(typeof opts) || Array.isArray(opts) || opts === null) {
-      throw Error('PlaceKit `client.reverse`: `opts` argument is invalid, expected an object.');
+      throw Error('PlaceKit.reverse: `opts` argument is invalid, expected an object.');
     }
     const params = {
       ...globalParams,
@@ -247,7 +247,7 @@ module.exports = (apiKey, options = {}) => {
      */
     get(id) {
       if (typeof id !== 'string' || !id) {
-        throw Error('PlaceKit `client.patch.get`: `id` argument is invalid, expected a string.');
+        throw Error('PlaceKit.patch.get: `id` argument is invalid, expected a string.');
       }
       return request('GET', `patch/${id}`);
     },
@@ -262,7 +262,7 @@ module.exports = (apiKey, options = {}) => {
      */
     update(id, address, { status, language } = {}) {
       if (typeof id !== 'string' || !id) {
-        throw Error('PlaceKit `client.patch.update`: `id` argument is invalid, expected a string.');
+        throw Error('PlaceKit.patch.update: `id` argument is invalid, expected a string.');
       }
       return request('PATCH', `patch/${id}`, {
         update: address,
@@ -278,10 +278,10 @@ module.exports = (apiKey, options = {}) => {
      */
     delete(id, language) {
       if (typeof id !== 'string' || !id) {
-        throw Error('PlaceKit `client.patch.delete`: `id` argument is invalid, expected a string.');
+        throw Error('PlaceKit.patch.delete: `id` argument is invalid, expected a string.');
       }
       if (!['string', 'undefined'].includes(typeof language)) {
-        throw Error('PlaceKit `client.patch.delete`: `language` argument is invalid, expected a string.');
+        throw Error('PlaceKit.patch.delete: `language` argument is invalid, expected a string.');
       }
       const resource = !!language ? `patch/${id}/language/${language}` : `patch/${id}`;
       return request('DELETE', resource);
@@ -305,7 +305,7 @@ module.exports = (apiKey, options = {}) => {
    */
   client.configure = (opts = {}) => {
     if (!['object', 'undefined'].includes(typeof opts) || Array.isArray(opts) || opts === null) {
-      throw Error('PlaceKit.configure: `opts` parameter is invalid, expected an object.');
+      throw Error('PlaceKit.configure: `opts` argument is invalid, expected an object.');
     }
 
     Object.assign(globalParams, opts);
