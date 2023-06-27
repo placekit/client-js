@@ -11,24 +11,24 @@ export interface PKClient {
   readonly hasGeolocation: boolean;
   requestGeolocation(opts?: Object): Promise<GeolocationPosition>;
   patch: {
-    list(opts?: PKPatchListOptions): PKPatchListResponse;
+    list(opts?: PKPatchListOptions): Promise<PKPatchListResponse>;
     create(
       update: PKPatchUpdate,
       opts?: PKPatchUpdateOptions
-    ): PKPatchResult;
+    ): Promise<PKPatchResult>;
     create(
       update: Partial<PKPatchUpdate>,
       origin: PKResult,
       opts?: PKPatchUpdateOptions
-    ): PKPatchResult;
-    get(id: string, language?: string): PKPatchResult;
+    ): Promise<PKPatchResult>;
+    get(id: string, language?: string): Promise<PKPatchResult>;
     update(
       id: string,
       update: Partial<PKPatchUpdate>,
       opts?: PKPatchUpdateOptions
-    ): PKPatchResult;
-    delete(id: string): void;
-    deleteLang(id: string, language: string): void;
+    ): Promise<PKPatchResult>;
+    delete(id: string): Promise<void>;
+    deleteLang(id: string, language: string): Promise<void>;
   };
 }
 
