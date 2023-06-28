@@ -3,7 +3,7 @@ const extensions = new Map();
 
 // Append info to the User-Agent
 function getUserAgent() {
-  let chunks = [];
+  const chunks = [];
   if (typeof window !== 'undefined' && navigator.userAgent) {
     chunks.push(navigator.userAgent);
   }
@@ -103,6 +103,9 @@ export default function placekit(apiKey, options = {}) {
 
     // Request the device's location
     requestGeolocation(opts = {}) {
+      if (!['object', 'undefined'].includes(typeof opts) || Array.isArray(opts) || opts === null) {
+        throw Error('PlaceKit.requestGeolocation: `opts` argument is invalid, expected an object.');
+      }
       return new Promise((resolve, reject) => {
         if (typeof window === 'undefined' || !navigator.geolocation) {
           reject(Error('PlaceKit.requestGeolocation: geolocation is only available in the browser.'));

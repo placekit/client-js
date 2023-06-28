@@ -4,11 +4,17 @@ import placekit from './placekit-lite.js';
 placekit.extend('patch', (request) => ({
   // List/search patch records
   list(opts = {}) {
+    if (!['object', 'undefined'].includes(typeof opts) || Array.isArray(opts) || opts === null) {
+      throw Error('PlaceKit.patch.list: `opts` argument is invalid, expected an object.');
+    }
     return request('POST', `patch/search`, opts);
   },
 
   // Create patch record
-  create(update, { status, language } = {}, origin) {
+  create(update, opts = {}, origin) {
+    if (!['object', 'undefined'].includes(typeof opts) || Array.isArray(opts) || opts === null) {
+      throw Error('PlaceKit.patch.create: `opts` argument is invalid, expected an object.');
+    }
     const method = typeof origin === 'undefined' ? 'POST' : 'PUT';
     const data = typeof origin === 'undefined' ? { record: update } : {
       origin,
@@ -16,8 +22,8 @@ placekit.extend('patch', (request) => ({
     };
     return request(method, 'patch', {
       ...data,
-      status,
-      language,
+      status: opts?.status,
+      language: opts?.language,
     });
   },
 
@@ -37,14 +43,17 @@ placekit.extend('patch', (request) => ({
   },
 
   // Update patch record
-  update(id, update, { status, language } = {}) {
+  update(id, update, opts = {}) {
     if (typeof id !== 'string' || !id) {
       throw Error('PlaceKit.patch.update: `id` argument is invalid, expected a string.');
     }
+    if (!['object', 'undefined'].includes(typeof opts) || Array.isArray(opts) || opts === null) {
+      throw Error('PlaceKit.patch.update: `opts` argument is invalid, expected an object.');
+    }
     return request('PATCH', `patch/${id}`, {
       update,
-      status,
-      language,
+      status: opts?.status,
+      language: opts?.language,
     });
   },
 
