@@ -8,17 +8,16 @@ placekit.extend('patch', (request) => ({
   },
 
   // Create patch record
-  create(update, ...args) {
-    const [origin, opts] = args.length < 2 ? [, args[0]] : args;
+  create(update, { status, language } = {}, origin) {
     const method = typeof origin === 'undefined' ? 'POST' : 'PUT';
     const data = typeof origin === 'undefined' ? { record: update } : {
-      origin: origin,
+      origin,
       update,
     };
     return request(method, 'patch', {
       ...data,
-      status: opts?.status,
-      language: opts?.language,
+      status,
+      language,
     });
   },
 
