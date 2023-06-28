@@ -19,8 +19,12 @@
   "types": "./dist/placekit.d.ts",
   "typesVersions": {
     "*": {
-      ".": ["./dist/placekit.d.ts"],
-      "lite": ["./dist/placekit-lite.d.ts"]
+      ".": [
+        "./dist/placekit.d.ts"
+      ],
+      "lite": [
+        "./dist/placekit-lite.d.ts"
+      ]
     }
   },
   "exports": {
@@ -54,5 +58,8 @@
     "rollup": "^3.25.2",
     "rollup-plugin-cleanup": "^3.2.1",
     "rollup-plugin-copy": "^3.4.0"
+  },
+  "dependencies": {
+    "@rollup/plugin-replace": "^5.0.2"
   }
 }

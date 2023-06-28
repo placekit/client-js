@@ -1,3 +1,4 @@
+import replace from '@rollup/plugin-replace';
 import cleanup from 'rollup-plugin-cleanup';
 import copy from 'rollup-plugin-copy';
 
@@ -31,6 +32,12 @@ export default [
     ],
     plugins: [
       cleanup(),
+      replace({
+        preventAssignment: true,
+        values: {
+          '__PLACEKIT_VERSION__': pkg.version,
+        }
+      }),
       copy({
         targets: [
           {
