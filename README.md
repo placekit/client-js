@@ -103,6 +103,18 @@ Or if you are using native ES Modules:
 
 ## 🧰 Reference
 
+PlaceKit Client JS exports two versions of the client:
+
+| Version | Path | Methods | Modules |
+| --- | --- | --- | --- |
+| **Lite** | `@placekit/client-js/lite` | Search methods | ESM, CJS, UMD |
+| **Extended** | `@placekit/client-js` | All methods | ESM, CJS |
+
+- Lite version has an optimized bundle size for the browser, but works also in the back-end.
+- Extended version methods require a **private** API key that you should never expose to the browser–it is intended for the back-end only.
+
+---
+
 - [`placekit()`](#placekit)
 
 Lite and Extended:
@@ -124,19 +136,11 @@ Extended-only:
 - [`pk.patch.delete()`](#pkpatchdelete)
 - [`pk.patch.deleteLang()`](#pkpatchdeleteLang)
 
+---
+
 ### `placekit()`
 
 PlaceKit initialization function returns a PlaceKit client, named `pk` in all examples.
-
-PlaceKit Client JS exports two versions of the client:
-
-| Version | Path | Methods | Modules |
-| --- | --- | --- | --- |
-| **Lite** | `@placekit/client-js/lite` | Search methods | ESM, CJS, UMD |
-| **Extended** | `@placekit/client-js` | All methods | ESM, CJS |
-
-- Lite version has an optimized bundle size for the browser, but works also in the back-end.
-- Extended version methods require a **private** API key that you should never expose to the browser–it is intended for the back-end only.
 
 ```js
 // Lite version, CommonJS syntax:
