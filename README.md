@@ -257,7 +257,7 @@ If `countries` is missing or invalid, you'll get a `422` error, excepted when`ty
 
 #### `countryByIP` option
 
-Set `countryByIP` to `true` when you don't know which country users will search addresses in. In that case, the option `countries` will be used as a fallback if the user's country is not supported:
+Set `countryByIP` to `true` when you don't know which country users will search locations in. In that case, the option `countries` will be used as a fallback if the user's country is not supported:
 
 ```js
 pk.search('123 ave', {
@@ -355,10 +355,10 @@ pk.patch.list({
 
 ⚠️ Restricted to **private** API keys, **do NOT expose the private key to the browser**.
 
-Add a missing address or fix an existing one.
+Add a missing location or fix an existing one.
 
 ```js
-// Adding a missing address
+// Adding a missing location
 const record = {
   type: 'street',
   name: 'New street',
@@ -375,7 +375,7 @@ pk.patch.create(record, { status: 'approved' }).then((record) => {
   console.log(record);
 });
 
-// Fixing an existing address
+// Fixing an existing location
 pk.patch.create(
   { population: 3849000 },
   { status: 'approved' }
