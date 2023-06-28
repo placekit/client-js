@@ -36,6 +36,16 @@ PlaceKit JavaScript Client abstracts interactions with our API, making your life
 
 ## 🎯 Quick start
 
+PlaceKit Client JS exports two versions of the client:
+
+| Version | Path | Methods | Modules |
+| --- | --- | --- | --- |
+| **Lite** | `@placekit/client-js/lite` | Search methods | ESM, CJS, UMD |
+| **Extended** | `@placekit/client-js` | All methods | ESM, CJS |
+
+- Lite version has an optimized bundle size for the browser, but works also in the back-end.
+- Extended version methods require a **private** API key that you should never expose to the browser–it is intended for the back-end only.
+
 ### NPM
 
 First, install PlaceKit JavaScript Client using [npm](https://docs.npmjs.com/getting-started) package manager:
@@ -48,10 +58,10 @@ Then import the package and perform your first address search:
 
 ```js
 // CommonJS syntax:
-const placekit = require('@placekit/client-js');
+const placekit = require('@placekit/client-js/lite');
 
 // ES6 Modules syntax:
-import placekit from '@placekit/client-js';
+import placekit from '@placekit/client-js/lite';
 
 const pk = placekit('<your-api-key>', {
   countries: ['fr'],
@@ -70,7 +80,7 @@ pk.search('Paris').then((res) => {
 First, add this line before the closing `</body>` tag in your HTML to import PlaceKit JavaScript Client:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@placekit/client-js@1.1.1/dist/placekit.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@placekit/client-js@2.0.0/dist/placekit-lite.umd.js"></script>
 ```
 
 Then it works the same as the node example above.
@@ -93,7 +103,7 @@ Or if you are using native ES Modules:
 
 ```html
 <script type="module">
-  import placekit from 'https://cdn.jsdelivr.net/npm/@placekit/client-js@1.1.1/dist/placekit.esm.mjs';
+  import placekit from 'https://cdn.jsdelivr.net/npm/@placekit/client-js@2.0.0/dist/placekit-lite.js';
   const pk = placekit(/* ... */);
   // ...
 </script>
@@ -104,6 +114,9 @@ Or if you are using native ES Modules:
 ## 🧰 Reference
 
 - [`placekit()`](#placekit)
+
+Lite and Extended:
+
 - [`pk.search()`](#pksearch)
 - [`pk.reverse()`](#pkreverse)
 - [`pk.options`](#pkoptions)
@@ -111,6 +124,9 @@ Or if you are using native ES Modules:
 - [`pk.requestGeolocation()`](#pkrequestGeolocation)
 - [`pk.clearGeolocation()`](#pkclearGeolocation)
 - [`pk.hasGeolocation`](#pkhasGeolocation)
+
+Extended-only:
+
 - [`pk.patch.list()`](#pkpatchlist)
 - [`pk.patch.create()`](#pkpatchcreate)
 - [`pk.patch.get()`](#pkpatchget)
@@ -123,6 +139,19 @@ Or if you are using native ES Modules:
 PlaceKit initialization function returns a PlaceKit client, named `pk` in all examples.
 
 ```js
+// Lite version, CommonJS syntax:
+const placekit = require('@placekit/client-js/lite');
+
+// Lite version, ES6 Modules syntax:
+import placekit from '@placekit/client-js/lite';
+
+// Extended version, CommonJS syntax:
+const placekit = require('@placekit/client-js');
+
+// Extended version, ES6 Modules syntax:
+import placekit from '@placekit/client-js';
+
+// Initialize PlaceKit client
 const pk = placekit('<your-api-key>', {
   countries: ['fr'],
   language: 'en',
@@ -133,7 +162,7 @@ const pk = placekit('<your-api-key>', {
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `apiKey` | `string` | API key |
-| `options` | `key-value mapping` (optional) | Global parameters (see [options](#pkoptions)) |
+| `options` | `key-value mapping` (optional) | Global parameters (see [options](#pkoptions)). |
 
 ### `pk.search()`
 
@@ -152,7 +181,7 @@ pk.search('Paris', {
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `query` | `string` | Search terms |
-| `opts` | `key-value mapping` (optional) | Search-specific parameters (see [options](#pkoptions)) |
+| `opts` | `key-value mapping` (optional) | Search-specific parameters (see [options](#pkoptions)). |
 
 ### `pk.reverse()`
 
@@ -172,7 +201,7 @@ pk.reverse({
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `opts` | `key-value mapping` (optional) | Search-specific parameters (see [options](#pkoptions)) |
+| `opts` | `key-value mapping` (optional) | Search-specific parameters (see [options](#pkoptions)). |
 
 **Notes:**
 - If you omit `options.coordinates`, it'll use `coordinates` from global parameters set when instanciating with `placekit()` or with `pk.configure()`.
@@ -203,13 +232,13 @@ console.log(pk.options); // { "language": "en", "maxResults": 10, ... }
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `maxResults` | `integer?` | `5` | Number of results per page. |
+| [`countries`](#%EF%B8%8F-countries-option-is-required) | `string[]?` | `undefined` | Countries to search in, or fallback to if `countryByIP` is `true`. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes<sup>[(1)](#ft1)</sup>. |
 | `language` | `string?` | `undefined` | Preferred language for the results<sup>[(1)](#ft1)</sup>, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. Supported languages are `en` and `fr`. By default the results are displayed in their country's language. |
 | `types` | `string[]?` | `undefined` | Type of results to show. Array of accepted values: `street`, `city`, `country`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
-| [`countries`](#%EF%B8%8F-countries-option-is-required) | `string[]?` | `undefined` | Countries to search in, or fallback to if `countryByIP` is `true`. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes<sup>[(1)](#ft1)</sup>. |
+| `maxResults` | `integer?` | `5` | Number of results per page. |
+| `coordinates` | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pk.requestGeolocation()`](#pkrequestGeolocation). |
 | [`countryByIP`](#countryByIP-option) | `boolean?` | `undefined` | Use IP to find user's country (turned off). |
 | `forwardIP` | `string?` | `undefined` | Set `x-forwarded-for` header to forward the provided IP for back-end usages (otherwise it'll use the server IP). |
-| `coordinates` | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pk.requestGeolocation()`](#pkrequestGeolocation). |
 
 <a id="ft1"><b>[1]</b></a>: See [Scope and Limitations](https://placekit.io/terms/scope) for more details.
 
@@ -259,7 +288,7 @@ pk.requestGeolocation({ timeout: 10000 }).then((pos) => console.log(pos.coords))
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `opts` | `key-value mapping` (optional) | `navigator.geolocation.getCurrentPosition` [options](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition) |
+| `opts` | `key-value mapping` (optional) | `navigator.geolocation.getCurrentPosition` [options](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition). |
 
 The location will be store in the `coordinates` global options, you can still manually override it.
 
@@ -283,8 +312,9 @@ console.log(pk.hasGeolocation); // true or false
 
 ### `pk.patch.list()`
 
-List, filter and paginate patches.
-⚠️ Restricted to **private** API keys, **do not expose it to the browser**.
+⚠️ Restricted to **private** API keys, **do NOT expose the private key to the browser**.
+
+List, filter and paginate patch records.
 
 ```js
 // get all patches, paginated
@@ -294,13 +324,9 @@ pk.patch.list().then((res) => {
 
 // filter and paginate patches
 pk.patch.list({
-  query: 'angeles',
-  countries: ['us'],
-  types: ['street'],
   status: 'approved',
-  language: 'fr',
   maxResults: 10,
-  offset: 0,
+  offset: 10,
 }).then((res) => {
   console.log(res.results);
 });
@@ -308,22 +334,27 @@ pk.patch.list({
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `query` | `string?` | Search query terms. |
 | `opts` | `key-value mapping` (optional) | Search options. |
 | `opts.status` | `('pending' \| 'approved')?` | Publication status. |
+| `opts.query` | `string?` | Terms filter. |
 | `opts.countries` | `string[]?` | Countries filter, array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes. |
 | `opts.types` | `string[]?` | Types filter, array of accepted values: `street`, `city`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
 | `opts.language` | `string?` | `undefined` | Preferred language for the results, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. |
 | `opts.maxResults` | `number?` | Maximum number of results to return. |
 | `opts.offset` | `number?` | Paginate results starting from the offset. |
 
+#### Patch Record `status` explained
+- `pending`: only available through Live Patching endpoints,
+- `approved`: available to end-users through Search endpoints.
+
 ### `pk.patch.create()`
 
-Add a missing record or fix an existing one.
-⚠️ Restricted to **private** API keys, **do not expose it to the browser**.
+⚠️ Restricted to **private** API keys, **do NOT expose the private key to the browser**.
+
+Add a missing address or fix an existing one.
 
 ```js
-// Adding a missing record
+// Adding a missing address
 const record = {
   type: 'street',
   name: 'New street',
@@ -340,11 +371,11 @@ pk.patch.create(record, { status: 'approved' }).then((record) => {
   console.log(record);
 });
 
-// Fixing an existing record
+// Fixing an existing address
 pk.patch.create(
   { population: 3849000 },
-  originalRecord, // original record from `pk.search` or `pk.reverse`
   { status: 'approved' }
+  originalRecord, // original record from `pk.search` or `pk.reverse`
 ).then((record) => {
   console.log(record);
 });
@@ -352,8 +383,8 @@ pk.patch.create(
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `update` | `key-value mapping` | Full record if adding, only updated fields if fixing. |
-| `update.type` | `string` | One of `airport`, `bus`, `city`, `street`, `tourism`, `townhall`, `train`. |
+| `update` | `key-value mapping` | Full patch record if adding, at least one property if fixing. |
+| `update.type` | `string` | Record type, one of `airport`, `bus`, `city`, `street`, `tourism`, `townhall`, `train`. |
 | `update.name` | `string` | Record display name (street name, city name, station name...). |
 | `update.city` | `string` | Record city name. |
 | `update.county` | `string` | Record county/province/department. |
@@ -363,15 +394,22 @@ pk.patch.create(
 | `update.coordinates` | `string` | Record coordinates in format `lat,lng`. |
 | `update.zipcode` | `string[]` | Record postal/zip code(s). |
 | `update.population` | `number` | Record population of its city. |
+| `opts` | `key-value mapping` (optional) | Patch record options. |
+| `opts.status` | `('pending' \| 'approved')?` | Record status. |
+| `opts.language` | `string?` | Language in which the record is written, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. |
 | `origin` | `key-value mapping` (optional) | Original (and complete) record to fix, from `pk.search()` or `pk.reverse()`. |
-| `opts` | `key-value mapping` (optional) | Patch options. |
-| `opts.status` | `('pending' \| 'approved')?` | Publication status. |
-| `opts.language` | `string?` | Target language, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. |
+
+#### Patch Record `language` explained
+Language is always considered as "preferred display language", which means:
+- If you omit `opts.language`, then details will be set in the `default` language.
+- If the patch record has a translation but no `default`, then the first available translation will be used as default.
+- If the patch record misses some translation, it will show the default value for non-translated properties.
 
 ### `pk.patch.get()`
 
+⚠️ Restricted to **private** API keys, **do NOT expose the private key to the browser**.
+
 Retrieve a patch record by ID.
-⚠️ Restricted to **private** API keys, **do not expose it to the browser**.
 
 ```js
 // get record default language
@@ -392,8 +430,9 @@ pk.patch.get('<patch-id>', 'fr').then((record) => {
 
 ### `pk.patch.update()`
 
+⚠️ Restricted to **private** API keys, **do NOT expose the private key to the browser**.
+
 Update a patch record.
-⚠️ Restricted to **private** API keys, **do not expose it to the browser**.
 
 ```js
 // update and publish
@@ -427,7 +466,7 @@ pk.patch.update(
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `id` | `string` | Record ID. |
-| `update` | `key-value mapping` (optional) | Updated fields. |
+| `update` | `key-value mapping` (optional) | Updated fields, at least one property must be set if defined. |
 | `update.type` | `string` | One of `airport`, `bus`, `city`, `street`, `tourism`, `townhall`, `train`. |
 | `update.name` | `string` | Record display name (street name, city name, station name...). |
 | `update.city` | `string` | Record city name. |
@@ -444,8 +483,9 @@ pk.patch.update(
 
 ### `pk.patch.delete()`
 
+⚠️ Restricted to **private** API keys, **do NOT expose the private key to the browser**.
+
 Delete a patch record.
-⚠️ Restricted to **private** API keys, **do not expose it to the browser**.
 
 ```js
 pk.patch.delete('<patch-id>');
@@ -460,8 +500,9 @@ NOTES:
 
 ### `pk.patch.deleteLang()`
 
+⚠️ Restricted to **private** API keys, **do NOT expose the private key to the browser**.
+
 Delete a patch translation.
-⚠️ Restricted to **private** API keys, **do not expose it to the browser**.
 
 ```js
 pk.patch.deleteLang('<patch-id>', 'fr');
