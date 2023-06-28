@@ -12,21 +12,6 @@ const banner = [
 
 export default [
   {
-    input: 'src/placekit-lite.js',
-    output: [
-      {
-        dir: 'dist',
-        entryFileNames: '[name].umd.js',
-        format: 'umd',
-        name: 'placekit',
-        banner,
-      },
-    ],
-    plugins: [
-      cleanup(),
-    ],
-  },
-  {
     input: [
       'src/placekit-lite.js',
       'src/placekit.js',
@@ -46,7 +31,9 @@ export default [
       },
     ],
     plugins: [
-      cleanup(),
+      cleanup({
+        comments: 'some',
+      }),
       replace({
         preventAssignment: true,
         values: {
@@ -67,6 +54,23 @@ export default [
           },
         ]
       })
+    ],
+  },
+  {
+    input: 'src/placekit-lite.js',
+    output: [
+      {
+        dir: 'dist',
+        entryFileNames: '[name].umd.js',
+        format: 'umd',
+        name: 'placekit',
+        banner,
+      },
+    ],
+    plugins: [
+      cleanup({
+        comments: 'some',
+      }),
     ],
   },
 ];
