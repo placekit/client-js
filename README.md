@@ -36,16 +36,6 @@ PlaceKit JavaScript Client abstracts interactions with our API, making your life
 
 ## 🎯 Quick start
 
-PlaceKit Client JS exports two versions of the client:
-
-| Version | Path | Methods | Modules |
-| --- | --- | --- | --- |
-| **Lite** | `@placekit/client-js/lite` | Search methods | ESM, CJS, UMD |
-| **Extended** | `@placekit/client-js` | All methods | ESM, CJS |
-
-- Lite version has an optimized bundle size for the browser, but works also in the back-end.
-- Extended version methods require a **private** API key that you should never expose to the browser–it is intended for the back-end only.
-
 ### NPM
 
 First, install PlaceKit JavaScript Client using [npm](https://docs.npmjs.com/getting-started) package manager:
@@ -137,6 +127,16 @@ Extended-only:
 ### `placekit()`
 
 PlaceKit initialization function returns a PlaceKit client, named `pk` in all examples.
+
+PlaceKit Client JS exports two versions of the client:
+
+| Version | Path | Methods | Modules |
+| --- | --- | --- | --- |
+| **Lite** | `@placekit/client-js/lite` | Search methods | ESM, CJS, UMD |
+| **Extended** | `@placekit/client-js` | All methods | ESM, CJS |
+
+- Lite version has an optimized bundle size for the browser, but works also in the back-end.
+- Extended version methods require a **private** API key that you should never expose to the browser–it is intended for the back-end only.
 
 ```js
 // Lite version, CommonJS syntax:
