@@ -3,6 +3,8 @@ export as namespace PlaceKit;
 
 declare function PlaceKit(apiKey?: string, opts?: PKOptions): PKClient;
 
+type AtLeastOne<T> = { [K in keyof T]: Pick<T, K> }[keyof T];
+
 export interface PKClient {
   search(query: string, opts?: PKOptions): Promise<PKSearchResponse>;
   reverse(opts?: PKOptions): Promise<PKSearchResponse>;
@@ -18,14 +20,14 @@ export interface PKClient {
       opts?: PKPatchUpdateOptions
     ): Promise<PKPatchResult>;
     create(
-      update: Partial<PKPatchUpdate>,
+      update: AtLeastOne<PKPatchUpdate>,
       opts?: PKPatchUpdateOptions,
       origin: PKResult,
     ): Promise<PKPatchResult>;
     get(id: string, language?: string): Promise<PKPatchResult>;
     update(
       id: string,
-      update: Partial<PKPatchUpdate>,
+      update?: AtLeastOne<PKPatchUpdate>,
       opts?: PKPatchUpdateOptions
     ): Promise<PKPatchResult>;
     delete(id: string): Promise<void>;
