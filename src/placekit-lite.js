@@ -1,6 +1,19 @@
 // Extend client
 const extensions = new Map();
 
+// Append info to the User-Agent
+function getUserAgent() {
+  let chunks = [];
+  if (typeof window !== 'undefined' && navigator.userAgent) {
+    chunks.push(navigator.userAgent);
+  }
+  chunks.push(`PlaceKit/__PLACEKIT_VERSION__ (Client=JavaScript)`);
+  if (typeof process !== 'undefined' && process.version) {
+    chunks.push(`NodeJS/${process.version}`);
+  }
+  return chunks.join(' ');
+}
+
 // PlaceKit init
 export default function placekit(apiKey, options = {}) {
   // Check apiKey parameter
@@ -28,6 +41,7 @@ export default function placekit(apiKey, options = {}) {
   }
 
   // Request wrapper
+  const userAgent = getUserAgent();
   function request(method = 'POST', resource = '', opts = {}) {
     const { timeout, forwardIP, ...params } = opts;
     const controller = new AbortController();
@@ -35,6 +49,7 @@ export default function placekit(apiKey, options = {}) {
     const url = new URL(resource.trim().replace(/^\/+/, ''), hosts[currentHost]);
     const headers = {
       'Content-Type': 'application/json; charset=UTF-8',
+      'User-Agent': userAgent,
       'x-placekit-api-key': apiKey,
     };
     if (forwardIP) {
