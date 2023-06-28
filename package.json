@@ -13,15 +13,26 @@
     "url": "https://github.com/placekit/client-js/issues"
   },
   "type": "module",
-  "types": "./dist/placekit.d.ts",
   "module": "./dist/placekit.js",
   "main": "./dist/placekit.cjs",
-  "browser": "./dist/placekit.umd.js",
+  "browser": "./dist/placekit-lite.umd.js",
+  "types": "./dist/placekit.d.ts",
+  "typesVersions": {
+    "*": {
+      ".": ["./dist/placekit.d.ts"],
+      "lite": ["./dist/placekit-lite.d.ts"]
+    }
+  },
   "exports": {
     ".": {
       "types": "./dist/placekit.d.ts",
       "require": "./dist/placekit.cjs",
       "import": "./dist/placekit.js"
+    },
+    "./lite": {
+      "types": "./dist/placekit-lite.d.ts",
+      "require": "./dist/placekit-lite.cjs",
+      "import": "./dist/placekit-lite.js"
     }
   },
   "files": [
@@ -37,7 +48,6 @@
     "test:watch": "node --test ./src --watch"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.2",
     "eslint": "^8.43.0",
     "eslint-config-google": "^0.14.0",
     "rimraf": "^5.0.1",
