@@ -499,9 +499,6 @@ pk.patch.delete('<patch-id>');
 | --- | --- | --- |
 | `id` | `string` | Record ID. |
 
-NOTES:
-- Deleting a translation will return a `409` error if there is no default language and no other translation available.
-
 ### `pk.patch.deleteLang()`
 
 ⚠️ Restricted to **private** API keys, **do NOT expose the private key to the browser**.
