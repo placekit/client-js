@@ -3,43 +3,29 @@ export as namespace PlaceKit;
 
 declare function PlaceKit(apiKey?: string, opts?: PKOptions): PKClient;
 
-export interface PKClient {
+export type PKClient = {
+  readonly options: PKOptions;
+  readonly hasGeolocation: boolean;
   search(query: string, opts?: PKOptions): Promise<PKSearchResponse>;
   reverse(opts?: PKOptions): Promise<PKSearchResponse>;
-  readonly options: PKOptions;
   configure(opts?: PKOptions): void;
-  readonly hasGeolocation: boolean;
   requestGeolocation(opts?: Object): Promise<GeolocationPosition>;
-}
+  clearGeolocation(): void;
+};
 
-type PKType = 
-  "airport" |
-  "bus" |
-  "city" |
-  "country" |
-  "street" |
-  "tourism" |
-  "townhall" |
-  "train" |
-  "-airport" |
-  "-bus" |
-  "-city" |
-  "-country" |
-  "-street" |
-  "-tourism" |
-  "-townhall" |
-  "-train";
+type PKType = "airport" | "bus" | "city" | "country" | "street" | "tourism" | "townhall" | "train";
+type PKTypeFilter = PKType | "-airport" | "-bus" | "-city" | "-country" | "-street" | "-tourism" | "-townhall" | "-train";
 
-export type PKOptions = Partial<{
+export type PKOptions = {
   timeout?: number;
   maxResults?: number;
   language?: string;
-  types?: PKType[];
+  types?: PKTypeFilter[];
   countries?: string[];
   countryByIP?: boolean;
   forwardIP?: string;
   coordinates?: string;
-}>;
+};
 
 export type PKResult = {
   street?: {
@@ -56,7 +42,7 @@ export type PKResult = {
   coordinates: string; // "lat,lng"
   lat?: number; // deprecated
   lng?: number; // deprecated
-  type: string;
+  type: PKType;
   zipcode: string[];
   population: number;
   highlight: string;

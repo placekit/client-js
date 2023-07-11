@@ -26,3 +26,7 @@ Then run, replacing `<yourQuery>` with whatever city or address you want:
 ```sh
 npx ts-node index.ts "<yourQuery>"
 ```
+
+## Notes
+
+- If you're not using `"type": "module"`, you may need to set `"esModuleInterop": true` in your `tsconfig.json`.

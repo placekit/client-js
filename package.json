@@ -1,6 +1,6 @@
 {
   "name": "@placekit/client-js",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "author": "PlaceKit <support@placekit.io>",
   "description": "PlaceKit JavaScript client",
   "license": "MIT",
@@ -12,15 +12,31 @@
   "bugs": {
     "url": "https://github.com/placekit/client-js/issues"
   },
+  "type": "module",
+  "module": "./dist/placekit.js",
+  "main": "./dist/placekit.cjs",
+  "browser": "./dist/placekit-lite.umd.js",
   "types": "./dist/placekit.d.ts",
-  "module": "./dist/placekit.esm.mjs",
-  "main": "./dist/placekit.cjs.js",
-  "browser": "./dist/placekit.umd.js",
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./dist/placekit.d.ts"
+      ],
+      "lite": [
+        "./dist/placekit-lite.d.ts"
+      ]
+    }
+  },
   "exports": {
     ".": {
       "types": "./dist/placekit.d.ts",
-      "require": "./dist/placekit.cjs.js",
-      "import": "./dist/placekit.esm.mjs"
+      "require": "./dist/placekit.cjs",
+      "import": "./dist/placekit.js"
+    },
+    "./lite": {
+      "types": "./dist/placekit-lite.d.ts",
+      "require": "./dist/placekit-lite.cjs",
+      "import": "./dist/placekit-lite.js"
     }
   },
   "files": [
@@ -32,21 +48,18 @@
     "build": "rollup -c",
     "lint": "eslint ./src",
     "format": "eslint ./src --fix",
-    "test": "jest --runInBand --detectOpenHandles --forceExit --roots ./src",
-    "test:watch": "jest --runInBand --detectOpenHandles --forceExit --roots ./src --onlyFailures --watch",
-    "test:ci": "jest --runInBand --detectOpenHandles --forceExit --roots ./src --ci",
-    "install:examples": "find examples -maxdepth 2 -name package.json -not -path \"*/node_modules/*\" -execdir npm i \\;"
+    "test": "node --test ./src",
+    "test:watch": "node --test ./src --watch"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.2",
-    "eslint": "^8.43.0",
+    "eslint": "^8.44.0",
     "eslint-config-google": "^0.14.0",
-    "jest": "^29.5.0",
-    "jest-environment-jsdom": "^29.5.0",
-    "jest-fetch-mock": "^3.0.3",
     "rimraf": "^5.0.1",
-    "rollup": "^3.25.1",
+    "rollup": "^3.26.2",
     "rollup-plugin-cleanup": "^3.2.1",
     "rollup-plugin-copy": "^3.4.0"
+  },
+  "dependencies": {
+    "@rollup/plugin-replace": "^5.0.2"
   }
 }
