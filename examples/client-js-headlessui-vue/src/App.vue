@@ -31,7 +31,7 @@
               v-for="item in state.suggestions"
               as="template"
               :key="item.id"
-              :value="[item.name, item.zipcode, item.county].join(' ')"
+              :value="[item.name, item.zipcode, item.city].join(' ')"
               v-slot="{ selected, active }"
             >
               <li
@@ -45,7 +45,7 @@
                   class="block truncate"
                   :class="{ 'font-medium': selected, 'font-normal': !selected }"
                 >
-                  {{ [item.name, item.zipcode, item.county].join(' ') }}
+                  {{ [item.name, item.zipcode, item.city].join(' ') }}
                 </span>
                 <span
                   class="absolute inset-y-0 left-0 flex items-center pl-3"
@@ -74,7 +74,7 @@
     TransitionRoot,
   } from '@headlessui/vue';
   import { CheckIcon, ChevronUpDownIcon, MapPinIcon } from '@heroicons/vue/24/solid';
-  import placekit from '@placekit/client-js';
+  import placekit from '@placekit/client-js/lite';
 
   const pk = placekit(import.meta.env.VITE_PLACEKIT_API_KEY, {
     countries: ['fr'],

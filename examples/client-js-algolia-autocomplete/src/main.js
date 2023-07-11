@@ -1,4 +1,4 @@
-import placekit from '@placekit/client-js';
+import placekit from '@placekit/client-js/lite';
 import { autocomplete } from '@algolia/autocomplete-js';
 
 import './global.css';
@@ -27,7 +27,7 @@ autocomplete({
             return [
               item.name,
               item.zipcode,
-              item.county
+              item.city
             ].join(' ');
           },
         },

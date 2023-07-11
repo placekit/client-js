@@ -8,13 +8,13 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",
-    "postcss": "^8.4.24",
+    "postcss": "^8.4.25",
     "tailwindcss": "^3.3.2",
-    "vite": "^4.3.9"
+    "vite": "^4.4.2"
   },
   "dependencies": {
-    "@algolia/autocomplete-js": "^1.9.4",
-    "@algolia/autocomplete-theme-classic": "^1.9.4",
-    "@placekit/client-js": "^1.1.1"
+    "@algolia/autocomplete-js": "^1.10.0",
+    "@algolia/autocomplete-theme-classic": "^1.10.0",
+    "@placekit/client-js": "^2.0.0"
   }
 }

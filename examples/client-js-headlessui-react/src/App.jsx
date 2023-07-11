@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react';
 import { Combobox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon, MapPinIcon } from '@heroicons/react/24/solid';
-import placekit from '@placekit/client-js';
+import placekit from '@placekit/client-js/lite';
 
 // Make sure to call `placekit` outside of a component’s render to avoid
 // recreating the `PlaceKit.Client` object on every render.
@@ -16,7 +16,6 @@ const App = () => {
   useEffect(
     () => {
       pk.search(value).then((res) => {
-        console.log(res.results);
         setSuggestions(res.results);
       });
     },
@@ -54,7 +53,7 @@ const App = () => {
                 const val = [
                   item.name,
                   item.zipcode,
-                  item.county
+                  item.city
                 ].join(' ');
                 return (
                   <Combobox.Option
