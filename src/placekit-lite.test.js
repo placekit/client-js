@@ -176,7 +176,6 @@ describe('PlaceKit/Lite: Search', () => {
     const pk = placekit('your-api-key');
     const res = await pk.search('', {
       forwardIP: '0.0.0.0',
-      countryByIP: true,
     });
     const calls = fetchMock.mock.calls;
     assert.equal(calls.length, 1);
