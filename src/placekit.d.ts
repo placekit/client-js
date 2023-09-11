@@ -47,7 +47,6 @@ export type PKOptions = {
   language?: string;
   types?: PKTypeFilter[];
   countries?: string[];
-  countryByIP?: boolean;
   forwardIP?: string;
   coordinates?: string;
 };
