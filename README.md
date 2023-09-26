@@ -133,6 +133,11 @@ Extended-only:
 - [`pk.patch.update()`](#pkpatchupdate)
 - [`pk.patch.delete()`](#pkpatchdelete)
 - [`pk.patch.deleteLang()`](#pkpatchdeleteLang)
+- [`pk.keys.list()`](#pkkeyslist)
+- [`pk.keys.create()`](#pkkeyscreate)
+- [`pk.keys.get()`](#pkkeysget)
+- [`pk.keys.update()`](#pkkeysupdate)
+- [`pk.keys.delete()`](#pkkeysdelete)
 
 ---
 
@@ -477,6 +482,76 @@ pk.patch.deleteLang('<patch-id>', 'fr');
 
 NOTES:
 - Deleting a translation will return a `409` error if there is no default language and no other translation available.
+
+### `pk.keys.list()`
+
+⚠️ Restricted to **private** API keys, **do NOT expose the private key to the browser**.
+
+Retrieve all application API keys.
+
+```js
+pk.keys.list();
+```
+
+### `pk.keys.create()`
+
+⚠️ Restricted to **private** API keys, **do NOT expose the private key to the browser**.
+
+Create an application API key.
+
+```js
+pk.keys.create('<role>', { domains: [] });
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `role` | `('public' \| 'private')` | API key role. |
+| `options` | `object?` | API key options. |
+| `options.domains` | `string[]?` | Domain or IP restriction (for public keys only). |
+
+### `pk.keys.get()`
+
+⚠️ Restricted to **private** API keys, **do NOT expose the private key to the browser**.
+
+Retrieve an API key by ID.
+
+```js
+pk.keys.get('<key-id>');
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `id` | `string` | API key ID. |
+
+### `pk.keys.update()`
+
+⚠️ Restricted to **private** API keys, **do NOT expose the private key to the browser**.
+
+Update an API key.
+
+```js
+pk.keys.update('<key-id>', { domains: [] });
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `id` | `string` | API key ID. |
+| `options` | `object?` | API key options. |
+| `options.domains` | `string[]?` | Domain or IP restriction (for public keys only). |
+
+### `pk.keys.delete()`
+
+⚠️ Restricted to **private** API keys, **do NOT expose the private key to the browser**.
+
+Delete an API key.
+
+```js
+pk.keys.delete('<key-id>');
+```
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `id` | `string` | API key ID. |
 
 ## ⚖️ License
 
