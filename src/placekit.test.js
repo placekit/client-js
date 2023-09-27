@@ -40,6 +40,12 @@ describe('PlceKit/Extended: Initialize', () => {
     assert.equal(typeof pk.patch.update, 'function');
     assert.equal(typeof pk.patch.delete, 'function');
     assert.equal(typeof pk.patch.deleteLang, 'function');
+    assert.equal(typeof pk.keys, 'object');
+    assert.equal(typeof pk.keys.list, 'function');
+    assert.equal(typeof pk.keys.create, 'function');
+    assert.equal(typeof pk.keys.get, 'function');
+    assert.equal(typeof pk.keys.update, 'function');
+    assert.equal(typeof pk.keys.delete, 'function');
   });
 });
 
@@ -145,11 +151,10 @@ describe('PlaceKit/Extended: Patch.get', () => {
     const pk = placekit('your-api-key');
     await pk.patch.get('abc', 'fr');
     const calls = fetchMock.mock.calls;
-    const body = JSON.parse(calls[0].arguments[1]?.body || {});
     assert.equal(calls.length, 1);
     assert.equal(calls[0].arguments[0]?.pathname, '/patch/abc');
+    assert.equal(calls[0].arguments[0]?.search, '?language=fr');
     assert.equal(calls[0].arguments[1]?.method, 'GET');
-    assert.equal(body.params?.language, 'fr');
   });
 });
 

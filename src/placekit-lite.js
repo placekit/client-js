@@ -47,6 +47,9 @@ export default function placekit(apiKey, options = {}) {
     const controller = new AbortController();
     const id = typeof timeout !== 'undefined' ? setTimeout(() => controller.abort(), timeout) : undefined;
     const url = new URL(resource.trim().replace(/^\/+/, ''), hosts[currentHost]);
+    if (['GET', 'HEAD'].includes(method) && typeof params !== 'undefined') {
+      Object.keys(params).forEach((k) => url.searchParams.append(k, params[k]));
+    }
     const headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       'User-Agent': userAgent,
@@ -55,7 +58,6 @@ export default function placekit(apiKey, options = {}) {
     if (forwardIP) {
       headers['x-forwarded-for'] = forwardIP;
     }
-
     return fetch(url, {
       method,
       headers,

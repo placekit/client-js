@@ -36,9 +36,7 @@ placekit.extend('patch', (request) => ({
       throw Error('PlaceKit.patch.get: `language` argument is invalid, expected a string.');
     }
     return request('GET', `patch/${id}`, {
-      params: {
-        language,
-      },
+      language,
     });
   },
 
