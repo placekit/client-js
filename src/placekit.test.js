@@ -40,6 +40,12 @@ describe('PlceKit/Extended: Initialize', () => {
     assert.equal(typeof pk.patch.update, 'function');
     assert.equal(typeof pk.patch.delete, 'function');
     assert.equal(typeof pk.patch.deleteLang, 'function');
+    assert.equal(typeof pk.keys, 'object');
+    assert.equal(typeof pk.keys.list, 'function');
+    assert.equal(typeof pk.keys.create, 'function');
+    assert.equal(typeof pk.keys.get, 'function');
+    assert.equal(typeof pk.keys.update, 'function');
+    assert.equal(typeof pk.keys.delete, 'function');
   });
 });
 
@@ -145,11 +151,10 @@ describe('PlaceKit/Extended: Patch.get', () => {
     const pk = placekit('your-api-key');
     await pk.patch.get('abc', 'fr');
     const calls = fetchMock.mock.calls;
-    const body = JSON.parse(calls[0].arguments[1]?.body || {});
     assert.equal(calls.length, 1);
     assert.equal(calls[0].arguments[0]?.pathname, '/patch/abc');
+    assert.equal(calls[0].arguments[0]?.search, '?language=fr');
     assert.equal(calls[0].arguments[1]?.method, 'GET');
-    assert.equal(body.params?.language, 'fr');
   });
 });
 
@@ -247,6 +252,141 @@ describe('PlaceKit/Extended: Patch.deleteLang', () => {
     const calls = fetchMock.mock.calls;
     assert.equal(calls.length, 1);
     assert.equal(calls[0].arguments[0]?.pathname, '/patch/abc/language/fr');
+    assert.equal(calls[0].arguments[1]?.method, 'DELETE');
+  });
+});
+
+describe('PlaceKit/Extended: Keys.list', () => {
+  it('sends proper request', async () => {
+    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
+      ok: true,
+      status: 200,
+      json: () => ({ results: [] }),
+    }));
+    const pk = placekit('your-api-key');
+    const res = await pk.keys.list();
+    const calls = fetchMock.mock.calls;
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].arguments[0]?.pathname, '/keys');
+    assert.equal(calls[0].arguments[1]?.method, 'GET');
+    assert.equal(res.results.length, 0);
+  });
+});
+
+describe('PlaceKit/Extended: Keys.create', () => {
+  it('throws when args are invalid', () => {
+    assert.throws(() => {
+      const pk = placekit('your-api-key');
+      pk.keys.create(null);
+    }, /role/i);
+    assert.throws(() => {
+      const pk = placekit('your-api-key');
+      pk.keys.create('invalid');
+    }, /role/i);
+    assert.throws(() => {
+      const pk = placekit('your-api-key');
+      pk.keys.create('public', 'invalid');
+    }, /opts/i);
+  });
+
+  it('sends proper request', async () => {
+    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
+      ok: true,
+      status: 200,
+      json: () => ({}),
+    }));
+    const pk = placekit('your-api-key');
+    await pk.keys.create('public', { domains: ['example.com'] });
+    const calls = fetchMock.mock.calls;
+    const body = JSON.parse(calls[0].arguments[1]?.body || {});
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].arguments[0]?.pathname, '/keys');
+    assert.equal(calls[0].arguments[1]?.method, 'POST');
+    assert.equal(body.domains.length, 1);
+  });
+});
+
+describe('PlaceKit/Extended: Keys.get', () => {
+  it('throws when args are invalid', () => {
+    assert.throws(() => {
+      const pk = placekit('your-api-key');
+      pk.keys.get();
+    }, /id/i);
+
+    assert.throws(() => {
+      const pk = placekit('your-api-key');
+      pk.keys.get(null);
+    }, /id/i);
+  });
+
+  it('sends proper request', async () => {
+    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
+      ok: true,
+      status: 200,
+      json: () => ({}),
+    }));
+    const pk = placekit('your-api-key');
+    await pk.keys.get('abc');
+    const calls = fetchMock.mock.calls;
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].arguments[0]?.pathname, '/keys/abc');
+    assert.equal(calls[0].arguments[1]?.method, 'GET');
+  });
+});
+
+describe('PlaceKit/Extended: Keys.update', () => {
+  it('throws when args are invalid', () => {
+    assert.throws(() => {
+      const pk = placekit('your-api-key');
+      pk.keys.update(null);
+    }, /id/i);
+    assert.throws(() => {
+      const pk = placekit('your-api-key');
+      pk.keys.update('abc', 'invalid');
+    }, /opts/i);
+  });
+
+  it('sends proper request', async () => {
+    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
+      ok: true,
+      status: 200,
+      json: () => ({}),
+    }));
+    const pk = placekit('your-api-key');
+    await pk.keys.update('abc', { domains: ['example.com'] });
+    const calls = fetchMock.mock.calls;
+    const body = JSON.parse(calls[0].arguments[1]?.body || {});
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].arguments[0]?.pathname, '/keys/abc');
+    assert.equal(calls[0].arguments[1]?.method, 'PATCH');
+    assert.equal(body.domains.length, 1);
+  });
+});
+
+describe('PlaceKit/Extended: Keys.delete', () => {
+  it('throws when args are invalid', () => {
+    assert.throws(() => {
+      const pk = placekit('your-api-key');
+      pk.keys.delete();
+    }, /id/i);
+
+    assert.throws(() => {
+      const pk = placekit('your-api-key');
+      pk.keys.delete(null);
+    }, /id/i);
+  });
+
+  it('sends proper request', async () => {
+    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
+      ok: true,
+      status: 200,
+      json: () => ({}),
+    }));
+    const pk = placekit('your-api-key');
+    await pk.keys.delete('abc');
+    const calls = fetchMock.mock.calls;
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].arguments[0]?.pathname, '/keys/abc');
     assert.equal(calls[0].arguments[1]?.method, 'DELETE');
   });
 });
