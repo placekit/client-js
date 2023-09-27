@@ -55,11 +55,12 @@ export default function placekit(apiKey, options = {}) {
     if (forwardIP) {
       headers['x-forwarded-for'] = forwardIP;
     }
+
     return fetch(url, {
       method,
       headers,
       signal: controller.signal,
-      body: JSON.stringify(params),
+      body: !['GET', 'HEAD'].includes(method) ? JSON.stringify(params) : undefined,
     }).then(async (res) => {
       clearTimeout(id);
       const body = await res.json();
