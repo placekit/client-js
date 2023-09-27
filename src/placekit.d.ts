@@ -33,6 +33,19 @@ export interface PKClient {
     delete(id: string): Promise<void>;
     deleteLang(id: string, language: string): Promise<void>;
   };
+  keys: {
+    list(): Promise<PKKeysResult[]>;
+    create(
+      role: "public" | "private",
+      opts?: PKKeysOptions,
+    ): Promise<PKKeysResult>;
+    get(id: string): Promise<PKKeysResult>;
+    update(
+      id: string,
+      opts?: PKKeysOptions
+    ): Promise<PKKeysResult>;
+    delete(id: string): Promise<void>;
+  };
 }
 
 type PKType = "airport" | "bus" | "city" | "country" | "street" | "tourism" | "townhall" | "train";
@@ -118,4 +131,18 @@ export type PKPatchListResponse = {
   maxResults: number;
   offset: number;
   totalResults: number;
+};
+
+export type PKKeysResult = {
+  id: string;
+  token: string;
+  appId: string;
+  role: "public" | "private";
+  domains: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type PKKeysOptions = {
+  domains?: string[];
 };
