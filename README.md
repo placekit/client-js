@@ -507,7 +507,7 @@ pk.keys.create('<role>', { domains: [] });
 | --- | --- | --- |
 | `role` | `('public' \| 'private')` | API key role. |
 | `options` | `object?` | API key options. |
-| `options.domains` | `string[]?` | Domain or IP restriction (for public keys only). |
+| `options.domains` | `string[]?` | Domain restriction. |
 
 ### `pk.keys.get()`
 
