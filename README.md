@@ -231,7 +231,7 @@ console.log(pk.options); // { "language": "en", "maxResults": 10, ... }
 | `coordinates` | `string?` | `undefined` | Coordinates to search around. Automatically set when calling [`pk.requestGeolocation()`](#pkrequestGeolocation). |
 | `forwardIP` | `string?` | `undefined` | Set `x-forwarded-for` header to forward the provided IP for back-end usages (otherwise it'll use the server IP). |
 
-<a id="ft1"><b>[1]</b></a>: See [Scope and Limitations](https://placekit.io/terms/scope) for more details.
+<a id="ft1"><b>[1]</b></a>: See [Coverage](https://placekit.io/terms/coverage) for more details.
 
 ### `pk.configure()`
 
