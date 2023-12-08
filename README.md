@@ -357,8 +357,8 @@ pk.patch.create(
 | `update.type` | `string` | Record type, one of `airport`, `bus`, `city`, `street`, `tourism`, `townhall`, `train`. |
 | `update.name` | `string` | Record display name (street name, city name, station name...). |
 | `update.city` | `string` | Record city name. |
-| `update.county` | `string` | Record county/province/department. |
-| `update.administrative` | `string` | Record administrative/region/state. |
+| `update.county` | `string` (optional) | Record county/province/department. |
+| `update.administrative` | `string` (optional) | Record administrative/region/state. |
 | `update.country` | `string` | Record country name. |
 | `update.countrycode` | `string` | Record [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code. |
 | `update.coordinates` | `string` | Record coordinates in format `lat,lng`. |
@@ -440,8 +440,8 @@ pk.patch.update(
 | `update.type` | `string` | One of `airport`, `bus`, `city`, `street`, `tourism`, `townhall`, `train`. |
 | `update.name` | `string` | Record display name (street name, city name, station name...). |
 | `update.city` | `string` | Record city name. |
-| `update.county` | `string` | Record county/province/department. |
-| `update.administrative` | `string` | Record administrative/region/state. |
+| `update.county` | `string` (optional) | Record county/province/department. |
+| `update.administrative` | `string` (optional) | Record administrative/region/state. |
 | `update.country` | `string` | Record country name. |
 | `update.countrycode` | `string` | Record [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code. |
 | `update.coordinates` | `string` | Record coordinates in format `lat,lng`. |
