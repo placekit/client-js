@@ -16,10 +16,13 @@ placekit.extend('patch', (request) => ({
       throw Error('PlaceKit.patch.create: `opts` argument is invalid, expected an object.');
     }
     const method = typeof origin === 'undefined' ? 'POST' : 'PUT';
-    const data = typeof origin === 'undefined' ? { record: update } : {
-      origin,
-      update,
-    };
+    const data =
+      typeof origin === 'undefined'
+        ? { record: update }
+        : {
+            origin,
+            update,
+          };
     return request(method, 'patch', {
       ...data,
       status: opts?.status,
@@ -85,7 +88,9 @@ placekit.extend('keys', (request) => ({
   // Create API key
   create(role, opts = {}) {
     if (!['public', 'private'].includes(role)) {
-      throw Error('PlaceKit.keys.create: `role` argument is invalid, expected either "public" or "private".');
+      throw Error(
+        'PlaceKit.keys.create: `role` argument is invalid, expected either "public" or "private".',
+      );
     }
     if (!['object', 'undefined'].includes(typeof opts) || Array.isArray(opts) || opts === null) {
       throw Error('PlaceKit.patch.update: `opts` argument is invalid, expected an object.');

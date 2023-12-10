@@ -13,8 +13,17 @@ export type PKClient = {
   clearGeolocation(): void;
 };
 
-type PKType = "airport" | "bus" | "city" | "country" | "street" | "tourism" | "townhall" | "train";
-type PKTypeFilter = PKType | "-airport" | "-bus" | "-city" | "-country" | "-street" | "-tourism" | "-townhall" | "-train";
+type PKType = 'airport' | 'bus' | 'city' | 'country' | 'street' | 'tourism' | 'townhall' | 'train';
+type PKTypeFilter =
+  | PKType
+  | '-airport'
+  | '-bus'
+  | '-city'
+  | '-country'
+  | '-street'
+  | '-tourism'
+  | '-townhall'
+  | '-train';
 
 export type PKOptions = {
   timeout?: number;

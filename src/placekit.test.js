@@ -58,11 +58,13 @@ describe('PlaceKit/Extended: Patch.list', () => {
   });
 
   it('sends proper request', async () => {
-    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
-      ok: true,
-      status: 200,
-      json: () => ({ results: [] }),
-    }));
+    fetchMock.mock.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => ({ results: [] }),
+      }),
+    );
     const pk = placekit('your-api-key');
     const res = await pk.patch.list({
       status: 'approved',
@@ -86,11 +88,13 @@ describe('PlaceKit/Extended: Patch.create', () => {
   });
 
   it('sends proper POST request', async () => {
-    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
-      ok: true,
-      status: 200,
-      json: () => ({}),
-    }));
+    fetchMock.mock.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => ({}),
+      }),
+    );
     const pk = placekit('your-api-key');
     await pk.patch.create({ name: 'test' }, { status: 'approved' });
     const calls = fetchMock.mock.calls;
@@ -104,13 +108,15 @@ describe('PlaceKit/Extended: Patch.create', () => {
   });
 
   it('sends proper PUT request', async () => {
-    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
-      ok: true,
-      status: 200,
-      json: () => ({}),
-    }));
+    fetchMock.mock.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => ({}),
+      }),
+    );
     const pk = placekit('your-api-key');
-    await pk.patch.create({ name: 'test' }, { status: 'approved' }, { name: 'previous'});
+    await pk.patch.create({ name: 'test' }, { status: 'approved' }, { name: 'previous' });
     const calls = fetchMock.mock.calls;
     const body = JSON.parse(calls[0].arguments[1]?.body || {});
     assert.equal(calls.length, 1);
@@ -143,11 +149,13 @@ describe('PlaceKit/Extended: Patch.get', () => {
   });
 
   it('sends proper request', async () => {
-    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
-      ok: true,
-      status: 200,
-      json: () => ({}),
-    }));
+    fetchMock.mock.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => ({}),
+      }),
+    );
     const pk = placekit('your-api-key');
     await pk.patch.get('abc', 'fr');
     const calls = fetchMock.mock.calls;
@@ -172,11 +180,13 @@ describe('PlaceKit/Extended: Patch.update', () => {
   });
 
   it('sends proper request', async () => {
-    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
-      ok: true,
-      status: 200,
-      json: () => ({}),
-    }));
+    fetchMock.mock.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => ({}),
+      }),
+    );
     const pk = placekit('your-api-key');
     await pk.patch.update('abc', { name: 'test' }, { status: 'approved' });
     const calls = fetchMock.mock.calls;
@@ -204,11 +214,13 @@ describe('PlaceKit/Extended: Patch.delete', () => {
   });
 
   it('sends proper request', async () => {
-    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
-      ok: true,
-      status: 200,
-      json: () => ({}),
-    }));
+    fetchMock.mock.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => ({}),
+      }),
+    );
     const pk = placekit('your-api-key');
     await pk.patch.delete('abc');
     const calls = fetchMock.mock.calls;
@@ -242,11 +254,13 @@ describe('PlaceKit/Extended: Patch.deleteLang', () => {
   });
 
   it('sends proper request', async () => {
-    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
-      ok: true,
-      status: 200,
-      json: () => ({}),
-    }));
+    fetchMock.mock.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => ({}),
+      }),
+    );
     const pk = placekit('your-api-key');
     await pk.patch.deleteLang('abc', 'fr');
     const calls = fetchMock.mock.calls;
@@ -258,11 +272,13 @@ describe('PlaceKit/Extended: Patch.deleteLang', () => {
 
 describe('PlaceKit/Extended: Keys.list', () => {
   it('sends proper request', async () => {
-    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
-      ok: true,
-      status: 200,
-      json: () => ({ results: [] }),
-    }));
+    fetchMock.mock.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => ({ results: [] }),
+      }),
+    );
     const pk = placekit('your-api-key');
     const res = await pk.keys.list();
     const calls = fetchMock.mock.calls;
@@ -290,11 +306,13 @@ describe('PlaceKit/Extended: Keys.create', () => {
   });
 
   it('sends proper request', async () => {
-    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
-      ok: true,
-      status: 200,
-      json: () => ({}),
-    }));
+    fetchMock.mock.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => ({}),
+      }),
+    );
     const pk = placekit('your-api-key');
     await pk.keys.create('public', { domains: ['example.com'] });
     const calls = fetchMock.mock.calls;
@@ -320,11 +338,13 @@ describe('PlaceKit/Extended: Keys.get', () => {
   });
 
   it('sends proper request', async () => {
-    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
-      ok: true,
-      status: 200,
-      json: () => ({}),
-    }));
+    fetchMock.mock.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => ({}),
+      }),
+    );
     const pk = placekit('your-api-key');
     await pk.keys.get('abc');
     const calls = fetchMock.mock.calls;
@@ -347,11 +367,13 @@ describe('PlaceKit/Extended: Keys.update', () => {
   });
 
   it('sends proper request', async () => {
-    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
-      ok: true,
-      status: 200,
-      json: () => ({}),
-    }));
+    fetchMock.mock.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => ({}),
+      }),
+    );
     const pk = placekit('your-api-key');
     await pk.keys.update('abc', { domains: ['example.com'] });
     const calls = fetchMock.mock.calls;
@@ -377,11 +399,13 @@ describe('PlaceKit/Extended: Keys.delete', () => {
   });
 
   it('sends proper request', async () => {
-    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
-      ok: true,
-      status: 200,
-      json: () => ({}),
-    }));
+    fetchMock.mock.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => ({}),
+      }),
+    );
     const pk = placekit('your-api-key');
     await pk.keys.delete('abc');
     const calls = fetchMock.mock.calls;

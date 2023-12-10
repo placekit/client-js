@@ -15,10 +15,7 @@ export interface PKClient {
   clearGeolocation(): void;
   patch: {
     list(opts?: PKPatchListOptions): Promise<PKPatchListResponse>;
-    create(
-      update: PKPatchUpdate,
-      opts?: PKPatchUpdateOptions
-    ): Promise<PKPatchResult>;
+    create(update: PKPatchUpdate, opts?: PKPatchUpdateOptions): Promise<PKPatchResult>;
     create(
       update: AtLeastOne<PKPatchUpdate>,
       opts?: PKPatchUpdateOptions,
@@ -28,30 +25,33 @@ export interface PKClient {
     update(
       id: string,
       update?: AtLeastOne<PKPatchUpdate>,
-      opts?: PKPatchUpdateOptions
+      opts?: PKPatchUpdateOptions,
     ): Promise<PKPatchResult>;
     delete(id: string): Promise<void>;
     deleteLang(id: string, language: string): Promise<void>;
   };
   keys: {
     list(): Promise<PKKeysResult[]>;
-    create(
-      role: "public" | "private",
-      opts?: PKKeysOptions,
-    ): Promise<PKKeysResult>;
+    create(role: 'public' | 'private', opts?: PKKeysOptions): Promise<PKKeysResult>;
     get(id: string): Promise<PKKeysResult>;
-    update(
-      id: string,
-      opts?: PKKeysOptions
-    ): Promise<PKKeysResult>;
+    update(id: string, opts?: PKKeysOptions): Promise<PKKeysResult>;
     delete(id: string): Promise<void>;
   };
 }
 
-type PKType = "airport" | "bus" | "city" | "country" | "street" | "tourism" | "townhall" | "train";
-type PKTypeFilter = PKType | "-airport" | "-bus" | "-city" | "-country" | "-street" | "-tourism" | "-townhall" | "-train";
-type PKPatchType = Exclude<PKType, "country">;
-type PKPatchTypeFilter = Exclude<PKTypeFilter, "country" | "-country">;
+type PKType = 'airport' | 'bus' | 'city' | 'country' | 'street' | 'tourism' | 'townhall' | 'train';
+type PKTypeFilter =
+  | PKType
+  | '-airport'
+  | '-bus'
+  | '-city'
+  | '-country'
+  | '-street'
+  | '-tourism'
+  | '-townhall'
+  | '-train';
+type PKPatchType = Exclude<PKType, 'country'>;
+type PKPatchTypeFilter = Exclude<PKTypeFilter, 'country' | '-country'>;
 type PKPatchStatus = 'pending' | 'approved';
 
 export type PKOptions = {
@@ -92,7 +92,7 @@ export type PKSearchResponse = {
   query: string;
 };
 
-export type PKPatchResult = Omit<PKResult, "type"> & {
+export type PKPatchResult = Omit<PKResult, 'type'> & {
   id: string;
   status: PKPatchStatus;
   type: PKPatchType;
@@ -137,11 +137,11 @@ export type PKKeysResult = {
   id: string;
   token: string;
   appId: string;
-  role: "public" | "private";
+  role: 'public' | 'private';
   domains: string[];
   createdAt: string;
   updatedAt: string;
-}
+};
 
 export type PKKeysOptions = {
   domains?: string[];

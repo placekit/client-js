@@ -91,15 +91,19 @@ describe('PlaceKit/Lite: Request Geolocation', () => {
   });
 
   it('denies geolocation', async () => {
-    geolocationMock.mock.mockImplementationOnce((_success, error) => Promise.resolve(error({
-      code: 1,
-      message: '',
-    })));
+    geolocationMock.mock.mockImplementationOnce((_success, error) =>
+      Promise.resolve(
+        error({
+          code: 1,
+          message: '',
+        }),
+      ),
+    );
     const pk = placekit('your-api-key');
     assert.rejects(async () => {
       await pk.requestGeolocation();
     });
-    assert.equal(geolocationMock.mock.calls.length, 1)
+    assert.equal(geolocationMock.mock.calls.length, 1);
     assert.equal(pk.hasGeolocation, false);
   });
 
@@ -148,11 +152,13 @@ describe('PlaceKit/Lite: Search', () => {
   });
 
   it('sends proper request', async () => {
-    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
-      ok: true,
-      status: 200,
-      json: () => ({ results: [] }),
-    }));
+    fetchMock.mock.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => ({ results: [] }),
+      }),
+    );
     const pk = placekit('your-api-key');
     const res = await pk.search('');
     const calls = fetchMock.mock.calls;
@@ -168,11 +174,13 @@ describe('PlaceKit/Lite: Search', () => {
   });
 
   it('sets `x-forwarded-for` header from forwardIP option', async () => {
-    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
-      ok: true,
-      status: 200,
-      json: () => ({ results: [] }),
-    }));
+    fetchMock.mock.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => ({ results: [] }),
+      }),
+    );
     const pk = placekit('your-api-key');
     const res = await pk.search('', {
       forwardIP: '0.0.0.0',
@@ -191,61 +199,78 @@ describe('PlaceKit/Lite: Search', () => {
   });
 
   it('retries with next host on timeout', () => {
-    fetchMock.mock.mockImplementation(() => Promise.resolve({
-      ok: true,
-      status: 200,
-      json: () => ({ results: [] }),
-    }));
+    fetchMock.mock.mockImplementation(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => ({ results: [] }),
+      }),
+    );
     fetchMock.mock.mockImplementationOnce(() => Promise.reject({ name: 'AbortError' }));
     const pk = placekit('your-api-key');
-    assert.rejects(async () => {
-      await pk.search('');
-    }, { name: 'AbortError' });
+    assert.rejects(
+      async () => {
+        await pk.search('');
+      },
+      { name: 'AbortError' },
+    );
     const calls = fetchMock.mock.calls;
     assert.equal(calls.length, 1);
   });
 
   it('retries with next host on 500', async () => {
-    fetchMock.mock.mockImplementation(() => Promise.resolve({
-      ok: true,
-      status: 200,
-      json: () => ({ results: [] }),
-    }));
-    fetchMock.mock.mockImplementationOnce(() => Promise.resolve({
-      ok: false,
-      status: 500,
-      statusText: '',
-      json: () => ({ message: 'An error occured.', errors: [] }),
-    }));
+    fetchMock.mock.mockImplementation(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => ({ results: [] }),
+      }),
+    );
+    fetchMock.mock.mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: false,
+        status: 500,
+        statusText: '',
+        json: () => ({ message: 'An error occured.', errors: [] }),
+      }),
+    );
     const pk = placekit('your-api-key');
-    assert.rejects(async () => {
-      await pk.search('');
-    }, {
-      status: 500,
-      statusText: '',
-      message: 'An error occured.',
-      errors: []
-    });
+    assert.rejects(
+      async () => {
+        await pk.search('');
+      },
+      {
+        status: 500,
+        statusText: '',
+        message: 'An error occured.',
+        errors: [],
+      },
+    );
     const calls = fetchMock.mock.calls;
     assert.equal(calls.length, 1);
   });
 
   it('rejects on 40x', async () => {
-    fetchMock.mock.mockImplementation(() => Promise.resolve({
-      ok: false,
-      status: 403,
-      statusText: '',
-      json: () => ({ message: 'An error occured.', errors: [] }),
-    }));
+    fetchMock.mock.mockImplementation(() =>
+      Promise.resolve({
+        ok: false,
+        status: 403,
+        statusText: '',
+        json: () => ({ message: 'An error occured.', errors: [] }),
+      }),
+    );
     const pk = placekit('your-api-key');
-    assert.rejects(async () => {
-      await pk.search('');
-    }, {
-      status: 403,
-      statusText: '',
-      message: 'An error occured.',
-      errors: []
-    });
+    assert.rejects(
+      async () => {
+        await pk.search('');
+      },
+      {
+        status: 403,
+        statusText: '',
+        message: 'An error occured.',
+        errors: [],
+      },
+    );
     const calls = fetchMock.mock.calls;
     assert.equal(calls.length, 1);
   });
@@ -260,11 +285,13 @@ describe('PlaceKit/Lite: Reverse', () => {
   });
 
   it('sends proper request', async () => {
-    fetchMock.mock.mockImplementation(() => Promise.resolve({
-      ok: true,
-      status: 200,
-      json: () => ({ results: [] }),
-    }));
+    fetchMock.mock.mockImplementation(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => ({ results: [] }),
+      }),
+    );
     const pk = placekit('your-api-key');
     const res = await pk.reverse({
       coordinates: '0,0',
@@ -281,11 +308,13 @@ describe('PlaceKit/Lite: Reverse', () => {
   });
 
   it('overrides previously set coordinates', async () => {
-    fetchMock.mock.mockImplementation(() => Promise.resolve({
-      ok: true,
-      status: 200,
-      json: () => ({ results: [] }),
-    }));
+    fetchMock.mock.mockImplementation(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => ({ results: [] }),
+      }),
+    );
     const pk = placekit('your-api-key', {
       coordinates: '1,1',
     });
