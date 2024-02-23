@@ -3,6 +3,14 @@
   "version": "2.3.0",
   "author": "PlaceKit <support@placekit.io>",
   "description": "PlaceKit JavaScript client",
+  "keywords": [
+    "addresses",
+    "api",
+    "geocoder",
+    "geocoding",
+    "locations",
+    "places"
+  ],
   "license": "MIT",
   "homepage": "https://github.com/placekit/client-js#readme",
   "repository": {
