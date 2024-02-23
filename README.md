@@ -69,7 +69,7 @@ pk.search("Paris").then((res) => {
 First, add this line before the closing `</body>` tag in your HTML to import PlaceKit JavaScript Client:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@placekit/client-js@2.2.0/dist/placekit-lite.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@placekit/client-js@2.3.0/dist/placekit-lite.umd.js"></script>
 ```
 
 Then it works the same as the node example above.
@@ -91,7 +91,7 @@ Or if you are using native ES Modules:
 
 ```html
 <script type="module">
-  import placekit from "https://cdn.jsdelivr.net/npm/@placekit/client-js@2.2.0/dist/placekit-lite.js";
+  import placekit from "https://cdn.jsdelivr.net/npm/@placekit/client-js@2.3.0/dist/placekit-lite.js";
   const pk = placekit(/* ... */);
   // ...
 </script>
@@ -225,7 +225,7 @@ console.log(pk.options); // { "language": "en", "maxResults": 10, ... }
 | ------------- | ----------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `countries`   | `string[]?` | `undefined` | Countries to search in, default to current IP country. Array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes<sup>[(1)](#ft1)</sup>.                                                                                   |
 | `language`    | `string?`   | `undefined` | Preferred language for the results<sup>[(1)](#ft1)</sup>, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. Supported languages are `en` and `fr`. By default the results are displayed in their country's language. |
-| `types`       | `string[]?` | `undefined` | Type of results to show. Array of accepted values: `street`, `city`, `country`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all.                                                        |
+| `types`       | `string[]?` | `undefined` | Type of results to show. Array of accepted values: `street`, `city`, `country`, `administrative`, `airport`, `bus`, `county`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all.                                                        |
 | `maxResults`  | `integer?`  | `5`         | Number of results per page.                                                                                                                                                                                                                               |
 | `coordinates` | `string?`   | `undefined` | Coordinates to search around. Automatically set when calling [`pk.requestGeolocation()`](#pkrequestGeolocation).                                                                                                                                          |
 | `forwardIP`   | `string?`   | `undefined` | Set `x-forwarded-for` header to forward the provided IP for back-end usages (otherwise it'll use the server IP).                                                                                                                                          |
@@ -305,13 +305,13 @@ pk.patch
   });
 ```
 
-| Parameter         | Type                           | Description                                                                                                                                                                  |
-| ----------------- | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Parameter         | Type                                | Description                                                                                                                                                        |
+| ----------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `opts`            | `key-value mapping` (optional) | Search options.                                                                                                                                                              |
 | `opts.status`     | `('pending' \| 'approved')?`   | Publication status.                                                                                                                                                          |
 | `opts.query`      | `string?`                      | Terms filter.                                                                                                                                                                |
 | `opts.countries`  | `string[]?`                    | Countries filter, array of [two-letter ISO](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country codes.                                                                 |
-| `opts.types`      | `string[]?`                    | Types filter, array of accepted values: `street`, `city`, `airport`, `bus`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
+| `opts.types`      | `string[]?`                    | Types filter, array of accepted values: `street`, `city`, `administrative`, `airport`, `bus`, `county`, `train`, `townhall`, `tourism`. Prepend `-` to omit a type like `['-bus']`. Unset to return all. |
 | `opts.language`   | `string?`                      | `undefined`                                                                                                                                                                  | Preferred language for the results, [two-letter ISO](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code. |
 | `opts.maxResults` | `number?`                      | Maximum number of results to return.                                                                                                                                         |
 | `opts.offset`     | `number?`                      | Paginate results starting from the offset.                                                                                                                                   |
@@ -358,7 +358,7 @@ pk.patch.create(
 | Parameter               | Type                           | Description                                                                                                                     |
 | ----------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
 | `update`                | `key-value mapping`            | Full patch record if adding, at least one property if fixing.                                                                   |
-| `update.type`           | `string`                       | Record type, one of `airport`, `bus`, `city`, `street`, `tourism`, `townhall`, `train`.                                         |
+| `update.type`           | `string`                       | Record type, one of `administrative`, `airport`, `bus`, `city`, `county`, `street`, `tourism`, `townhall`, `train`.                                         |
 | `update.name`           | `string`                       | Record display name (street name, city name, station name...).                                                                  |
 | `update.city`           | `string`                       | Record city name.                                                                                                               |
 | `update.county`         | `string` (optional)            | Record county/province/department.                                                                                              |
@@ -441,7 +441,7 @@ pk.patch
 | ----------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------- |
 | `id`                    | `string`                       | Record ID.                                                                                              |
 | `update`                | `key-value mapping` (optional) | Updated fields, at least one property must be set if defined.                                           |
-| `update.type`           | `string`                       | One of `airport`, `bus`, `city`, `street`, `tourism`, `townhall`, `train`.                              |
+| `update.type`           | `string`                       | One of `administrative`, `airport`, `bus`, `city`, `county`, `street`, `tourism`, `townhall`, `train`.                              |
 | `update.name`           | `string`                       | Record display name (street name, city name, station name...).                                          |
 | `update.city`           | `string`                       | Record city name.                                                                                       |
 | `update.county`         | `string` (optional)            | Record county/province/department.                                                                      |

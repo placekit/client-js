@@ -13,13 +13,15 @@ export type PKClient = {
   clearGeolocation(): void;
 };
 
-type PKType = 'airport' | 'bus' | 'city' | 'country' | 'street' | 'tourism' | 'townhall' | 'train';
+type PKType = 'administrative' | 'airport' | 'bus' | 'city' | 'country' | 'county' | 'street' | 'tourism' | 'townhall' | 'train';
 type PKTypeFilter =
   | PKType
+  | '-administrative'
   | '-airport'
   | '-bus'
   | '-city'
   | '-country'
+  | '-county'
   | '-street'
   | '-tourism'
   | '-townhall'
