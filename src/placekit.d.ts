@@ -18,7 +18,7 @@ export interface PKClient {
     create(update: PKPatchUpdate, opts?: PKPatchUpdateOptions): Promise<PKPatchResult>;
     create(
       update: AtLeastOne<PKPatchUpdate>,
-      opts?: PKPatchUpdateOptions,
+      opts: PKPatchUpdateOptions | undefined,
       origin: PKResult,
     ): Promise<PKPatchResult>;
     get(id: string, language?: string): Promise<PKPatchResult>;

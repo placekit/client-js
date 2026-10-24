@@ -2,7 +2,7 @@ import replace from '@rollup/plugin-replace';
 import cleanup from 'rollup-plugin-cleanup';
 import copy from 'rollup-plugin-copy';
 
-import pkg from './package.json' assert { type: 'json' };
+import pkg from './package.json' with { type: 'json' };
 const banner = [
   `/*! ${pkg.name} v${pkg.version}`,
   '© placekit.io',
