@@ -348,7 +348,7 @@ pk.patch.create(record, { status: 'approved' }).then((record) => {
 // Fixing an existing location
 pk.patch.create(
   { population: 3849000 },
-  { status: 'approved' }
+  { status: 'approved' },
   originalRecord, // original record from `pk.search` or `pk.reverse`
 ).then((record) => {
   console.log(record);
